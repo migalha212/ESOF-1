@@ -101,6 +101,12 @@ Take a look at the following links to learn some techniques:
 ## Requirements
 
 ### User Stories
+
+- As a user I want to be able to see stores laid out on a map so that i can better search for ones near my location.
+- As a user I want to be notified of events like eco-markets or new stores in my area so that I can stay informed.
+- As a user I need to be able to filter through a list of shops so I can find stores that better fit my needs.
+- As a user I need to be able to search for shops using a search bar so I can find a specific store faster.
+- As a user i want to be able to see an establishments whole profile such as product origins and practices so that i can make better informed decisions.
 <!-- 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
 
