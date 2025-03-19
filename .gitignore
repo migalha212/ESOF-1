@@ -8,6 +8,7 @@ linux/*
 macos/*
 web/*
 windows/*
+.metadata
 
 # Miscellaneous
 .DS_Store
