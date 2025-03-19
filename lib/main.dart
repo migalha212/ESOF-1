@@ -1,4 +1,4 @@
-import 'package:esof/pages/map_page.dart';
+import 'package:esof/pages/landing_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,11 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'EcoFinder',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF3E8E4D)),
+        useMaterial3: true,
       ),
-      home: MapPage(),
+      home: LandingPage(), // Now pointing to LandingPage instead of MapPage
     );
   }
 }

@@ -37,14 +37,17 @@ class _MapPageState extends State<MapPage> {
 
     LocationData locationData = await _location.getLocation();
     if (locationData.latitude != null && locationData.longitude != null) {
-      setState(() {
-        _markers.add(
-          Marker(
-              markerId: MarkerId('user_location'),
-              position: LatLng(locationData.latitude!, locationData.longitude!)
-          ),
-        );
-      });
+
+      // Marker of initial location
+
+      //setState(() {
+      //  _markers.add(
+      //    Marker(
+      //        markerId: MarkerId('user_location'),
+      //        position: LatLng(locationData.latitude!, locationData.longitude!)
+      //    ),
+      //  );
+      //});
 
       _mapController.animateCamera(CameraUpdate.newLatLng(
           LatLng(locationData.latitude!, locationData.longitude!)
