@@ -2,26 +2,27 @@
 
 Welcome to the documentation pages of EcoFinder!
 
-This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about EcoFinder, from high-level vision to low-level implementation decisions. It’s organised by the following activities. 
+This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about EcoFinder, from high-level vision to low-level implementation decisions. It’s organised by the following activities.
 
-* [Business modeling](#Business-Modelling) 
-  * [Product Vision](#Product-Vision)
-  * [Features and Assumptions](#Features-and-Assumptions)
-  * [Elevator Pitch](#Elevator-pitch)
-* [Requirements](#Requirements)
-  * [User stories](#User-stories)
-  * [Domain model](#Domain-model)
-* [Architecture and Design](#Architecture-And-Design)
-  * [Logical architecture](#Logical-Architecture)
-  * [Physical architecture](#Physical-Architecture)
-  * [Vertical prototype](#Vertical-Prototype)
-* [Project management](#Project-Management)
-  * [Sprint 0](#Sprint-0)
-  * [Sprint 1](#Sprint-1)
-  * [Sprint 2](#Sprint-2)
-  * [Sprint 3](#Sprint-3)
-  * [Sprint 4](#Sprint-4)
-  * [Final Release](#Final-Release)
+- [EcoFinder Development Report](#ecofinder-development-report)
+  - [Business Modelling](#business-modelling)
+    - [Product Vision](#product-vision)
+    - [Features and Assumptions](#features-and-assumptions)
+    - [Elevator Pitch](#elevator-pitch)
+  - [Requirements](#requirements)
+    - [User Stories](#user-stories)
+    - [Domain model](#domain-model)
+  - [Architecture and Design](#architecture-and-design)
+    - [Logical architecture](#logical-architecture)
+    - [Physical architecture](#physical-architecture)
+    - [Vertical prototype](#vertical-prototype)
+  - [Project management](#project-management)
+    - [Sprint 0](#sprint-0)
+    - [Sprint 1](#sprint-1)
+    - [Sprint 2](#sprint-2)
+    - [Sprint 3](#sprint-3)
+    - [Sprint 4](#sprint-4)
+    - [Final Release](#final-release)
 
 Contributions are expected to be made exclusively by the initial team, but we may open them to the community, after the course, in all areas and topics: requirements, technologies, development, experimentation, testing, etc.
 
@@ -29,13 +30,14 @@ Please contact us!
 
 Thank you!
 
-* Arnaldo Ferraz Lopes, up202307659@fe.up.pt
-* Diogo Sousa Campeão, up202307177@fe.up.pt
-* José Pedro Marques Ferreira, up202305478@fe.up.pt
-* Miguel Borges Pereira, up202304387@fe.up.pt
-* Sérgio Miguel Cardoso Almeida, up202305946@fe.up.pt
+- Arnaldo Ferraz Lopes, up202307659@fe.up.pt
+- Diogo Sousa Campeão, up202307177@fe.up.pt
+- José Pedro Marques Ferreira, up202305478@fe.up.pt
+- Miguel Borges Pereira, up202304387@fe.up.pt
+- Sérgio Miguel Cardoso Almeida, up202305946@fe.up.pt
 
 ---
+
 ## Business Modelling
 
 Business modeling in software development involves defining the product's vision, understanding market needs, aligning features with user expectations, and setting the groundwork for strategic planning and execution.
@@ -43,16 +45,14 @@ Business modeling in software development involves defining the product's vision
 ### Product Vision
 
 First brainstorming idea: Sustainable Shopping Guide
-An app to help people to buy from sustainable, fair-trade and eco-friendly businesses offering features to navigate, search and be informed about updates on those markets. 
+An app to help people to buy from sustainable, fair-trade and eco-friendly businesses offering features to navigate, search and be informed about updates on those markets.
 
-
-
-<!-- 
-Start by defining a clear and concise vision for your app, to help members of the team, contributors, and users into focusing their often disparate views into a concise, visual, and short textual form. 
+<!--
+Start by defining a clear and concise vision for your app, to help members of the team, contributors, and users into focusing their often disparate views into a concise, visual, and short textual form.
 
 The vision should provide a "high concept" of the product for marketers, developers, and managers.
 
-A product vision describes the essential of the product and sets the direction to where a product is headed, and what the product will deliver in the future. 
+A product vision describes the essential of the product and sets the direction to where a product is headed, and what the product will deliver in the future.
 
 **We favor a catchy and concise statement, ideally one sentence.**
 
@@ -66,20 +66,18 @@ To learn more about how to write a good product vision, please see:
 * [20 Inspiring Vision Statement Examples (2019 Updated), by lifehack.org](https://www.lifehack.org/articles/work/20-sample-vision-statement-for-the-new-startup.html)
 -->
 
-
 ### Features and Assumptions
 
-* A map to search for stores in an area
-* A search bar
-* A list page, listing all businesses or people selling products
-* A filter in the list page, being able to filter by type, price and seller
-* A profile page, both for a regular buyer or a business owner
-* A business management page, in case the user is a seller
-* A news page, giving users updates about events, eco-markets/flea markets, new store openings, etc.
-* A favorite/bookmark functionality
+- A map to search for stores in an area
+- A search bar
+- A list page, listing all businesses or people selling products
+- A filter in the list page, being able to filter by type, price and seller
+- A profile page, both for a regular buyer or a business owner
+- A business management page, in case the user is a seller
+- A news page, giving users updates about events, eco-markets/flea markets, new store openings, etc.
+- A favorite/bookmark functionality
 
-
-<!-- 
+<!--
 Indicate an  initial/tentative list of high-level features - high-level capabilities or desired services of the system that are necessary to deliver benefits to the users.
  - Feature XPTO - a few words to briefly describe the feature
  - Feature ABCD - ...
@@ -89,7 +87,8 @@ Optionally, indicate an initial/tentative list of assumptions that you are doing
 -->
 
 ### Elevator Pitch
-<!-- 
+
+<!--
 Draft a small text to help you quickly introduce and describe your product in a short time (lift travel time ~90 seconds) and a few words (~800 characters), a technique usually known as elevator pitch.
 
 Take a look at the following links to learn some techniques:
@@ -110,18 +109,18 @@ Take a look at the following links to learn some techniques:
 <!-- 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
 
-For LEIC-ES-2024-25, the requirements will be gathered and documented as user stories. 
+For LEIC-ES-2024-25, the requirements will be gathered and documented as user stories.
 
 Please add in this section a concise summary of all the user stories.
 
 **User stories as GitHub Project Items**
-The user stories themselves should be created and described as items in your GitHub Project with the label "user story". 
+The user stories themselves should be created and described as items in your GitHub Project with the label "user story".
 
-A user story is a description of a desired functionality told from the perspective of the user or customer. A starting template for the description of a user story is *As a < user role >, I want < goal > so that < reason >.*
+A user story is a description of a desired functionality told from the perspective of the user or customer. A starting template for the description of a user story is _As a < user role >, I want < goal > so that < reason >._
 
 Name the item with either the full user story or a shorter name. In the “comments” field, add relevant notes, mockup images, and acceptance test scenarios, linking to the acceptance test in Gherkin when available, and finally estimate value and effort.
 
-**INVEST in good user stories**. 
+**INVEST in good user stories**.
 You may add more details after, but the shorter and complete, the better. In order to decide if the user story is good, please follow the [INVEST guidelines](https://xp123.com/articles/invest-in-good-stories-and-smart-tasks/).
 
 **User interface mockups**.
@@ -137,9 +136,17 @@ At the end, it is good to add a rough indication of the value of the user story 
 
 ### Domain model
 
-<!-- 
-To better understand the context of the software system, it is useful to have a simple UML class diagram with all and only the key concepts (names, attributes) and relationships involved of the problem domain addressed by your app. 
-Also provide a short textual description of each concept (domain class). 
+Our eco finder app connects users with eco-friendly stores and events in their area. **Users** can register as either **Buyers** or **Sellers**. **Buyers** can search for **Stores**, view **Profiles**, and add favorite **Stores** to their personal list. **Sellers** manage their businesses through the app, including updating store news and managing product listings.
+
+Each store is linked to a **Location**, a list of **Products**, and **News** updates. The interactive **Map** feature displays nearby stores, helping users easily discover eco-friendly options. The model is designed to promote seamless navigation and efficient store management.
+
+<div style="padding: 2em;" align="center" justify="center">
+  <img style="width: 100%" src="docs/domain_model.png"/>
+</div>
+
+<!--
+To better understand the context of the software system, it is useful to have a simple UML class diagram with all and only the key concepts (names, attributes) and relationships involved of the problem domain addressed by your app.
+Also provide a short textual description of each concept (domain class).
 
 Example:
  <p align="center" justify="center">
@@ -147,20 +154,27 @@ Example:
 </p>
 -->
 
-
 ## Architecture and Design
+
 <!--
-The architecture of a software system encompasses the set of key decisions about its organization. 
+The architecture of a software system encompasses the set of key decisions about its organization.
 
 A well written architecture document is brief and reduces the amount of time it takes new programmers to a project to understand the code to feel able to make modifications and enhancements.
 
-To document the architecture requires describing the decomposition of the system in their parts (high-level components) and the key behaviors and collaborations between them. 
+To document the architecture requires describing the decomposition of the system in their parts (high-level components) and the key behaviors and collaborations between them.
 
 In this section you should start by briefly describing the components of the project and their interrelations. You should describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
 -->
 
-
 ### Logical architecture
+
+The app architecture consists of three main layers: **User Interface (UI)** for visual elements and user interactions, **Business Logic** for handling core functionalities and integrating with external systems like *Geocoding and Google Maps APIs*, and the **Data Access Layer** for storing and retrieving data from the **Database** (*Firebase*).
+
+<div style="padding: 2em;" align="center" justify="center">
+  <img style="width: 100%" src="docs/logical_architecture.png"/>
+</div>
+
+
 <!--
 The purpose of this subsection is to document the high-level logical structure of the code (Logical View), using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
 
@@ -171,8 +185,14 @@ Example of _UML package diagram_ showing a _logical view_ of the Eletronic Ticke
 ![LogicalView](https://user-images.githubusercontent.com/9655877/160585416-b1278ad7-18d7-463c-b8c6-afa4f7ac7639.png)
 -->
 
-
 ### Physical architecture
+
+The app runs on a mobile device and interacts with external services to provide location-based features and real-time updates. It uses *Google Maps API* for location services and *Firebase Firestore* for data storage and retrieval. Push notifications are handled through *Firebase Cloud Messaging (FCM)*. The app also utilizes local storage on the device to cache data.
+
+<div style="padding: 2em;" align="center" justify="center">
+  <img style="width: 100%" src="docs/physical_architecture.png"/>
+</div>
+
 <!--
 The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams (Deployment View) or component diagrams (Implementation View), separate or integrated, showing the physical structure of the system.
 
@@ -183,8 +203,8 @@ Example of _UML deployment diagram_ showing a _deployment view_ of the Eletronic
 ![DeploymentView](https://user-images.githubusercontent.com/9655877/160592491-20e85af9-0758-4e1e-a704-0db1be3ee65d.png)
 -->
 
-
 ### Vertical prototype
+
 <!--
 To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system integrating as much technologies we can.
 
@@ -194,6 +214,7 @@ At this phase, instead of a complete user story, you can simply implement a smal
 -->
 
 ## Project management
+
 <!--
 Software project management is the art and science of planning and leading software projects, in which software projects are planned, implemented, monitored and controlled.
 
@@ -201,16 +222,16 @@ In the context of ESOF, we recommend each team to adopt a set of project managem
 
 Common practices of managing agile software development with Scrum are: backlog management, release management, estimation, Sprint planning, Sprint development, acceptance tests, and Sprint retrospectives.
 
-You can find below information and references related with the project management: 
+You can find below information and references related with the project management:
 
 * Backlog management: Product backlog and Sprint backlog in a [Github Projects board](https://github.com/orgs/FEUP-LEIC-ES-2023-24/projects/64);
 * Release management: [v0](#), v1, v2, v3, ...;
-* Sprint planning and retrospectives: 
+* Sprint planning and retrospectives:
   * plans: screenshots of Github Projects board at begin and end of each Sprint;
   * retrospectives: meeting notes in a document in the repository, addressing the following questions:
     * Did well: things we did well and should continue;
     * Do differently: things we should do differently and how;
-    * Puzzles: things we don’t know yet if they are right or wrong… 
+    * Puzzles: things we don’t know yet if they are right or wrong…
     * list of a few improvements to implement next Sprint;
 
 -->
