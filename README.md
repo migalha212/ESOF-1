@@ -205,6 +205,14 @@ Example of _UML deployment diagram_ showing a _deployment view_ of the Eletronic
 
 ### Vertical prototype
 
+We implemented a Map, using Google Maps API, and a simple welcome page.
+
+<div style="padding: 2em;" align="center" justify="center">
+  <img style="width: 32%" src="https://cdn.discordapp.com/attachments/1339198718628593679/1352764958517231636/image.png?ex=67df340b&is=67dde28b&hm=a8f9b11164fc9473a3bf311ea3224596e48ec17fc8bfbea2e2057d50ec2d6ec4&"/>
+    <img style="width: 32%" src="https://cdn.discordapp.com/attachments/1339198718628593679/1352765034476081212/image.png?ex=67df341d&is=67dde29d&hm=c241ac59f4ecc2010b5be77e33acbefa85dda9eda7b5e512b063122ffe21a02e&"/>
+      <img style="width: 32%" src="https://cdn.discordapp.com/attachments/1339198718628593679/1352765132337315860/image.png?ex=67df3434&is=67dde2b4&hm=0a9548b4d28c19f34de0a7f45100b8533dc91c0db7fc85fe0c8762913efa5a5d&"/>
+</div>
+
 <!--
 To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system integrating as much technologies we can.
 
