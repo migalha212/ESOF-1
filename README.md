@@ -140,9 +140,7 @@ Our eco finder app connects users with eco-friendly stores and events in their a
 
 Each store is linked to a **Location**, a list of **Products**, and **News** updates. The interactive **Map** feature displays nearby stores, helping users easily discover eco-friendly options. The model is designed to promote seamless navigation and efficient store management.
 
-<div style="padding: 2em;" align="center" justify="center">
-  <img style="width: 100%" src="docs/domain_model.png"/>
-</div>
+![Domain Model](docs/resources/umls/domain_model.png)
 
 <!--
 To better understand the context of the software system, it is useful to have a simple UML class diagram with all and only the key concepts (names, attributes) and relationships involved of the problem domain addressed by your app.
@@ -168,12 +166,9 @@ In this section you should start by briefly describing the components of the pro
 
 ### Logical architecture
 
-The app architecture consists of three main layers: **User Interface (UI)** for visual elements and user interactions, **Business Logic** for handling core functionalities and integrating with external systems like *Geocoding and Google Maps APIs*, and the **Data Access Layer** for storing and retrieving data from the **Database** (*Firebase*).
+The app architecture consists of three main layers: **User Interface (UI)** for visual elements and user interactions, **Business Logic** for handling core functionalities and integrating with external systems like _Geocoding and Google Maps APIs_, and the **Data Access Layer** for storing and retrieving data from the **Database** (_Firebase_).
 
-<div style="padding: 2em;" align="center" justify="center">
-  <img style="width: 100%" src="docs/logical_architecture.png"/>
-</div>
-
+![logical_architecture](docs/resources/umls/logical_architecture.png)
 
 <!--
 The purpose of this subsection is to document the high-level logical structure of the code (Logical View), using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
@@ -187,11 +182,9 @@ Example of _UML package diagram_ showing a _logical view_ of the Eletronic Ticke
 
 ### Physical architecture
 
-The app runs on a mobile device and interacts with external services to provide location-based features and real-time updates. It uses *Google Maps API* for location services and *Firebase Firestore* for data storage and retrieval. Push notifications are handled through *Firebase Cloud Messaging (FCM)*. The app also utilizes local storage on the device to cache data.
+The app runs on a mobile device and interacts with external services to provide location-based features and real-time updates. It uses _Google Maps API_ for location services and _Firebase Firestore_ for data storage and retrieval. Push notifications are handled through _Firebase Cloud Messaging (FCM)_. The app also utilizes local storage on the device to cache data.
 
-<div style="padding: 2em;" align="center" justify="center">
-  <img style="width: 100%" src="docs/physical_architecture.png"/>
-</div>
+![physical_architecture](docs/resources/umls/physical_architecture.png)
 
 <!--
 The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams (Deployment View) or component diagrams (Implementation View), separate or integrated, showing the physical structure of the system.
@@ -208,9 +201,9 @@ Example of _UML deployment diagram_ showing a _deployment view_ of the Eletronic
 We implemented a Map, using Google Maps API, and a simple welcome page.
 
 <div style="padding: 2em;" align="center" justify="center">
-  <img style="width: 32%" src="https://cdn.discordapp.com/attachments/1339198718628593679/1352764958517231636/image.png?ex=67df340b&is=67dde28b&hm=a8f9b11164fc9473a3bf311ea3224596e48ec17fc8bfbea2e2057d50ec2d6ec4&"/>
-    <img style="width: 32%" src="https://cdn.discordapp.com/attachments/1339198718628593679/1352765034476081212/image.png?ex=67df341d&is=67dde29d&hm=c241ac59f4ecc2010b5be77e33acbefa85dda9eda7b5e512b063122ffe21a02e&"/>
-      <img style="width: 32%" src="https://cdn.discordapp.com/attachments/1339198718628593679/1352765132337315860/image.png?ex=67df3434&is=67dde2b4&hm=0a9548b4d28c19f34de0a7f45100b8533dc91c0db7fc85fe0c8762913efa5a5d&"/>
+  <img style="width: 32%" src="docs/resources/mockups/about_eco_finder.png"/>
+    <img style="width: 32%" src="docs/resources/mockups/our_team.png"/>
+      <img style="width: 32%" src="docs/resources/mockups/map.png"/>
 </div>
 
 <!--
@@ -246,7 +239,17 @@ You can find below information and references related with the project managemen
 
 ### Sprint 0
 
+> #### Github Projects Board
+> 
+> ![sprint_0](docs/resources/scrum_board/sprint0.png)
+
 ### Sprint 1
+
+> #### Github Projects Board
+> - Beginning
+> ![sprint_1](docs/resources/scrum_board/sprint1.png)
+>
+> - End
 
 ### Sprint 2
 
