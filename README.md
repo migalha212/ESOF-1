@@ -241,15 +241,21 @@ You can find below information and references related with the project managemen
 
 > #### Github Projects Board
 > 
-> ![sprint_0](docs/resources/scrum_board/sprint0.png)
+> ![sprint_0](docs/resources/scrum_board/sprint0.png) 
 
 ### Sprint 1
 
 > #### Github Projects Board
-> - Beginning
+> Implement database functionality.
+> - **Beginning**
+> 
 > ![sprint_1](docs/resources/scrum_board/sprint1.png)
 >
-> - End
+> - **End**
+>
+> #### Retrospectives
+>
+> 
 
 ### Sprint 2
 
