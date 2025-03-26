@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -20,7 +21,38 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     _getUserLocation();
+    _loadEcoMarkets();
   }
+
+  Future<void> _loadEcoMarkets() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('businesses').get();
+
+      print("🔍 Número de mercados encontrados: ${querySnapshot.docs.length}");
+
+      Set<Marker> newMarkers = querySnapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+
+        // Debug: Ver dados carregados
+        print("📌 Mercado encontrado: ${data['name']}, Lat: ${data['latitude']}, Lng: ${data['longitude']}");
+
+        return Marker(
+          markerId: MarkerId(doc.id),
+          position: LatLng(data['latitude'], data['longitude']),
+          infoWindow: InfoWindow(title: data['name'], snippet: data['description']),
+        );
+      }).toSet();
+
+      setState(() {
+        _markers = newMarkers;
+      });
+
+      print("✅ Marcadores adicionados: ${_markers.length}");
+    } catch (e) {
+      print("❌ Erro ao carregar mercados: $e");
+    }
+  }
+
 
   void _getUserLocation() async {
     bool serviceEnabled = await _location.serviceEnabled();

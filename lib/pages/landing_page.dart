@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:esof/pages/map_page.dart';
+import 'package:esof/pages/add_bussiness.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -19,206 +20,201 @@ class LandingPage extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20),
-                // Logo and App Name
-                Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.eco_rounded,
-                        size: 72,
+          child: Stack( // Adicionado para os Positioned widgets
+            children: [
+              SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 20),
+
+                    // Logo e Nome do App
+                    Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(Icons.eco_rounded, size: 72, color: Colors
+                              .white),
+                          Text(
+                            'EcoFinder',
+                            style: TextStyle(
+                              fontSize: 42,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Sustainable Shopping Guide',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white.withOpacity(0.9),
+                              fontStyle: FontStyle.italic,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: 30),
+
+                    // Descrição do Projeto
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
                         color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'EcoFinder',
-                        style: TextStyle(
-                          fontSize: 42,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 1.2,
-                        ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'About EcoFinder',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF3E8E4D),
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Text(
+                            'EcoFinder helps you discover sustainable, fair-trade, and eco-friendly businesses. '
+                                'Navigate through our interactive map, search for specific stores, and stay updated with the latest sustainability news.',
+                            style: TextStyle(
+                              fontSize: 16,
+                              height: 1.5,
+                              color: Colors.black87,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Key Features:',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF3E8E4D),
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          FeatureItem(icon: Icons.map,
+                              text: 'Interactive store map'),
+                          FeatureItem(icon: Icons.search,
+                              text: 'Advanced search capabilities'),
+                          FeatureItem(icon: Icons.list_alt,
+                              text: 'Filtered business listings'),
+                          FeatureItem(icon: Icons.bookmark,
+                              text: 'Bookmark your favorites'),
+                          FeatureItem(icon: Icons.newspaper,
+                              text: 'Sustainability news'),
+                        ],
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Sustainable Shopping Guide',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white.withOpacity(0.9),
-                          fontStyle: FontStyle.italic,
-                        ),
-                        textAlign: TextAlign.center,
+                    ),
+
+                    SizedBox(height: 30),
+
+                    // Seção da Equipe
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Our Team',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF3E8E4D),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          TeamMemberCard(
+                            name: 'Arnaldo Ferraz Lopes',
+                            email: 'up202307659@fe.up.pt',
+                          ),
+                          TeamMemberCard(
+                            name: 'Diogo Sousa Campeão',
+                            email: 'up202307177@fe.up.pt',
+                          ),
+                          TeamMemberCard(
+                            name: 'José Pedro Marques Ferreira',
+                            email: 'up202305478@fe.up.pt',
+                          ),
+                          TeamMemberCard(
+                            name: 'Miguel Borges Pereira',
+                            email: 'up202304387@fe.up.pt',
+                          ),
+                          TeamMemberCard(
+                            name: 'Sérgio Miguel Cardoso Almeida',
+                            email: 'up202305946@fe.up.pt',
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: 100),
+                    // Espaço extra para os botões flutuantes
+                  ],
                 ),
+              ),
 
-                SizedBox(height: 30),
-
-                // Description Card
-                Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'About EcoFinder',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF3E8E4D),
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'EcoFinder helps you discover sustainable, fair-trade, and eco-friendly businesses. '
-                            'Navigate through our interactive map, search for specific stores, and stay updated with the latest sustainability news.',
-                        style: TextStyle(
-                          fontSize: 16,
-                          height: 1.5,
-                          color: Colors.black87,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Key Features:',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF3E8E4D),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      FeatureItem(icon: Icons.map, text: 'Interactive store map'),
-                      FeatureItem(icon: Icons.search, text: 'Advanced search capabilities'),
-                      FeatureItem(icon: Icons.list_alt, text: 'Filtered business listings'),
-                      FeatureItem(icon: Icons.bookmark, text: 'Bookmark your favorites'),
-                      FeatureItem(icon: Icons.newspaper, text: 'Sustainability news'),
-                    ],
-                  ),
+              // Botões flutuantes
+              Positioned(
+                bottom: 80,
+                right: 16,
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddBusinessPage()),
+                    );
+                  },
+                  backgroundColor: Color(0xFF3E8E4D),
+                  icon: Icon(Icons.add),
+                  label: Text('Add Business'),
                 ),
-
-                SizedBox(height: 30),
-
-                // Team Section
-                Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Our Team',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF3E8E4D),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      TeamMemberCard(
-                        name: 'Arnaldo Ferraz Lopes',
-                        email: 'up202307659@fe.up.pt',
-                      ),
-                      TeamMemberCard(
-                        name: 'Diogo Sousa Campeão',
-                        email: 'up202307177@fe.up.pt',
-                      ),
-                      TeamMemberCard(
-                        name: 'José Pedro Marques Ferreira',
-                        email: 'up202305478@fe.up.pt',
-                      ),
-                      TeamMemberCard(
-                        name: 'Miguel Borges Pereira',
-                        email: 'up202304387@fe.up.pt',
-                      ),
-                      TeamMemberCard(
-                        name: 'Sérgio Miguel Cardoso Almeida',
-                        email: 'up202305946@fe.up.pt',
-                      ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: 40),
-
-                // Big Button to Map
-                InkWell(
-                  onTap: () {
+              ),
+              Positioned(
+                bottom: 16,
+                right: 16,
+                child: FloatingActionButton.extended(
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MapPage()),
                     );
                   },
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 10,
-                          offset: Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.map_outlined,
-                          size: 28,
-                          color: Color(0xFF3E8E4D),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          'EXPLORE THE MAP',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF3E8E4D),
-                            letterSpacing: 1.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  backgroundColor: Colors.white,
+                  icon: Icon(Icons.map, color: Color(0xFF3E8E4D)),
+                  label: Text('Explore Map',
+                      style: TextStyle(color: Color(0xFF3E8E4D))),
                 ),
-
-                SizedBox(height: 30),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -226,7 +222,6 @@ class LandingPage extends StatelessWidget {
   }
 }
 
-// Helper Widget for Feature Items
 class FeatureItem extends StatelessWidget {
   final IconData icon;
   final String text;
