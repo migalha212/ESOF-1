@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "961900566768",
+    "project_id": "esof-6405c",
+    "storage_bucket": "esof-6405c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961900566768:android:a72f3d6496ec3906edca35",
+        "android_client_info": {
+          "package_name": "com.example.esof"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5CaXTyR32hEYRRcuWbvvkbZpmFrWXBR4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
