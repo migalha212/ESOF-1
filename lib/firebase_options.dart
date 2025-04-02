@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'esof-6405c.firebasestorage.app',
     measurementId: 'G-Z7M44VJG6K',
   );
+
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:esof/pages/map_page.dart';
-import 'package:esof/pages/add_bussiness.dart';
+import 'package:EcoFinder/pages/map_page.dart';
+import 'package:EcoFinder/pages/add_bussiness.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
