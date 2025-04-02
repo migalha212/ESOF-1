@@ -13,7 +13,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   static const LatLng _initialPosition = LatLng(41.17740754929651, -8.596500719923418);
   late GoogleMapController _mapController;
-  Location _location = Location();
+  final Location _location = Location();
   Set<Marker> _markers = {};
   bool _hovering = false;
 

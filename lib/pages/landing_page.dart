@@ -14,7 +14,7 @@ class LandingPage extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF3E8E4D).withOpacity(0.9),
+              Color(0xFF3E8E4D).withValues(alpha: 0.9),
               Color(0xFF2E6E3D),
             ],
           ),
@@ -33,7 +33,7 @@ class LandingPage extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Column(
@@ -54,7 +54,7 @@ class LandingPage extends StatelessWidget {
                             'Sustainable Shopping Guide',
                             style: TextStyle(
                               fontSize: 18,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               fontStyle: FontStyle.italic,
                             ),
                             textAlign: TextAlign.center,
@@ -73,7 +73,7 @@ class LandingPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 10,
                             offset: Offset(0, 5),
                           ),
@@ -134,7 +134,7 @@ class LandingPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 10,
                             offset: Offset(0, 5),
                           ),
@@ -187,6 +187,7 @@ class LandingPage extends StatelessWidget {
                 right: 16,
                 child: FloatingActionButton.extended(
                   onPressed: () {
+                    print('Add Business button pressed');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -281,7 +282,7 @@ class TeamMemberCard extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: Color(0xFF3E8E4D).withOpacity(0.2),
+            backgroundColor: Color(0xFF3E8E4D).withValues(alpha: 0.2),
             radius: 22,
             child: Text(
               name.substring(0, 1),

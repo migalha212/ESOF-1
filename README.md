@@ -44,7 +44,6 @@ Business modeling in software development involves defining the product's vision
 
 ### Product Vision
 
-First brainstorming idea: Sustainable Shopping Guide
 An app to help people to buy from sustainable, fair-trade and eco-friendly businesses offering features to navigate, search and be informed about updates on those markets.
 
 <!--
