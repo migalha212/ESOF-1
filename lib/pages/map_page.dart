@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -11,35 +12,43 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  static const LatLng _initialPosition = LatLng(41.17740754929651, -8.596500719923418);
+  static const LatLng _initialPosition =
+  LatLng(41.17740754929651, -8.596500719923418);
   late GoogleMapController _mapController;
   final Location _location = Location();
   Set<Marker> _markers = {};
   bool _hovering = false;
+  String? _mapStyle; // Stores your custom map style
 
   @override
   void initState() {
     super.initState();
+    _loadMapStyle(); // Load the custom map style
     _getUserLocation();
     _loadEcoMarkets();
   }
 
+  Future<void> _loadMapStyle() async {
+    _mapStyle = await rootBundle.loadString('assets/map_style.json');
+    setState(() {}); // Trigger rebuild to apply the style once loaded
+  }
+
   Future<void> _loadEcoMarkets() async {
     try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('businesses').get();
+      QuerySnapshot querySnapshot =
+      await FirebaseFirestore.instance.collection('businesses').get();
 
       print("🔍 Número de mercados encontrados: ${querySnapshot.docs.length}");
 
       Set<Marker> newMarkers = querySnapshot.docs.map((doc) {
         var data = doc.data() as Map<String, dynamic>;
-
-        // Debug: Ver dados carregados
-        print("📌 Mercado encontrado: ${data['name']}, Lat: ${data['latitude']}, Lng: ${data['longitude']}");
-
+        print(
+            "📌 Mercado encontrado: ${data['name']}, Lat: ${data['latitude']}, Lng: ${data['longitude']}");
         return Marker(
           markerId: MarkerId(doc.id),
           position: LatLng(data['latitude'], data['longitude']),
-          infoWindow: InfoWindow(title: data['name'], snippet: data['description']),
+          infoWindow:
+          InfoWindow(title: data['name'], snippet: data['description']),
         );
       }).toSet();
 
@@ -52,7 +61,6 @@ class _MapPageState extends State<MapPage> {
       print("❌ Erro ao carregar mercados: $e");
     }
   }
-
 
   void _getUserLocation() async {
     bool serviceEnabled = await _location.serviceEnabled();
@@ -69,21 +77,8 @@ class _MapPageState extends State<MapPage> {
 
     LocationData locationData = await _location.getLocation();
     if (locationData.latitude != null && locationData.longitude != null) {
-
-      // Marker of initial location
-
-      //setState(() {
-      //  _markers.add(
-      //    Marker(
-      //        markerId: MarkerId('user_location'),
-      //        position: LatLng(locationData.latitude!, locationData.longitude!)
-      //    ),
-      //  );
-      //});
-
       _mapController.animateCamera(CameraUpdate.newLatLng(
-          LatLng(locationData.latitude!, locationData.longitude!)
-      ));
+          LatLng(locationData.latitude!, locationData.longitude!)));
     }
   }
 
@@ -93,13 +88,12 @@ class _MapPageState extends State<MapPage> {
       body: Stack(
         children: [
           GoogleMap(
-            initialCameraPosition: CameraPosition(
-                target: _initialPosition,
-                zoom: 14
-            ),
+            initialCameraPosition:
+            CameraPosition(target: _initialPosition, zoom: 14),
             markers: _markers,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
+            style: _mapStyle, // Apply the custom map style here
             onMapCreated: (controller) {
               _mapController = controller;
             },
