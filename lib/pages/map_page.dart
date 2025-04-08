@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-import 'landing_page.dart';
+//import 'landing_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -126,7 +126,7 @@ class _MapPageState extends State<MapPage> {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 8,
                           offset: Offset(0, 3),
                         )
