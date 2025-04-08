@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class AddBusinessPage extends StatefulWidget {
   @override
   _AddBusinessPageState createState() => _AddBusinessPageState();
@@ -9,7 +8,6 @@ class AddBusinessPage extends StatefulWidget {
 
 class BusinessService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-
   Future<void> addBusiness(SustainableBusiness business) async {
     try {
       await _db.collection('businesses').add(business.toMap());
@@ -19,12 +17,10 @@ class BusinessService {
   }
 }
 
-
 class _AddBusinessPageState extends State<AddBusinessPage> {
   final _formKey = GlobalKey<FormState>();
   final BusinessService _businessService = BusinessService();
 
-  // Controladores para campos de texto
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -33,65 +29,186 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
   final TextEditingController _latitudeController = TextEditingController();
   final TextEditingController _longitudeController = TextEditingController();
 
-  // Lista de categorias selecionáveis
-  final List<String> _allCategories = [
-    'Organic',
-    'Fair Trade',
-    'Zero Waste',
-    'Local Produce',
-    'Renewable Energy',
-    'Eco-Friendly Packaging',
-    'Sustainable Fashion',
-    'Green Restaurant',
-    'Recycling',
-  ];
+  final Map<String, Map<String, dynamic>> _primaryCategories = {
+    'Alimentos': {
+      'emoji': '🍏',
+      'subcategories': ['Orgânicos', 'Veganos', 'Artesanais'],
+    },
+    'Roupas': {
+      'emoji': '👗',
+      'subcategories': ['Reciclada', 'Eco-Friendly', 'Segunda Mao'],
+    },
+    'Itens Colecionáveis': {
+      'emoji': '🎁',
+      'subcategories': ['Vintage', 'Edição Limitada', 'Antiguidades'],
+    },
+    'Decoração': {
+      'emoji': '🏡',
+      'subcategories': ['Móveis', 'Iluminação', 'Arte'],
+    },
+    'Eletrônicos': {
+      'emoji': '📱',
+      'subcategories': ['Smartphones', 'Computadores', 'Acessórios'],
+    },
+    'Brinquedos': {
+      'emoji': '🧸',
+      'subcategories': ['Educativos', 'Criativos', 'Lúdicos'],
+    },
+    'Saúde & Beleza': {
+      'emoji': '💄',
+      'subcategories': ['Cosméticos', 'Cuidados Pessoais', 'Fitness'],
+    },
+    'Artesanato': {
+      'emoji': '🧵',
+      'subcategories': ['Feito à mão', 'Reciclado', 'Regional'],
+    },
+    'Livros': {
+      'emoji': '📚',
+      'subcategories': ['Romance', 'Não-Ficção', 'Infantis'],
+    },
+    'Esportes & Lazer': {
+      'emoji': '⚽',
+      'subcategories': ['Academia', 'Ao ar livre', 'Indoor'],
+    },
+  };
 
-  // Categorias selecionadas
-  List<String> _selectedCategories = [];
+  List<String> _selectedPrimaryCategories = [];
+  Map<String, List<String>> _selectedSubcategories = {};
 
-  // Mapa de práticas de sustentabilidade
-  Map<String, bool> _sustainabilityPractices = {
-    'Solar Energy': false,
-    'Composting': false,
-    'Water Conservation': false,
-    'Plastic-Free': false,
-    'Local Sourcing': false,
-    'Ethical Labor': false,
+  Map<String, bool> _certifications = {
+    'Certificado Orgânico': false,
+    'Fair Trade Certified': false,
+    'Green Business Award': false,
   };
 
   void _submitBusiness() async {
-    if (_formKey.currentState!.validate()) {
-      // Coletar práticas de sustentabilidade selecionadas
-      Map<String, dynamic> sustainability = {};
-      _sustainabilityPractices.forEach((key, value) {
-        if (value) sustainability[key] = true;
+    if (_formKey.currentState!.validate() && _selectedPrimaryCategories.isNotEmpty) {
+      List<String> primaries = List.from(_selectedPrimaryCategories);
+      Map<String, dynamic> subs = {};
+      _selectedSubcategories.forEach((k, v) => subs[k] = v);
+      List<String> certs = [];
+      _certifications.forEach((k, v) {
+        if (v) certs.add(k);
       });
-
       SustainableBusiness business = SustainableBusiness(
-        id: '', // Firestore gerará automaticamente
+        id: '',
         name: _nameController.text,
         description: _descriptionController.text,
         latitude: double.parse(_latitudeController.text),
         longitude: double.parse(_longitudeController.text),
-        categories: _selectedCategories,
+        primaryCategories: primaries,
+        subcategories: subs,
         address: _addressController.text,
         contactPhone: _phoneController.text,
         website: _websiteController.text,
-        sustainability: sustainability,
+        certifications: certs,
       );
-
       try {
         await _businessService.addBusiness(business);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Negócio adicionado com sucesso!')),
-        );
-        Navigator.pop(context); // Voltar para a tela anterior
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Negócio adicionado com sucesso!')));
+        Navigator.pop(context);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao adicionar negócio: $e')),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Erro ao adicionar negócio: $e')));
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Selecione pelo menos uma categoria primária')));
     }
+  }
+
+  Widget _buildPrimaryCategoryTile(String category, Map<String, dynamic> data) {
+    bool selected = _selectedPrimaryCategories.contains(category);
+    return Card(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        child: ExpansionTile(
+          key: PageStorageKey(category),
+          initiallyExpanded: selected,
+          title: Row(
+            children: [
+              Text('${data['emoji']} $category'),
+              Spacer(),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    if (selected) {
+                      _selectedPrimaryCategories.remove(category);
+                      _selectedSubcategories.remove(category);
+                    } else {
+                      if (_selectedPrimaryCategories.length < 3) {
+                        _selectedPrimaryCategories.add(category);
+                        _selectedSubcategories[category] = [];
+                      }
+                    }
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Icon(
+                    selected ? Icons.check_box : Icons.check_box_outline_blank,
+                    color: selected ? Colors.green : null,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          onExpansionChanged: (expanded) {
+            if (expanded && !selected) {
+              if (_selectedPrimaryCategories.length < 2) {
+                setState(() {
+                  _selectedPrimaryCategories.add(category);
+                  _selectedSubcategories[category] = [];
+                });
+              }
+            }
+          },
+          children: [
+            Wrap(
+              spacing: 8,
+              children: List<String>.from(data['subcategories']).map((sub) {
+                bool subSelected = _selectedSubcategories[category]?.contains(sub) ?? false;
+                return ChoiceChip(
+                  label: Text(sub),
+                  selected: subSelected,
+                  onSelected: (bool sel) {
+                    setState(() {
+                      if (sel) {
+                        if (_selectedSubcategories[category] == null) {
+                          _selectedSubcategories[category] = [sub];
+                        } else {
+                          _selectedSubcategories[category]!.add(sub);
+                        }
+                      } else {
+                        _selectedSubcategories[category]?.remove(sub);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedPrimaryCategories.remove(category);
+                    _selectedSubcategories.remove(category);
+                  });
+                },
+                child: Text('Desselecionar'),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -108,19 +225,15 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Campos de texto para informações básicas
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Nome do Negócio',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o nome do negócio';
-                  }
-                  return null;
-                },
+                validator: (value) => (value == null || value.isEmpty)
+                    ? 'Por favor, insira o nome do negócio'
+                    : null,
               ),
               SizedBox(height: 16),
               TextFormField(
@@ -130,58 +243,37 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira uma descrição';
-                  }
-                  return null;
-                },
+                validator: (value) => (value == null || value.isEmpty)
+                    ? 'Por favor, insira uma descrição'
+                    : null,
               ),
               SizedBox(height: 16),
-              // Seleção de Categorias
               Text(
-                'Categorias de Sustentabilidade',
+                'Categorias Primárias (Max. 3)',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              Wrap(
-                spacing: 8,
-                children: _allCategories.map((category) {
-                  return ChoiceChip(
-                    label: Text(category),
-                    selected: _selectedCategories.contains(category),
-                    onSelected: (bool selected) {
-                      setState(() {
-                        if (selected) {
-                          _selectedCategories.add(category);
-                        } else {
-                          _selectedCategories.remove(category);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
+              ..._primaryCategories.entries
+                  .map((entry) => _buildPrimaryCategoryTile(entry.key, entry.value))
+                  .toList(),
               SizedBox(height: 16),
-              // Práticas de Sustentabilidade
               Text(
-                'Práticas de Sustentabilidade',
+                'Certificações / Prêmios',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Column(
-                children: _sustainabilityPractices.keys.map((practice) {
+                children: _certifications.keys.map((cert) {
                   return CheckboxListTile(
-                    title: Text(practice),
-                    value: _sustainabilityPractices[practice],
+                    title: Text(cert),
+                    value: _certifications[cert],
                     onChanged: (bool? value) {
                       setState(() {
-                        _sustainabilityPractices[practice] = value!;
+                        _certifications[cert] = value!;
                       });
                     },
                   );
                 }).toList(),
               ),
               SizedBox(height: 16),
-              // Campos de localização
               Row(
                 children: [
                   Expanded(
@@ -192,12 +284,8 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Insira a latitude';
-                        }
-                        return null;
-                      },
+                      validator: (value) =>
+                      (value == null || value.isEmpty) ? 'Insira a latitude' : null,
                     ),
                   ),
                   SizedBox(width: 16),
@@ -209,18 +297,13 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Insira a longitude';
-                        }
-                        return null;
-                      },
+                      validator: (value) =>
+                      (value == null || value.isEmpty) ? 'Insira a longitude' : null,
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 16),
-              // Campos de contato
               TextFormField(
                 controller: _addressController,
                 decoration: InputDecoration(
@@ -269,11 +352,12 @@ class SustainableBusiness {
   String description;
   double latitude;
   double longitude;
-  List<String> categories;
+  List<String> primaryCategories;
+  Map<String, dynamic> subcategories;
   String address;
   String contactPhone;
   String website;
-  Map<String, dynamic> sustainability;
+  List<String> certifications;
 
   SustainableBusiness({
     required this.id,
@@ -281,25 +365,26 @@ class SustainableBusiness {
     required this.description,
     required this.latitude,
     required this.longitude,
-    required this.categories,
+    required this.primaryCategories,
+    required this.subcategories,
     required this.address,
     required this.contactPhone,
     required this.website,
-    required this.sustainability,
+    required this.certifications,
   });
 
-  // Converter para JSON antes de enviar para Firestore
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'description': description,
       'latitude': latitude,
       'longitude': longitude,
-      'categories': categories,
+      'primaryCategories': primaryCategories,
+      'subcategories': subcategories,
       'address': address,
       'contactPhone': contactPhone,
       'website': website,
-      'sustainability': sustainability,
+      'certifications': certifications,
     };
   }
 }
