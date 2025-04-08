@@ -32,7 +32,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
   final Map<String, Map<String, dynamic>> _primaryCategories = {
     'Alimentos': {
       'emoji': '🍏',
-      'subcategories': ['Orgânicos', 'Veganos', 'Artesanais'],
+      'subcategories': ['Orgânicos', 'Vegan', 'Biológicos'],
     },
     'Roupas': {
       'emoji': '👗',
@@ -52,7 +52,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
     },
     'Brinquedos': {
       'emoji': '🧸',
-      'subcategories': ['Educativos', 'Criativos', 'Lúdicos'],
+      'subcategories': ['Artesanais', 'Segunda Mão', 'Reciclados'],
     },
     'Saúde & Beleza': {
       'emoji': '💄',
