@@ -36,7 +36,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
     },
     'Roupas': {
       'emoji': '👗',
-      'subcategories': ['Reciclada', 'Eco-Friendly', 'Segunda Mao'],
+      'subcategories': ['Reciclada', 'Eco-Friendly', 'Segunda Mão'],
     },
     'Itens Colecionáveis': {
       'emoji': '🎁',
@@ -46,7 +46,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
       'emoji': '🏡',
       'subcategories': ['Móveis', 'Iluminação', 'Arte'],
     },
-    'Eletrônicos': {
+    'Eletrónicos': {
       'emoji': '📱',
       'subcategories': ['Smartphones', 'Computadores', 'Acessórios'],
     },
@@ -64,11 +64,11 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
     },
     'Livros': {
       'emoji': '📚',
-      'subcategories': ['Romance', 'Não-Ficção', 'Infantis'],
+      'subcategories': ['Romance', 'Segunda Mão', 'Infantis'],
     },
-    'Esportes & Lazer': {
+    'Desportos & Lazer': {
       'emoji': '⚽',
-      'subcategories': ['Academia', 'Ao ar livre', 'Indoor'],
+      'subcategories': ['Ginasio', 'Ao ar livre', 'Indoor'],
     },
   };
 
