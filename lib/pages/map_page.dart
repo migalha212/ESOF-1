@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:EcoFinder/pages/landing_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -99,6 +100,43 @@ class _MapPageState extends State<MapPage> {
               _mapController = controller;
             },
           ),
+
+          // Home button
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: ElevatedButton.icon(
+                onPressed: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LandingPage(),
+                      )
+                  );
+                },
+                icon: Icon(Icons.home, color: Colors.white, size: 30),
+                label: Text('Home',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: _hovering ? 22 : 20,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(200, 50),
+                  backgroundColor: Color(0xFF3E8E4D),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                  )
+                ),
+              ),
+            )
+
+          ),
+
+          // Search Button
           Positioned(
             top: 40,
             left: 0,
@@ -117,7 +155,7 @@ class _MapPageState extends State<MapPage> {
                   },
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 200),
-                    width: _hovering ? 180 : 160,
+                    width: 200,
                     height: 50,
                     decoration: BoxDecoration(
                       color: Color(0xFF3E8E4D),
@@ -131,13 +169,24 @@ class _MapPageState extends State<MapPage> {
                       ],
                     ),
                     child: Center(
-                      child: Text(
-                        'EcoFinder',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: _hovering ? 22 : 20,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.manage_search,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Search Stores',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: _hovering ? 22 : 20,
+                            ),
+                          ),
+                        ]
                       ),
                     ),
                   ),

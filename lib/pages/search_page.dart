@@ -27,9 +27,11 @@ class _SearchPageState extends State<SearchPage> {
           .collection('businesses')
           .get();
     }
+
     setState(() {
       _searchResults = querySnapshot.docs;
     });
+
   }
 
   @override
