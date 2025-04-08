@@ -15,21 +15,21 @@ class _SearchPageState extends State<SearchPage> {
   // Function to perform the search
   Future<void> _searchMarkets() async {
     String query = _searchController.text;
+    QuerySnapshot querySnapshot;
     if (query.isNotEmpty) {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      querySnapshot = await FirebaseFirestore.instance
           .collection('businesses')
           .where('name', isGreaterThanOrEqualTo: query)
           .where('name', isLessThanOrEqualTo: query + '\uf8ff')
           .get();
-
-      setState(() {
-        _searchResults = querySnapshot.docs;
-      });
     } else {
-      setState(() {
-        _searchResults = [];
-      });
+      querySnapshot = await FirebaseFirestore.instance
+          .collection('businesses')
+          .get();
     }
+    setState(() {
+      _searchResults = querySnapshot.docs;
+    });
   }
 
   @override
