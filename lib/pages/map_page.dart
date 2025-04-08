@@ -1,8 +1,11 @@
+import 'package:EcoFinder/pages/search_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
+
+import 'landing_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -106,35 +109,44 @@ class _MapPageState extends State<MapPage> {
               child: MouseRegion(
                 onEnter: (_) => setState(() => _hovering = true),
                 onExit: (_) => setState(() => _hovering = false),
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  width: _hovering ? 180 : 160,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF3E8E4D),
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 8,
-                        offset: Offset(0, 3),
-                      )
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'EcoFinder',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: _hovering ? 22 : 20,
+                child: GestureDetector(
+                  onTap: () {
+                    // Navigate to the SearchPage
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SearchPage()),
+                    );
+                  },
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 200),
+                    width: _hovering ? 180 : 160,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF3E8E4D),
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 8,
+                          offset: Offset(0, 3),
+                        )
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'EcoFinder',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: _hovering ? 22 : 20,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
