@@ -1,3 +1,4 @@
+import 'package:EcoFinder/common_widgets/navbar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class _SearchPageState extends State<SearchPage> {
   final ScrollController _filterScrollController = ScrollController();
   List<DocumentSnapshot> _searchResults = [];
   bool _isFilterExpanded = false;
-
+  final int _index = 0;
   final Map<String, String> _filterCategories = {
     'Alimentos': '🍏',
     'Roupas': '👗',
@@ -138,9 +139,12 @@ class _SearchPageState extends State<SearchPage> {
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: NavBar(selectedIndex: _index),
       appBar: AppBar(
         title: Text('Search EcoMarkets'),
         backgroundColor: Color(0xFF3E8E4D),
