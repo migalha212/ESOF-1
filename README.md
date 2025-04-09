@@ -105,7 +105,7 @@ Take a look at the following links to learn some techniques:
 - As a user I need to be able to filter through a list of shops so I can find stores that better fit my needs.
 - As a user I need to be able to search for shops using a search bar so I can find a specific store faster.
 - As a user i want to be able to see an establishments whole profile such as product origins and practices so that i can make better informed decisions.
-<!-- 
+<!--
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
 
 For LEIC-ES-2024-25, the requirements will be gathered and documented as user stories.
@@ -239,22 +239,38 @@ You can find below information and references related with the project managemen
 ### Sprint 0
 
 > #### Github Projects Board
-> 
-> ![sprint_0](docs/resources/scrum_board/sprint0.png) 
+>
+> ![sprint_0](docs/resources/scrum_board/sprint0.png)
 
 ### Sprint 1
 
 > #### Github Projects Board
-> Implement database functionality.
+>
+> Goals: Implement database, search, and map functionality.
+>
 > - **Beginning**
-> 
-> ![sprint_1](docs/resources/scrum_board/sprint1.png)
+>
+> ![sprint_1](docs/resources/scrum_board/sprint1_start.png)
 >
 > - **End**
 >
+> ![sprint_1_end](docs/resources/scrum_board/sprint1_end.png)
+>
 > #### Retrospectives
 >
-> 
+> - **Did well:**
+>   - Successfully implemented Firebase for storing and querying businesses.
+>   - Delivered key user stories: map visualization, search bar, and filtering functionality.
+>   - Effective teamwork and task management.
+> - **Do differently:**
+>   - Improve task estimation to avoid last-minute efforts.
+>   - Allocate more time for testing edge cases.
+> - **Puzzles:**
+>   - Learning how to use Firebase.
+>   - Handling edge cases in filtering and search functionalities (e.g., case-insensitive search).
+> - **Improvements for next sprint:**
+>   - Enhance time management by setting clearer deadlines for tasks.
+>   - Improve team organization by holding more frequent check-ins to track progress.
 
 ### Sprint 2
 
