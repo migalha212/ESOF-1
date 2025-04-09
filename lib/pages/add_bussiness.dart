@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:EcoFinder/pages/location_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddBusinessPage extends StatefulWidget {
@@ -276,42 +277,10 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                 }).toList(),
               ),
               SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _latitudeController,
-                      decoration: InputDecoration(
-                        labelText: 'Latitude',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) =>
-                      (value == null || value.isEmpty) ? 'Insira a latitude' : null,
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _longitudeController,
-                      decoration: InputDecoration(
-                        labelText: 'Longitude',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) =>
-                      (value == null || value.isEmpty) ? 'Insira a longitude' : null,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _addressController,
-                decoration: InputDecoration(
-                  labelText: 'Endereço',
-                  border: OutlineInputBorder(),
-                ),
+              LocationPicker(
+                latitudeController: _latitudeController,
+                longitudeController: _longitudeController,
+                addressController: _addressController,
               ),
               SizedBox(height: 16),
               TextFormField(
