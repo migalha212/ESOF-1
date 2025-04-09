@@ -26,7 +26,7 @@ class _SearchPageState extends State<SearchPage> {
     'Desportos & Lazer': '⚽',
   };
 
-  List<String> _selectedFilterCategories = [];
+  final List<String> _selectedFilterCategories = [];
 
   Future<void> _searchMarkets() async {
     String query = _searchController.text;
@@ -35,7 +35,7 @@ class _SearchPageState extends State<SearchPage> {
       querySnapshot = await FirebaseFirestore.instance
           .collection('businesses')
           .where('name', isGreaterThanOrEqualTo: query)
-          .where('name', isLessThanOrEqualTo: query + '\uf8ff')
+          .where('name', isLessThanOrEqualTo: '$query\uf8ff')
           .get();
     } else {
       querySnapshot = await FirebaseFirestore.instance.collection('businesses').get();
@@ -43,20 +43,20 @@ class _SearchPageState extends State<SearchPage> {
 
     List<DocumentSnapshot> docs = querySnapshot.docs.where((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
       if (_selectedFilterCategories.isEmpty) return true;
+
       List<dynamic>? docCats = data['primaryCategories'];
-      for (String cat in _selectedFilterCategories) {
-        if (docCats == null || !docCats.contains(cat)) {
-          return false;
-        }
-      }
-      return true;
+
+      return docCats != null &&
+          _selectedFilterCategories.any((cat) => docCats.contains(cat));
     }).toList();
 
     setState(() {
       _searchResults = docs;
     });
   }
+
 
   Widget _buildFilterList() {
     return Column(
@@ -107,8 +107,8 @@ class _SearchPageState extends State<SearchPage> {
                       _isFilterExpanded = false;
                     });
                   },
-                  child: Text('Apply'),
                   style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF3E8E4D)),
+                  child: Text('Apply'),
                 ),
               ],
             ),
