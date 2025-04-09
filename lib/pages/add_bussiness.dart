@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddBusinessPage extends StatefulWidget {
+  const AddBusinessPage({super.key});
+
   @override
   _AddBusinessPageState createState() => _AddBusinessPageState();
 }
@@ -72,10 +74,10 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
     },
   };
 
-  List<String> _selectedPrimaryCategories = [];
-  Map<String, List<String>> _selectedSubcategories = {};
+  final List<String> _selectedPrimaryCategories = [];
+  final Map<String, List<String>> _selectedSubcategories = {};
 
-  Map<String, bool> _certifications = {
+  final Map<String, bool> _certifications = {
     'Certificado Orgânico': false,
     'Fair Trade Certified': false,
     'Green Business Award': false,
@@ -254,7 +256,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
               ),
               ..._primaryCategories.entries
                   .map((entry) => _buildPrimaryCategoryTile(entry.key, entry.value))
-                  .toList(),
+                  ,
               SizedBox(height: 16),
               Text(
                 'Certificações / Prêmios',
@@ -332,11 +334,11 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
               SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _submitBusiness,
-                child: Text('Adicionar Negócio'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF3E8E4D),
                   padding: EdgeInsets.symmetric(vertical: 16),
                 ),
+                child: Text('Adicionar Negócio'),
               ),
             ],
           ),

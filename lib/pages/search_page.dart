@@ -3,16 +3,31 @@ import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
-
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+  final ScrollController _filterScrollController = ScrollController();
   List<DocumentSnapshot> _searchResults = [];
+  bool _isFilterExpanded = false;
 
-  // Function to perform the search
+  final Map<String, String> _filterCategories = {
+    'Alimentos': '🍏',
+    'Roupas': '👗',
+    'Itens Colecionáveis': '🎁',
+    'Decoração': '🏡',
+    'Eletrónicos': '📱',
+    'Brinquedos': '🧸',
+    'Saúde & Beleza': '💄',
+    'Artesanato': '🧵',
+    'Livros': '📚',
+    'Desportos & Lazer': '⚽',
+  };
+
+  List<String> _selectedFilterCategories = [];
+
   Future<void> _searchMarkets() async {
     String query = _searchController.text;
     QuerySnapshot querySnapshot;
@@ -23,38 +38,122 @@ class _SearchPageState extends State<SearchPage> {
           .where('name', isLessThanOrEqualTo: query + '\uf8ff')
           .get();
     } else {
-      querySnapshot = await FirebaseFirestore.instance
-          .collection('businesses')
-          .get();
+      querySnapshot = await FirebaseFirestore.instance.collection('businesses').get();
     }
 
-    setState(() {
-      _searchResults = querySnapshot.docs;
-    });
+    List<DocumentSnapshot> docs = querySnapshot.docs.where((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      if (_selectedFilterCategories.isEmpty) return true;
+      List<dynamic>? docCats = data['primaryCategories'];
+      for (String cat in _selectedFilterCategories) {
+        if (docCats == null || !docCats.contains(cat)) {
+          return false;
+        }
+      }
+      return true;
+    }).toList();
 
+    setState(() {
+      _searchResults = docs;
+    });
+  }
+
+  Widget _buildFilterList() {
+    return Column(
+      children: _filterCategories.entries.map((entry) {
+        bool selected = _selectedFilterCategories.contains(entry.key);
+        return ListTile(
+          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+          title: Text('${entry.value} ${entry.key}'),
+          trailing: Icon(
+            selected ? Icons.check_box : Icons.check_box_outline_blank,
+            color: selected ? Colors.green : null,
+          ),
+          onTap: () {
+            setState(() {
+              if (selected) {
+                _selectedFilterCategories.remove(entry.key);
+              } else {
+                _selectedFilterCategories.add(entry.key);
+              }
+            });
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildFilterPanel() {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      height: _isFilterExpanded ? 300 : 0,
+      child: Scrollbar(
+        controller: _filterScrollController,
+        thumbVisibility: true,
+        scrollbarOrientation: ScrollbarOrientation.left,
+        child: SingleChildScrollView(
+          controller: _filterScrollController,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 32),
+            child: Column(
+              children: [
+                _buildFilterList(),
+                SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    _searchMarkets();
+                    setState(() {
+                      _isFilterExpanded = false;
+                    });
+                  },
+                  child: Text('Apply'),
+                  style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF3E8E4D)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_searchMarkets);
+    _searchMarkets();
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_searchMarkets);
+    _searchController.dispose();
+    _filterScrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Search EcoMarkets')),
+      appBar: AppBar(
+        title: Text('Search EcoMarkets'),
+        backgroundColor: Color(0xFF3E8E4D),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.filter_alt),
+            onPressed: () {
+              setState(() {
+                _isFilterExpanded = !_isFilterExpanded;
+              });
+            },
+          ),
+        ],
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            // Search Bar
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -64,30 +163,24 @@ class _SearchPageState extends State<SearchPage> {
                 prefixIcon: Icon(Icons.search),
               ),
             ),
-            SizedBox(height: 16),
-            // Display Search Results
+            SizedBox(height: 8),
+            _buildFilterPanel(),
+            SizedBox(height: 8),
             Expanded(
-              child: _searchResults.isEmpty
-                  ? Center(child: Text('No results found'))
-                  : ListView.builder(
+              child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
                   var data = _searchResults[index].data() as Map<String, dynamic>;
                   return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                     elevation: 4,
                     child: ListTile(
-                      contentPadding: const EdgeInsets.all(12),
+                      contentPadding: EdgeInsets.all(12),
                       leading: Icon(Icons.shopping_bag, color: Colors.green),
                       title: Text(data['name'], style: TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text(data['description'] ?? 'No description available'),
-                      onTap: () {
-                        // Optionally, you can navigate to a detail page
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => MarketDetailPage(marketData: data)));
-                      },
+                      onTap: () {},
                     ),
                   );
                 },
