@@ -30,6 +30,9 @@ class _MapPageState extends State<MapPage> {
     _loadEcoMarkets();
   }
 
+
+
+
   Future<void> _loadMapStyle() async {
     _mapStyle = await rootBundle.loadString('assets/map_style.json');
     setState(() {}); // Trigger rebuild to apply the style once loaded
@@ -87,6 +90,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: ,
       body: Stack(
         children: [
           GoogleMap(
