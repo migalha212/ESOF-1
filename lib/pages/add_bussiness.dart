@@ -378,6 +378,7 @@ class SustainableBusiness {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'name_lowercase': name.toLowerCase(),
       'description': description,
       'latitude': latitude,
       'longitude': longitude,

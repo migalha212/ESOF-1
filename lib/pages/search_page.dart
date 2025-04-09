@@ -29,57 +29,60 @@ class _SearchPageState extends State<SearchPage> {
   final List<String> _selectedFilterCategories = [];
 
   Future<void> _searchMarkets() async {
-    String query = _searchController.text;
+    String query = _searchController.text.toLowerCase().trim();
     QuerySnapshot querySnapshot;
     if (query.isNotEmpty) {
-      querySnapshot = await FirebaseFirestore.instance
-          .collection('businesses')
-          .where('name', isGreaterThanOrEqualTo: query)
-          .where('name', isLessThanOrEqualTo: '$query\uf8ff')
-          .get();
+      querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('businesses')
+              .where('name_lowercase', isGreaterThanOrEqualTo: query)
+              .where('name_lowercase', isLessThanOrEqualTo: '$query\uf8ff')
+              .get();
     } else {
-      querySnapshot = await FirebaseFirestore.instance.collection('businesses').get();
+      querySnapshot =
+          await FirebaseFirestore.instance.collection('businesses').get();
     }
 
-    List<DocumentSnapshot> docs = querySnapshot.docs.where((doc) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    List<DocumentSnapshot> docs =
+        querySnapshot.docs.where((doc) {
+          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-      if (_selectedFilterCategories.isEmpty) return true;
+          if (_selectedFilterCategories.isEmpty) return true;
 
-      List<dynamic>? docCats = data['primaryCategories'];
+          List<dynamic>? docCats = data['primaryCategories'];
 
-      return docCats != null &&
-          _selectedFilterCategories.any((cat) => docCats.contains(cat));
-    }).toList();
+          return docCats != null &&
+              _selectedFilterCategories.any((cat) => docCats.contains(cat));
+        }).toList();
 
     setState(() {
       _searchResults = docs;
     });
   }
 
-
   Widget _buildFilterList() {
     return Column(
-      children: _filterCategories.entries.map((entry) {
-        bool selected = _selectedFilterCategories.contains(entry.key);
-        return ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 8),
-          title: Text('${entry.value} ${entry.key}'),
-          trailing: Icon(
-            selected ? Icons.check_box : Icons.check_box_outline_blank,
-            color: selected ? Colors.green : null,
-          ),
-          onTap: () {
-            setState(() {
-              if (selected) {
-                _selectedFilterCategories.remove(entry.key);
-              } else {
-                _selectedFilterCategories.add(entry.key);
-              }
-            });
-          },
-        );
-      }).toList(),
+      children:
+          _filterCategories.entries.map((entry) {
+            bool selected = _selectedFilterCategories.contains(entry.key);
+            return ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 8),
+              title: Text('${entry.value} ${entry.key}'),
+              trailing: Icon(
+                selected ? Icons.check_box : Icons.check_box_outline_blank,
+                color: selected ? Colors.green : null,
+              ),
+              onTap: () {
+                setState(() {
+                  if (selected) {
+                    _selectedFilterCategories.remove(entry.key);
+                  } else {
+                    _selectedFilterCategories.add(entry.key);
+                  }
+                });
+              },
+            );
+          }).toList(),
     );
   }
 
@@ -107,7 +110,9 @@ class _SearchPageState extends State<SearchPage> {
                       _isFilterExpanded = false;
                     });
                   },
-                  style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF3E8E4D)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF3E8E4D),
+                  ),
                   child: Text('Apply'),
                 ),
               ],
@@ -170,16 +175,24 @@ class _SearchPageState extends State<SearchPage> {
               child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
-                  var data = _searchResults[index].data() as Map<String, dynamic>;
+                  var data =
+                      _searchResults[index].data() as Map<String, dynamic>;
                   return Card(
                     margin: EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                     elevation: 4,
                     child: ListTile(
                       contentPadding: EdgeInsets.all(12),
                       leading: Icon(Icons.shopping_bag, color: Colors.green),
-                      title: Text(data['name'], style: TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text(data['description'] ?? 'No description available'),
+                      title: Text(
+                        data['name'],
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        data['description'] ?? 'No description available',
+                      ),
                       onTap: () {},
                     ),
                   );
