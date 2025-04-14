@@ -3,6 +3,7 @@ import 'package:EcoFinder/pages/landing_page.dart';
 import 'package:EcoFinder/pages/search_page.dart';
 import 'package:EcoFinder/pages/map_page.dart';
 import 'package:EcoFinder/pages/add_bussiness.dart';
+import 'package:EcoFinder/pages/work_in_progress.dart';
 
 
 class NavBar extends StatelessWidget {
@@ -26,7 +27,7 @@ class NavBar extends StatelessWidget {
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const LandingPage()),
+          MaterialPageRoute(builder: (context) => const WorkInProgressPage(index: 1,)),
         );
         break;
       case 2:
@@ -38,9 +39,14 @@ class NavBar extends StatelessWidget {
       case 3:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const AddBusinessPage()),
+          MaterialPageRoute(builder: (context) => const WorkInProgressPage(index: 3,)),
         );
         break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const WorkInProgressPage(index: 4)),
+        );
     }
   }
 
