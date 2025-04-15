@@ -1,6 +1,7 @@
 import 'package:EcoFinder/common_widgets/navbar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:EcoFinder/pages/map_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -146,8 +147,21 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       bottomNavigationBar: NavBar(selectedIndex: _index),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Search EcoMarkets'),
         backgroundColor: Color(0xFF3E8E4D),
+        leading: IconButton(
+            onPressed: (){
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const MapPage()),
+              );
+            },
+            icon: Icon(
+              Icons.keyboard_arrow_left,
+              color: Colors.black,
+            )
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.filter_alt),
