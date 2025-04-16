@@ -1,10 +1,10 @@
-import 'package:EcoFinder/pages/search_page.dart';
+import 'package:eco_finder/pages/navigation_items.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:EcoFinder/common_widgets/navbar_widget.dart';
+import 'package:eco_finder/common_widgets/navbar_widget.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -13,14 +13,16 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  static const LatLng _initialPosition =
-  LatLng(41.17740754929651, -8.596500719923418);
+  static const LatLng _initialPosition = LatLng(
+    41.17740754929651,
+    -8.596500719923418,
+  );
   late GoogleMapController _mapController;
   final Location _location = Location();
   Set<Marker> _markers = {};
   bool _hovering = false;
   String? _mapStyle; // Stores your custom map style
-  int _index = 2;
+  final int _index = 2;
   @override
   void initState() {
     super.initState();
@@ -28,9 +30,6 @@ class _MapPageState extends State<MapPage> {
     _getUserLocation();
     _loadEcoMarkets();
   }
-
-
-
 
   Future<void> _loadMapStyle() async {
     _mapStyle = await rootBundle.loadString('assets/map_style.json');
@@ -40,21 +39,25 @@ class _MapPageState extends State<MapPage> {
   Future<void> _loadEcoMarkets() async {
     try {
       QuerySnapshot querySnapshot =
-      await FirebaseFirestore.instance.collection('businesses').get();
+          await FirebaseFirestore.instance.collection('businesses').get();
 
       print("🔍 Número de mercados encontrados: ${querySnapshot.docs.length}");
 
-      Set<Marker> newMarkers = querySnapshot.docs.map((doc) {
-        var data = doc.data() as Map<String, dynamic>;
-        print(
-            "📌 Mercado encontrado: ${data['name']}, Lat: ${data['latitude']}, Lng: ${data['longitude']}");
-        return Marker(
-          markerId: MarkerId(doc.id),
-          position: LatLng(data['latitude'], data['longitude']),
-          infoWindow:
-          InfoWindow(title: data['name'], snippet: data['description']),
-        );
-      }).toSet();
+      Set<Marker> newMarkers =
+          querySnapshot.docs.map((doc) {
+            var data = doc.data() as Map<String, dynamic>;
+            print(
+              "📌 Mercado encontrado: ${data['name']}, Lat: ${data['latitude']}, Lng: ${data['longitude']}",
+            );
+            return Marker(
+              markerId: MarkerId(doc.id),
+              position: LatLng(data['latitude'], data['longitude']),
+              infoWindow: InfoWindow(
+                title: data['name'],
+                snippet: data['description'],
+              ),
+            );
+          }).toSet();
 
       setState(() {
         _markers = newMarkers;
@@ -81,8 +84,11 @@ class _MapPageState extends State<MapPage> {
 
     LocationData locationData = await _location.getLocation();
     if (locationData.latitude != null && locationData.longitude != null) {
-      _mapController.animateCamera(CameraUpdate.newLatLng(
-          LatLng(locationData.latitude!, locationData.longitude!)));
+      _mapController.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(locationData.latitude!, locationData.longitude!),
+        ),
+      );
     }
   }
 
@@ -93,8 +99,10 @@ class _MapPageState extends State<MapPage> {
       body: Stack(
         children: [
           GoogleMap(
-            initialCameraPosition:
-            CameraPosition(target: _initialPosition, zoom: 14),
+            initialCameraPosition: CameraPosition(
+              target: _initialPosition,
+              zoom: 14,
+            ),
             markers: _markers,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
@@ -116,9 +124,9 @@ class _MapPageState extends State<MapPage> {
                 child: GestureDetector(
                   onTap: () {
                     // Navigate to the SearchPage
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(builder: (context) => const SearchPage()),
+                      NavigationItems.navSearch.route,
                     );
                   },
                   child: AnimatedContainer(
@@ -133,7 +141,7 @@ class _MapPageState extends State<MapPage> {
                           color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 8,
                           offset: Offset(0, 3),
-                        )
+                        ),
                       ],
                     ),
                     child: Center(
@@ -154,7 +162,7 @@ class _MapPageState extends State<MapPage> {
                               fontSize: _hovering ? 22 : 20,
                             ),
                           ),
-                        ]
+                        ],
                       ),
                     ),
                   ),

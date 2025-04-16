@@ -1,52 +1,27 @@
+import 'package:eco_finder/pages/navigation_items.dart';
 import 'package:flutter/material.dart';
-import 'package:EcoFinder/pages/landing_page.dart';
-import 'package:EcoFinder/pages/search_page.dart';
-import 'package:EcoFinder/pages/map_page.dart';
-import 'package:EcoFinder/pages/add_bussiness.dart';
-import 'package:EcoFinder/pages/work_in_progress.dart';
-
 
 class NavBar extends StatelessWidget {
   final int selectedIndex;
 
-  const NavBar({
-    super.key,
-    required this.selectedIndex,
-  });
+  const NavBar({super.key, required this.selectedIndex});
 
   void _handleNavigation(BuildContext context, int index) {
     if (index == selectedIndex) return; // Already on this page
 
     switch (index) {
       case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const SearchPage()),
-        );
+        Navigator.pushNamed(context, NavigationItems.navSearch.route);
         break;
       case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WorkInProgressPage(index: 1,)),
-        );
+        Navigator.pushNamed(context, NavigationItems.navLanding.route);
         break;
       case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MapPage()),
-        );
+        Navigator.pushNamed(context, NavigationItems.navMap.route);
         break;
       case 3:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WorkInProgressPage(index: 3,)),
-        );
+        Navigator.pushNamed(context, NavigationItems.navAddBusiness.route);
         break;
-      case 4:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WorkInProgressPage(index: 4)),
-        );
     }
   }
 
