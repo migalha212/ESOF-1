@@ -271,7 +271,7 @@ You can find below information and references related with the project managemen
 > - **Improvements for next sprint:**
 >   - Enhance time management by setting clearer deadlines for tasks.
 >   - Improve team organization by holding more frequent check-ins to track progress.
-
+>  - **[Changelog](docs/CHANGELOG.MD)**
 ### Sprint 2
 
 ### Sprint 3
