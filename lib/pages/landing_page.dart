@@ -199,6 +199,7 @@ class LandingPage extends StatelessWidget {
                 bottom: 80,
                 right: 16,
                 child: FloatingActionButton.extended(
+                  heroTag: null,
                   onPressed: () {
                     print('Add Business button pressed');
                     Navigator.pushNamed(
@@ -215,6 +216,7 @@ class LandingPage extends StatelessWidget {
                 bottom: 16,
                 right: 16,
                 child: FloatingActionButton.extended(
+                  heroTag: null,
                   onPressed: () {
                     Navigator.pushNamed(context, NavigationItems.navMap.route);
                   },
