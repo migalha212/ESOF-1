@@ -41,14 +41,10 @@ class _MapPageState extends State<MapPage> {
       QuerySnapshot querySnapshot =
           await FirebaseFirestore.instance.collection('businesses').get();
 
-      print("🔍 Número de mercados encontrados: ${querySnapshot.docs.length}");
 
       Set<Marker> newMarkers =
           querySnapshot.docs.map((doc) {
             var data = doc.data() as Map<String, dynamic>;
-            print(
-              "📌 Mercado encontrado: ${data['name']}, Lat: ${data['latitude']}, Lng: ${data['longitude']}",
-            );
             return Marker(
               markerId: MarkerId(doc.id),
               position: LatLng(data['latitude'], data['longitude']),
@@ -62,10 +58,8 @@ class _MapPageState extends State<MapPage> {
       setState(() {
         _markers = newMarkers;
       });
-
-      print("✅ Marcadores adicionados: ${_markers.length}");
     } catch (e) {
-      print("❌ Erro ao carregar mercados: $e");
+      //
     }
   }
 
