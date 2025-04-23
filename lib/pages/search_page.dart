@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'dart:math';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  final double? userLatitude;
+  final double? userLongitude;
+
+  const SearchPage({super.key, this.userLatitude, this.userLongitude});
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
@@ -11,8 +15,11 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _filterScrollController = ScrollController();
+  late final double? _userLat;
+  late final double? _userLng;
   List<DocumentSnapshot> _searchResults = [];
   bool _isFilterExpanded = false;
+  static const int _maxSearchResults = 10;
 
   final Map<String, String> _filterCategories = {
     'Alimentos': '🍏',
@@ -28,6 +35,24 @@ class _SearchPageState extends State<SearchPage> {
   };
 
   final List<String> _selectedFilterCategories = [];
+
+  double _calculateDistance(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
+    const earthRadius = 6371; // km
+    final dLat = (lat2 - lat1) * (3.141592653589793 / 180);
+    final dLon = (lon2 - lon1) * (3.141592653589793 / 180);
+    final a =
+        (sin(dLat / 2) * sin(dLat / 2)) +
+        cos(lat1 * (3.141592653589793 / 180)) *
+            cos(lat2 * (3.141592653589793 / 180)) *
+            (sin(dLon / 2) * sin(dLon / 2));
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    return earthRadius * c;
+  }
 
   double getSimilarityThreshold(String query) {
     int len = query.length;
@@ -89,19 +114,28 @@ class _SearchPageState extends State<SearchPage> {
         final bSim = StringSimilarity.compareTwoStrings(query, bName);
         return bSim.compareTo(aSim);
       });
-    } else {
+    } else if (_userLat != null && _userLng != null) {
       docs.sort((a, b) {
-        final aPop = (a.data() as Map<String, dynamic>)['popularity'] ?? 0;
-        final bPop = (b.data() as Map<String, dynamic>)['popularity'] ?? 0;
-        return bPop.compareTo(aPop);
+        final aData = a.data() as Map<String, dynamic>;
+        final bData = b.data() as Map<String, dynamic>;
+        final aDist = _calculateDistance(
+          _userLat!,
+          _userLng!,
+          aData['latitude'],
+          aData['longitude'],
+        );
+        final bDist = _calculateDistance(
+          _userLat!,
+          _userLng!,
+          bData['latitude'],
+          bData['longitude'],
+        );
+        return aDist.compareTo(bDist);
       });
-
-      // Show only top 10 when no query
-      docs = docs.take(10).toList();
     }
 
     setState(() {
-      _searchResults = docs;
+      _searchResults = docs.take(_maxSearchResults).toList();
     });
   }
 
@@ -171,6 +205,8 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    _userLat = widget.userLatitude;
+    _userLng = widget.userLongitude;
     _searchController.addListener(_searchMarkets);
     _searchMarkets();
   }
