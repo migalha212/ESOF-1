@@ -6,8 +6,17 @@ import 'dart:math';
 class SearchPage extends StatefulWidget {
   final double? userLatitude;
   final double? userLongitude;
+  final double? hoveredLatitude;
+  final double? hoveredLongitude;
 
-  const SearchPage({super.key, this.userLatitude, this.userLongitude});
+  const SearchPage({
+    super.key,
+    this.userLatitude,
+    this.userLongitude,
+    this.hoveredLatitude,
+    this.hoveredLongitude,
+  });
+
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
@@ -17,6 +26,8 @@ class _SearchPageState extends State<SearchPage> {
   final ScrollController _filterScrollController = ScrollController();
   late final double? _userLat;
   late final double? _userLng;
+  double? _hoveredLat;
+  double? _hoveredLng;
   List<DocumentSnapshot> _searchResults = [];
   bool _isFilterExpanded = false;
   static const int _maxSearchResults = 10;
@@ -114,22 +125,28 @@ class _SearchPageState extends State<SearchPage> {
         final bSim = StringSimilarity.compareTwoStrings(query, bName);
         return bSim.compareTo(aSim);
       });
-    } else if (_userLat != null && _userLng != null) {
+    } else {
       docs.sort((a, b) {
         final aData = a.data() as Map<String, dynamic>;
         final bData = b.data() as Map<String, dynamic>;
+
+        // Use hovered location if available, otherwise fallback to user location
+        double referenceLat = _hoveredLat ?? _userLat ?? 0.0;
+        double referenceLng = _hoveredLng ?? _userLng ?? 0.0;
+
         final aDist = _calculateDistance(
-          _userLat!,
-          _userLng!,
+          referenceLat,
+          referenceLng,
           aData['latitude'],
           aData['longitude'],
         );
         final bDist = _calculateDistance(
-          _userLat!,
-          _userLng!,
+          referenceLat,
+          referenceLng,
           bData['latitude'],
           bData['longitude'],
         );
+
         return aDist.compareTo(bDist);
       });
     }
@@ -207,6 +224,8 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
     _userLat = widget.userLatitude;
     _userLng = widget.userLongitude;
+    _hoveredLat = widget.hoveredLatitude;
+    _hoveredLng = widget.hoveredLongitude;
     _searchController.addListener(_searchMarkets);
     _searchMarkets();
   }

@@ -155,7 +155,14 @@ class _MapPageState extends State<MapPage> {
                 onEnter: (_) => setState(() => _hovering = true),
                 onExit: (_) => setState(() => _hovering = false),
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    LatLng center = await _mapController.getLatLng(
+                      ScreenCoordinate(
+                        x: MediaQuery.of(context).size.width ~/ 2,
+                        y: MediaQuery.of(context).size.height ~/ 2,
+                      ),
+                    );
+
                     // Navigate to the SearchPage
                     Navigator.push(
                       context,
@@ -164,6 +171,8 @@ class _MapPageState extends State<MapPage> {
                             (context) => SearchPage(
                               userLatitude: _userPosition?.latitude,
                               userLongitude: _userPosition?.longitude,
+                              hoveredLatitude: center.latitude,
+                              hoveredLongitude: center.longitude,
                             ),
                       ),
                     );
