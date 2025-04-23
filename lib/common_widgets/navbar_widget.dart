@@ -22,6 +22,11 @@ class NavBar extends StatelessWidget {
       case 3:
         Navigator.pushNamed(context, NavigationItems.navAddBusiness.route);
         break;
+      case 4:
+        Navigator.pushNamed(context, NavigationItems.navNotifications.route);
+        break;
+      default:
+        break; // Handle other cases if needed
     }
   }
 
