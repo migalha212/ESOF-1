@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:string_similarity/string_similarity.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -28,32 +29,76 @@ class _SearchPageState extends State<SearchPage> {
 
   final List<String> _selectedFilterCategories = [];
 
+  double getSimilarityThreshold(String query) {
+    int len = query.length;
+
+    if (len <= 1) return 0.05; // Accept anything for ultra-short input
+    if (len <= 2) return 0.1;
+    if (len <= 4) return 0.15;
+    if (len <= 6) return 0.25;
+
+    return (0.3 + (len - 6) * 0.05).clamp(
+      0.0,
+      0.6,
+    ); // cap at 0.6 for broader reach
+  }
+
   Future<void> _searchMarkets() async {
     String query = _searchController.text.toLowerCase().trim();
     QuerySnapshot querySnapshot;
-    if (query.isNotEmpty) {
-      querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('businesses')
-              .where('name_lowercase', isGreaterThanOrEqualTo: query)
-              .where('name_lowercase', isLessThanOrEqualTo: '$query\uf8ff')
-              .get();
-    } else {
-      querySnapshot =
-          await FirebaseFirestore.instance.collection('businesses').get();
-    }
+
+    querySnapshot =
+        await FirebaseFirestore.instance
+            .collection('businesses')
+            .get(); // Wide search
+
+    final threshold = getSimilarityThreshold(query);
 
     List<DocumentSnapshot> docs =
         querySnapshot.docs.where((doc) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          final data = doc.data() as Map<String, dynamic>;
+          final name = data['name_lowercase'] ?? '';
 
-          if (_selectedFilterCategories.isEmpty) return true;
+          if (query.isNotEmpty) {
+            final similarity = StringSimilarity.compareTwoStrings(query, name);
 
-          List<dynamic>? docCats = data['primaryCategories'];
+            if (!name.contains(query) && similarity < threshold) {
+              return false;
+            }
+          }
 
-          return docCats != null &&
-              _selectedFilterCategories.any((cat) => docCats.contains(cat));
+          if (_selectedFilterCategories.isNotEmpty) {
+            final List<dynamic>? docCats = data['primaryCategories'];
+            if (docCats == null ||
+                !_selectedFilterCategories.any(
+                  (cat) => docCats.contains(cat),
+                )) {
+              return false;
+            }
+          }
+
+          return true;
         }).toList();
+
+    // Sort by similarity if there's a query, else by popularity
+    if (query.isNotEmpty) {
+      docs.sort((a, b) {
+        final aName = (a.data() as Map<String, dynamic>)['name_lowercase'];
+        final bName = (b.data() as Map<String, dynamic>)['name_lowercase'];
+        final aSim = StringSimilarity.compareTwoStrings(query, aName);
+        final bSim = StringSimilarity.compareTwoStrings(query, bName);
+        return bSim.compareTo(aSim);
+      });
+    } else {
+      docs.sort((a, b) {
+        final aPop = (a.data() as Map<String, dynamic>)['popularity'] ?? 0;
+        final bPop = (b.data() as Map<String, dynamic>)['popularity'] ?? 0;
+        return bPop.compareTo(aPop);
+      });
+
+      // Show only top 10 when no query
+      docs = docs.take(10).toList();
+    }
 
     setState(() {
       _searchResults = docs;

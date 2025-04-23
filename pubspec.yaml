@@ -24,6 +24,8 @@ dependencies:
 
   cupertino_icons: ^1.0.8
 
+  string_similarity: ^2.0.0
+
 flutter:
   uses-material-design: true
   assets:
