@@ -1,6 +1,5 @@
+import 'package:eco_finder/pages/navigation_items.dart';
 import 'package:flutter/material.dart';
-import 'package:EcoFinder/pages/map_page.dart';
-import 'package:EcoFinder/pages/add_bussiness.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -20,7 +19,8 @@ class LandingPage extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: Stack( // Adicionado para os Positioned widgets
+          child: Stack(
+            // Adicionado para os Positioned widgets
             children: [
               SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -38,8 +38,11 @@ class LandingPage extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.eco_rounded, size: 72, color: Colors
-                              .white),
+                          Icon(
+                            Icons.eco_rounded,
+                            size: 72,
+                            color: Colors.white,
+                          ),
                           Text(
                             'EcoFinder',
                             style: TextStyle(
@@ -92,7 +95,7 @@ class LandingPage extends StatelessWidget {
                           SizedBox(height: 12),
                           Text(
                             'EcoFinder helps you discover sustainable, fair-trade, and eco-friendly businesses. '
-                                'Navigate through our interactive map, search for specific stores, and stay updated with the latest sustainability news.',
+                            'Navigate through our interactive map, search for specific stores, and stay updated with the latest sustainability news.',
                             style: TextStyle(
                               fontSize: 16,
                               height: 1.5,
@@ -110,16 +113,26 @@ class LandingPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 8),
-                          FeatureItem(icon: Icons.map,
-                              text: 'Interactive store map'),
-                          FeatureItem(icon: Icons.search,
-                              text: 'Advanced search capabilities'),
-                          FeatureItem(icon: Icons.list_alt,
-                              text: 'Filtered business listings'),
-                          FeatureItem(icon: Icons.bookmark,
-                              text: 'Bookmark your favorites'),
-                          FeatureItem(icon: Icons.newspaper,
-                              text: 'Sustainability news'),
+                          FeatureItem(
+                            icon: Icons.map,
+                            text: 'Interactive store map',
+                          ),
+                          FeatureItem(
+                            icon: Icons.search,
+                            text: 'Advanced search capabilities',
+                          ),
+                          FeatureItem(
+                            icon: Icons.list_alt,
+                            text: 'Filtered business listings',
+                          ),
+                          FeatureItem(
+                            icon: Icons.bookmark,
+                            text: 'Bookmark your favorites',
+                          ),
+                          FeatureItem(
+                            icon: Icons.newspaper,
+                            text: 'Sustainability news',
+                          ),
                         ],
                       ),
                     ),
@@ -186,12 +199,11 @@ class LandingPage extends StatelessWidget {
                 bottom: 80,
                 right: 16,
                 child: FloatingActionButton.extended(
+                  heroTag: null,
                   onPressed: () {
-                    print('Add Business button pressed');
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => AddBusinessPage()),
+                      NavigationItems.navAddBusiness.route,
                     );
                   },
                   backgroundColor: Color(0xFF3E8E4D),
@@ -203,16 +215,16 @@ class LandingPage extends StatelessWidget {
                 bottom: 16,
                 right: 16,
                 child: FloatingActionButton.extended(
+                  heroTag: null,
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MapPage()),
-                    );
+                    Navigator.pushNamed(context, NavigationItems.navMap.route);
                   },
                   backgroundColor: Colors.white,
                   icon: Icon(Icons.map, color: Color(0xFF3E8E4D)),
-                  label: Text('Explore Map',
-                      style: TextStyle(color: Color(0xFF3E8E4D))),
+                  label: Text(
+                    'Explore Map',
+                    style: TextStyle(color: Color(0xFF3E8E4D)),
+                  ),
                 ),
               ),
             ],
@@ -227,11 +239,7 @@ class FeatureItem extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const FeatureItem({
-    required this.icon,
-    required this.text,
-    super.key,
-  });
+  const FeatureItem({required this.icon, required this.text, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -239,19 +247,9 @@ class FeatureItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 20,
-            color: Color(0xFF3E8E4D),
-          ),
+          Icon(icon, size: 20, color: Color(0xFF3E8E4D)),
           SizedBox(width: 10),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.black87,
-            ),
-          ),
+          Text(text, style: TextStyle(fontSize: 15, color: Colors.black87)),
         ],
       ),
     );
@@ -263,11 +261,7 @@ class TeamMemberCard extends StatelessWidget {
   final String name;
   final String email;
 
-  const TeamMemberCard({
-    required this.name,
-    required this.email,
-    super.key,
-  });
+  const TeamMemberCard({required this.name, required this.email, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -300,18 +294,12 @@ class TeamMemberCard extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
                 SizedBox(height: 3),
                 Text(
                   email,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade700,
-                  ),
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
                 ),
               ],
             ),

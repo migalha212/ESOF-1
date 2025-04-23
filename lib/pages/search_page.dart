@@ -1,4 +1,6 @@
+import 'package:eco_finder/common_widgets/navbar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_finder/pages/navigation_items.dart';
 import 'package:flutter/material.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'dart:math';
@@ -31,7 +33,7 @@ class _SearchPageState extends State<SearchPage> {
   List<DocumentSnapshot> _searchResults = [];
   bool _isFilterExpanded = false;
   static const int _maxSearchResults = 10;
-
+  final int _index = 0;
   final Map<String, String> _filterCategories = {
     'Alimentos': '🍏',
     'Roupas': '👗',
@@ -241,9 +243,17 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: NavBar(selectedIndex: _index),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Search EcoMarkets'),
         backgroundColor: Color(0xFF3E8E4D),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, NavigationItems.navLanding.route);
+          },
+          icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.filter_alt),
@@ -256,7 +266,12 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.only(
+          left: 16,
+          top: 16,
+          right: 16,
+          bottom: 0,
+        ),
         child: Column(
           children: [
             TextField(

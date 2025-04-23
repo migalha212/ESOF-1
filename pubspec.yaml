@@ -1,4 +1,4 @@
-name: EcoFinder
+name: 'eco_finder'
 description: "An app to help people to buy from sustainable, fair-trade and eco-friendly businesses offering features to navigate, search and be informed about updates on those markets."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

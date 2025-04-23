@@ -1,14 +1,13 @@
-import 'package:EcoFinder/pages/search_page.dart';
+import 'package:eco_finder/pages/navigation_items.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:EcoFinder/pages/landing_page.dart';
+import 'package:eco_finder/common_widgets/navbar_widget.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
-
   @override
   State<MapPage> createState() => _MapPageState();
 }
@@ -25,6 +24,7 @@ class _MapPageState extends State<MapPage> {
   String? _mapStyle; // Stores your custom map style
   LatLng? _userPosition;
 
+  final int _index = 2;
   @override
   void initState() {
     super.initState();
@@ -43,14 +43,10 @@ class _MapPageState extends State<MapPage> {
       QuerySnapshot querySnapshot =
           await FirebaseFirestore.instance.collection('businesses').get();
 
-      print("🔍 Número de mercados encontrados: ${querySnapshot.docs.length}");
 
       Set<Marker> newMarkers =
           querySnapshot.docs.map((doc) {
             var data = doc.data() as Map<String, dynamic>;
-            print(
-              "📌 Mercado encontrado: ${data['name']}, Lat: ${data['latitude']}, Lng: ${data['longitude']}",
-            );
             return Marker(
               markerId: MarkerId(doc.id),
               position: LatLng(data['latitude'], data['longitude']),
@@ -64,10 +60,8 @@ class _MapPageState extends State<MapPage> {
       setState(() {
         _markers = newMarkers;
       });
-
-      print("✅ Marcadores adicionados: ${_markers.length}");
     } catch (e) {
-      print("❌ Erro ao carregar mercados: $e");
+      //
     }
   }
 
@@ -94,6 +88,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: NavBar(selectedIndex: _index),
       body: Stack(
         children: [
           GoogleMap(
@@ -108,41 +103,6 @@ class _MapPageState extends State<MapPage> {
             onMapCreated: (controller) {
               _mapController = controller;
             },
-          ),
-
-          // Home button
-          Positioned(
-            bottom: 30,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LandingPage(),
-                    ),
-                  );
-                },
-                icon: Icon(Icons.home, color: Colors.white, size: 30),
-                label: Text(
-                  'Home',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: _hovering ? 22 : 20,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(200, 50),
-                  backgroundColor: Color(0xFF3E8E4D),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-              ),
-            ),
           ),
 
           // Search Button
@@ -164,17 +124,18 @@ class _MapPageState extends State<MapPage> {
                     );
 
                     // Navigate to the SearchPage
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => SearchPage(
-                              userLatitude: _userPosition?.latitude,
-                              userLongitude: _userPosition?.longitude,
-                              hoveredLatitude: center.latitude,
-                              hoveredLongitude: center.longitude,
-                            ),
-                      ),
+                      // MaterialPageRoute(
+                      //   builder:
+                      //       (context) => SearchPage(
+                      //         userLatitude: _userPosition?.latitude,
+                      //         userLongitude: _userPosition?.longitude,
+                      //         hoveredLatitude: center.latitude,
+                      //         hoveredLongitude: center.longitude,
+                      //       ),
+                      // ),
+                      NavigationItems.navSearch.route,
                     );
                   },
                   child: AnimatedContainer(
