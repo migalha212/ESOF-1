@@ -1,4 +1,5 @@
 import 'package:eco_finder/pages/navigation_items.dart';
+import 'package:eco_finder/pages/search_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -42,7 +43,6 @@ class _MapPageState extends State<MapPage> {
     try {
       QuerySnapshot querySnapshot =
           await FirebaseFirestore.instance.collection('businesses').get();
-
 
       Set<Marker> newMarkers =
           querySnapshot.docs.map((doc) {
@@ -124,18 +124,17 @@ class _MapPageState extends State<MapPage> {
                     );
 
                     // Navigate to the SearchPage
-                    Navigator.pushNamed(
+                    Navigator.push(
                       context,
-                      // MaterialPageRoute(
-                      //   builder:
-                      //       (context) => SearchPage(
-                      //         userLatitude: _userPosition?.latitude,
-                      //         userLongitude: _userPosition?.longitude,
-                      //         hoveredLatitude: center.latitude,
-                      //         hoveredLongitude: center.longitude,
-                      //       ),
-                      // ),
-                      NavigationItems.navSearch.route,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => SearchPage(
+                              userLatitude: _userPosition?.latitude,
+                              userLongitude: _userPosition?.longitude,
+                              hoveredLatitude: center.latitude,
+                              hoveredLongitude: center.longitude,
+                            ),
+                      ),
                     );
                   },
                   child: AnimatedContainer(
