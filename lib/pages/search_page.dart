@@ -2,22 +2,16 @@ import 'package:eco_finder/common_widgets/navbar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/pages/navigation_items.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'dart:math';
+import 'package:location/location.dart';
 
 class SearchPage extends StatefulWidget {
-  final double? userLatitude;
-  final double? userLongitude;
   final double? hoveredLatitude;
   final double? hoveredLongitude;
 
-  const SearchPage({
-    super.key,
-    this.userLatitude,
-    this.userLongitude,
-    this.hoveredLatitude,
-    this.hoveredLongitude,
-  });
+  const SearchPage({super.key, this.hoveredLatitude, this.hoveredLongitude});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -26,8 +20,10 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _filterScrollController = ScrollController();
-  late final double? _userLat;
-  late final double? _userLng;
+
+  double? _userLat;
+  double? _userLng;
+
   double? _hoveredLat;
   double? _hoveredLng;
   List<DocumentSnapshot> _searchResults = [];
@@ -48,6 +44,28 @@ class _SearchPageState extends State<SearchPage> {
   };
 
   final List<String> _selectedFilterCategories = [];
+
+  Future<void> _getUserLocation() async {
+    final location = Location();
+
+    bool serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) return;
+    }
+
+    PermissionStatus permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) return;
+    }
+
+    LocationData locationData = await location.getLocation();
+    setState(() {
+      _userLat = locationData.latitude;
+      _userLng = locationData.longitude;
+    });
+  }
 
   double _calculateDistance(
     double lat1,
@@ -224,8 +242,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    _userLat = widget.userLatitude;
-    _userLng = widget.userLongitude;
+    _getUserLocation();
     _hoveredLat = widget.hoveredLatitude;
     _hoveredLng = widget.hoveredLongitude;
     _searchController.addListener(_searchMarkets);
@@ -250,7 +267,7 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor: Color(0xFF3E8E4D),
         leading: IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, NavigationItems.navLanding.route);
+            Navigator.pop(context);
           },
           icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
         ),
@@ -266,12 +283,7 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.only(
-          left: 16,
-          top: 16,
-          right: 16,
-          bottom: 0,
-        ),
+        padding: EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 0),
         child: Column(
           children: [
             TextField(

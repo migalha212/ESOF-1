@@ -129,8 +129,6 @@ class _MapPageState extends State<MapPage> {
                       MaterialPageRoute(
                         builder:
                             (context) => SearchPage(
-                              userLatitude: _userPosition?.latitude,
-                              userLongitude: _userPosition?.longitude,
                               hoveredLatitude: center.latitude,
                               hoveredLongitude: center.longitude,
                             ),
