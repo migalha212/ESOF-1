@@ -166,7 +166,12 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.only(
+          left: 16,
+          top: 16,
+          right: 16,
+          bottom: 0,
+        ),
         child: Column(
           children: [
             TextField(

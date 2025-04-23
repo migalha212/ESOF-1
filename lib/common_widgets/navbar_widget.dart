@@ -27,29 +27,63 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      selectedIndex: selectedIndex,
-      onDestinationSelected: (int index) {
-        _handleNavigation(context, index);
-      },
-      indicatorColor: Colors.amber,
-      destinations: const <NavigationDestination>[
-        NavigationDestination(
-          icon: Icon(Icons.shopping_cart_outlined),
-          label: 'Stores',
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF3E8E4D), // verde principal
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, -2), // sombra para cima
+          ),
+        ],
+      ),
+      child: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          backgroundColor: Colors.transparent, // já definido no container
+          indicatorColor: Colors.white.withOpacity(0.2),
+          height: 65, // altura reduzida (default é 80)
+          labelTextStyle: MaterialStateProperty.all(
+            TextStyle(color: Colors.white, fontSize: 12),
+          ),
+          iconTheme: MaterialStateProperty.all(
+            IconThemeData(color: Colors.white),
+          ),
         ),
-        NavigationDestination(
-          icon: Icon(Icons.calendar_month_outlined),
-          label: '',
+        child: NavigationBar(
+          selectedIndex: selectedIndex,
+          onDestinationSelected: (int index) {
+            _handleNavigation(context, index);
+          },
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.shopping_cart_outlined),
+              selectedIcon: Icon(Icons.shopping_cart),
+              label: 'Stores',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.calendar_month_outlined),
+              selectedIcon: Icon(Icons.calendar_month),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: 'Map',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.favorite_outline),
+              selectedIcon: Icon(Icons.favorite),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline),
+              selectedIcon: Icon(Icons.person),
+              label: '',
+            ),
+          ],
         ),
-        NavigationDestination(
-          selectedIcon: Icon(Icons.home),
-          icon: Icon(Icons.home_outlined),
-          label: 'Map',
-        ),
-        NavigationDestination(icon: Icon(Icons.favorite_outline), label: ''),
-        NavigationDestination(icon: Icon(Icons.person_outline), label: ''),
-      ],
+      ),
     );
   }
 }
