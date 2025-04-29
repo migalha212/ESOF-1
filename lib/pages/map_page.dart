@@ -98,12 +98,18 @@ class _MapPageState extends State<MapPage> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                icon: Icon(Icons.store),
-                                label: Text('Ver página da loja'),
+                                icon: Icon(
+                                    Icons.store,
+                                    size: 20,
+                                ),
+                                label: Text(
+                                  'Ver página da loja',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF3E8E4D),
                                   foregroundColor: Colors.white,
-                                  minimumSize: Size(double.infinity, 45),
+                                  minimumSize: Size(double.infinity, 60),
                                 ),
                               ),
                             ],
