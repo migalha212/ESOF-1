@@ -24,6 +24,9 @@ class _MapPageState extends State<MapPage> {
   bool _hovering = false;
   String? _mapStyle; // Stores your custom map style
   LatLng? _userPosition;
+  LatLng? _markerPosition;
+  Map<String, dynamic>? _markerData;
+  Offset? _popUpPosition;
 
   final int _index = 2;
   @override
@@ -47,13 +50,69 @@ class _MapPageState extends State<MapPage> {
       Set<Marker> newMarkers =
           querySnapshot.docs.map((doc) {
             var data = doc.data() as Map<String, dynamic>;
+            final position = LatLng(data['latitude'], data['longitude']);
             return Marker(
               markerId: MarkerId(doc.id),
-              position: LatLng(data['latitude'], data['longitude']),
-              infoWindow: InfoWindow(
-                title: data['name'],
-                snippet: data['description'],
-              ),
+              position: position,
+                onTap: () async {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    backgroundColor: Colors.white,
+                    builder: (BuildContext context) {
+                      return FractionallySizedBox(
+                        heightFactor: 0.4,
+                        widthFactor: 1.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 5,
+                                margin: EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              Text(
+                                data['name'],
+                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 10),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Text(
+                                    data['description'] ?? ' ',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.store),
+                                label: Text('Ver página da loja'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xFF3E8E4D),
+                                  foregroundColor: Colors.white,
+                                  minimumSize: Size(double.infinity, 45),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
             );
           }).toSet();
 
@@ -91,6 +150,16 @@ class _MapPageState extends State<MapPage> {
       bottomNavigationBar: NavBar(selectedIndex: _index),
       body: Stack(
         children: [
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              setState(() {
+                _markerPosition = null;
+                _markerData = null;
+                _popUpPosition = null;
+              });
+            },
+          ),
           GoogleMap(
             initialCameraPosition: CameraPosition(
               target: _initialPosition,
@@ -176,6 +245,45 @@ class _MapPageState extends State<MapPage> {
               ),
             ),
           ),
+          if (_markerData != null && _popUpPosition != null)
+            Positioned(
+              left: _popUpPosition!.dx - 75, // Ajusta conforme o tamanho do widget
+              top: _popUpPosition!.dy - 130, // Ajusta para ficar acima do ícone
+              child: Material(
+                elevation: 4,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: 150,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _markerData!['name'],
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        _markerData!['description'] ?? '',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          // ex: ir para detalhes
+                        },
+                        child: Text('Ver loja'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
