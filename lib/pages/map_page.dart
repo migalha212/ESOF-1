@@ -1,4 +1,5 @@
 import 'package:eco_finder/pages/navigation_items.dart';
+import 'package:eco_finder/pages/search_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -22,6 +23,8 @@ class _MapPageState extends State<MapPage> {
   Set<Marker> _markers = {};
   bool _hovering = false;
   String? _mapStyle; // Stores your custom map style
+  LatLng? _userPosition;
+
   final int _index = 2;
   @override
   void initState() {
@@ -40,7 +43,6 @@ class _MapPageState extends State<MapPage> {
     try {
       QuerySnapshot querySnapshot =
           await FirebaseFirestore.instance.collection('businesses').get();
-
 
       Set<Marker> newMarkers =
           querySnapshot.docs.map((doc) {
@@ -78,11 +80,8 @@ class _MapPageState extends State<MapPage> {
 
     LocationData locationData = await _location.getLocation();
     if (locationData.latitude != null && locationData.longitude != null) {
-      _mapController.animateCamera(
-        CameraUpdate.newLatLng(
-          LatLng(locationData.latitude!, locationData.longitude!),
-        ),
-      );
+      _userPosition = LatLng(locationData.latitude!, locationData.longitude!);
+      _mapController.animateCamera(CameraUpdate.newLatLng(_userPosition!));
     }
   }
 
@@ -116,11 +115,24 @@ class _MapPageState extends State<MapPage> {
                 onEnter: (_) => setState(() => _hovering = true),
                 onExit: (_) => setState(() => _hovering = false),
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    LatLng center = await _mapController.getLatLng(
+                      ScreenCoordinate(
+                        x: MediaQuery.of(context).size.width ~/ 2,
+                        y: MediaQuery.of(context).size.height ~/ 2,
+                      ),
+                    );
+
                     // Navigate to the SearchPage
-                    Navigator.pushNamed(
+                    Navigator.push(
                       context,
-                      NavigationItems.navSearch.route,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => SearchPage(
+                              hoveredLatitude: center.latitude,
+                              hoveredLongitude: center.longitude,
+                            ),
+                      ),
                     );
                   },
                   child: AnimatedContainer(

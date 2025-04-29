@@ -2,9 +2,17 @@ import 'package:eco_finder/common_widgets/navbar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/pages/navigation_items.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:string_similarity/string_similarity.dart';
+import 'dart:math';
+import 'package:location/location.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  final double? hoveredLatitude;
+  final double? hoveredLongitude;
+
+  const SearchPage({super.key, this.hoveredLatitude, this.hoveredLongitude});
+
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
@@ -12,8 +20,15 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _filterScrollController = ScrollController();
+
+  double? _userLat;
+  double? _userLng;
+
+  double? _hoveredLat;
+  double? _hoveredLng;
   List<DocumentSnapshot> _searchResults = [];
   bool _isFilterExpanded = false;
+  static const int _maxSearchResults = 10;
   final int _index = 0;
   final Map<String, String> _filterCategories = {
     'Alimentos': '🍏',
@@ -30,35 +45,134 @@ class _SearchPageState extends State<SearchPage> {
 
   final List<String> _selectedFilterCategories = [];
 
+  Future<void> _getUserLocation() async {
+    final location = Location();
+
+    bool serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) return;
+    }
+
+    PermissionStatus permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) return;
+    }
+
+    LocationData locationData = await location.getLocation();
+    setState(() {
+      _userLat = locationData.latitude;
+      _userLng = locationData.longitude;
+    });
+  }
+
+  double _calculateDistance(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
+    const earthRadius = 6371; // km
+    final dLat = (lat2 - lat1) * (3.141592653589793 / 180);
+    final dLon = (lon2 - lon1) * (3.141592653589793 / 180);
+    final a =
+        (sin(dLat / 2) * sin(dLat / 2)) +
+        cos(lat1 * (3.141592653589793 / 180)) *
+            cos(lat2 * (3.141592653589793 / 180)) *
+            (sin(dLon / 2) * sin(dLon / 2));
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    return earthRadius * c;
+  }
+
+  double getSimilarityThreshold(String query) {
+    int len = query.length;
+
+    if (len <= 1) return 0.05; // Accept anything for ultra-short input
+    if (len <= 2) return 0.1;
+    if (len <= 4) return 0.15;
+    if (len <= 6) return 0.25;
+
+    return (0.3 + (len - 6) * 0.05).clamp(
+      0.0,
+      0.6,
+    ); // cap at 0.6 for broader reach
+  }
+
   Future<void> _searchMarkets() async {
     String query = _searchController.text.toLowerCase().trim();
     QuerySnapshot querySnapshot;
-    if (query.isNotEmpty) {
-      querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('businesses')
-              .where('name_lowercase', isGreaterThanOrEqualTo: query)
-              .where('name_lowercase', isLessThanOrEqualTo: '$query\uf8ff')
-              .get();
-    } else {
-      querySnapshot =
-          await FirebaseFirestore.instance.collection('businesses').get();
-    }
+
+    querySnapshot =
+        await FirebaseFirestore.instance
+            .collection('businesses')
+            .get(); // Wide search
+
+    final threshold = getSimilarityThreshold(query);
 
     List<DocumentSnapshot> docs =
         querySnapshot.docs.where((doc) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          final data = doc.data() as Map<String, dynamic>;
+          final name = data['name_lowercase'] ?? '';
 
-          if (_selectedFilterCategories.isEmpty) return true;
+          if (query.isNotEmpty) {
+            final similarity = StringSimilarity.compareTwoStrings(query, name);
 
-          List<dynamic>? docCats = data['primaryCategories'];
+            if (!name.contains(query) && similarity < threshold) {
+              return false;
+            }
+          }
 
-          return docCats != null &&
-              _selectedFilterCategories.any((cat) => docCats.contains(cat));
+          if (_selectedFilterCategories.isNotEmpty) {
+            final List<dynamic>? docCats = data['primaryCategories'];
+            if (docCats == null ||
+                !_selectedFilterCategories.any(
+                  (cat) => docCats.contains(cat),
+                )) {
+              return false;
+            }
+          }
+
+          return true;
         }).toList();
 
+    // Sort by similarity if there's a query, else by popularity
+    if (query.isNotEmpty) {
+      docs.sort((a, b) {
+        final aName = (a.data() as Map<String, dynamic>)['name_lowercase'];
+        final bName = (b.data() as Map<String, dynamic>)['name_lowercase'];
+        final aSim = StringSimilarity.compareTwoStrings(query, aName);
+        final bSim = StringSimilarity.compareTwoStrings(query, bName);
+        return bSim.compareTo(aSim);
+      });
+    } else {
+      docs.sort((a, b) {
+        final aData = a.data() as Map<String, dynamic>;
+        final bData = b.data() as Map<String, dynamic>;
+
+        // Use hovered location if available, otherwise fallback to user location
+        double referenceLat = _hoveredLat ?? _userLat ?? 0.0;
+        double referenceLng = _hoveredLng ?? _userLng ?? 0.0;
+
+        final aDist = _calculateDistance(
+          referenceLat,
+          referenceLng,
+          aData['latitude'],
+          aData['longitude'],
+        );
+        final bDist = _calculateDistance(
+          referenceLat,
+          referenceLng,
+          bData['latitude'],
+          bData['longitude'],
+        );
+
+        return aDist.compareTo(bDist);
+      });
+    }
+
     setState(() {
-      _searchResults = docs;
+      _searchResults = docs.take(_maxSearchResults).toList();
     });
   }
 
@@ -128,6 +242,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    _getUserLocation();
+    _hoveredLat = widget.hoveredLatitude;
+    _hoveredLng = widget.hoveredLongitude;
     _searchController.addListener(_searchMarkets);
     _searchMarkets();
   }
@@ -150,7 +267,7 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor: Color(0xFF3E8E4D),
         leading: IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, NavigationItems.navLanding.route);
+            Navigator.pop(context);
           },
           icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
         ),
@@ -166,12 +283,7 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.only(
-          left: 16,
-          top: 16,
-          right: 16,
-          bottom: 0,
-        ),
+        padding: EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 0),
         child: Column(
           children: [
             TextField(
