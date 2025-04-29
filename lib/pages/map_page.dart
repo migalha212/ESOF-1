@@ -64,7 +64,7 @@ class _MapPageState extends State<MapPage> {
                     backgroundColor: Colors.white,
                     builder: (BuildContext context) {
                       return FractionallySizedBox(
-                        heightFactor: 0.4,
+                        heightFactor: 0.45,
                         widthFactor: 1.0,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -81,7 +81,7 @@ class _MapPageState extends State<MapPage> {
                               ),
                               Text(
                                 data['name'],
-                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 10),
                               Expanded(
