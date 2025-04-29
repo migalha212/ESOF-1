@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/common_widgets/navbar_widget.dart'; // Importa o teu widget NavBar
 
-class StoreProfileScreen extends StatelessWidget {
+class StoreProfilePage extends StatelessWidget {
   final DocumentReference storeRef;
 
-  const StoreProfileScreen({Key? key, required this.storeRef}) : super(key: key);
+  const StoreProfilePage({Key? key, required this.storeRef}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,9 @@ class StoreProfileScreen extends StatelessWidget {
           return const Scaffold(
             backgroundColor: Colors.white,
             body: Center(child: CircularProgressIndicator(color: Colors.green)),
-            bottomNavigationBar: NavBar(selectedIndex: 0), // Adiciona a NavBar aqui
+            bottomNavigationBar: NavBar(
+              selectedIndex: 0,
+            ), // Adiciona a NavBar aqui
           );
         }
 
@@ -25,10 +27,20 @@ class StoreProfileScreen extends StatelessWidget {
             backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: Colors.green,
-              title: const Text('Loja não encontrada', style: TextStyle(color: Colors.white)),
+              title: const Text(
+                'Loja não encontrada',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
-            body: const Center(child: Text('Loja não encontrada', style: TextStyle(color: Colors.green))),
-            bottomNavigationBar: const NavBar(selectedIndex: 0), // Adiciona a NavBar aqui
+            body: const Center(
+              child: Text(
+                'Loja não encontrada',
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
+            bottomNavigationBar: const NavBar(
+              selectedIndex: 0,
+            ), // Adiciona a NavBar aqui
           );
         }
 
@@ -39,7 +51,10 @@ class StoreProfileScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: Colors.green,
-            title: Text(storeName.isNotEmpty ? storeName : 'Loja', style: const TextStyle(color: Colors.white)),
+            title: Text(
+              storeName.isNotEmpty ? storeName : 'Loja',
+              style: const TextStyle(color: Colors.white),
+            ),
             iconTheme: const IconThemeData(color: Colors.white),
           ),
           body: SingleChildScrollView(
@@ -87,7 +102,10 @@ class StoreProfileScreen extends StatelessWidget {
                     child: Center(
                       child: Text(
                         storeName.isNotEmpty ? storeName : 'Nome da Loja',
-                        style: const TextStyle(fontSize: 20, color: Colors.white),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -96,12 +114,36 @@ class StoreProfileScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildInfoRow(Icons.category_outlined, 'Categoria', data['primaryCategories']?.join(', ')),
-                      _buildInfoRow(Icons.description_outlined, 'Descrição', data['description']),
-                      _buildInfoRow(Icons.phone_outlined, 'Telefone', data['contactPhone']),
-                      _buildInfoRow(Icons.email_outlined, 'Email', data['email']),
-                      _buildInfoRow(Icons.language_outlined, 'Website', data['website']),
-                      _buildInfoRow(Icons.location_on_outlined, 'Morada', data['address']),
+                      _buildInfoRow(
+                        Icons.category_outlined,
+                        'Categoria',
+                        data['primaryCategories']?.join(', '),
+                      ),
+                      _buildInfoRow(
+                        Icons.description_outlined,
+                        'Descrição',
+                        data['description'],
+                      ),
+                      _buildInfoRow(
+                        Icons.phone_outlined,
+                        'Telefone',
+                        data['contactPhone'],
+                      ),
+                      _buildInfoRow(
+                        Icons.email_outlined,
+                        'Email',
+                        data['email'],
+                      ),
+                      _buildInfoRow(
+                        Icons.language_outlined,
+                        'Website',
+                        data['website'],
+                      ),
+                      _buildInfoRow(
+                        Icons.location_on_outlined,
+                        'Morada',
+                        data['address'],
+                      ),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -109,7 +151,9 @@ class StoreProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          bottomNavigationBar: const NavBar(selectedIndex: 0), // Adiciona a NavBar aqui com selectedIndex 0
+          bottomNavigationBar: const NavBar(
+            selectedIndex: 0,
+          ), // Adiciona a NavBar aqui com selectedIndex 0
         );
       },
     );
@@ -130,7 +174,11 @@ class StoreProfileScreen extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
                 const SizedBox(height: 4.0),
                 Text(

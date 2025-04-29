@@ -1,6 +1,7 @@
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/pages/navigation_items.dart';
+import 'package:eco_finder/pages/store_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:string_similarity/string_similarity.dart';
@@ -320,7 +321,17 @@ class _SearchPageState extends State<SearchPage> {
                       subtitle: Text(
                         data['description'] ?? 'No description available',
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pop(context); // Fecha o model
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) =>
+                                    StoreProfilePage(storeRef: _searchResults[index].reference),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },
