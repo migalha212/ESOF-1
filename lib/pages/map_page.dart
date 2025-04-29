@@ -251,45 +251,6 @@ class _MapPageState extends State<MapPage> {
               ),
             ),
           ),
-          if (_markerData != null && _popUpPosition != null)
-            Positioned(
-              left: _popUpPosition!.dx - 75, // Ajusta conforme o tamanho do widget
-              top: _popUpPosition!.dy - 130, // Ajusta para ficar acima do ícone
-              child: Material(
-                elevation: 4,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  width: 150,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        _markerData!['name'],
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        _markerData!['description'] ?? '',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          // ex: ir para detalhes
-                        },
-                        child: Text('Ver loja'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );
