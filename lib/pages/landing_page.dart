@@ -1,4 +1,4 @@
-import 'package:eco_finder/pages/navigation_items.dart';
+import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
 
 class LandingPage extends StatelessWidget {

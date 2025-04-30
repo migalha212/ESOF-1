@@ -1,4 +1,4 @@
-import 'package:eco_finder/pages/navigation_items.dart';
+import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:eco_finder/pages/search_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -102,16 +102,7 @@ class _MapPageState extends State<MapPage> {
                             const SizedBox(height: 10),
                             ElevatedButton.icon(
                               onPressed: () {
-                                Navigator.pop(context); // Fecha o modal
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => StoreProfilePage(
-                                          storeRef: doc.reference,
-                                        ),
-                                  ),
-                                );
+                                Navigator.pushNamed(context, NavigationItems.navMapProfile.route, arguments: doc.reference);
                               },
                               icon: const Icon(Icons.store, size: 20),
                               label: const Text(
