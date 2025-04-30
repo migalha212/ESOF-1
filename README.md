@@ -274,6 +274,35 @@ You can find below information and references related with the project managemen
 >  - **[Changelog](docs/CHANGELOG.MD)**
 ### Sprint 2
 
+> ### Github Projects Board
+> 
+> Goals: Navbar, Events and Store profile
+> 
+> - **Beginning**
+> 
+> ![sprint 2](docs/resources/scrum_board/sprint2_start.png)
+> 
+> - **End**
+> 
+> ![sprint_2_end](docs/resources/scrum_board/sprint2_end.png)
+> 
+> ### Retrospectives
+> 
+> - **Did well:**
+> - Successfully implemented a Navigation Bar for accessing the different pages of the App easily.
+> - Delivered key user stories: App navigation, store profile visualization, event notification.
+> - Improved already implemented features: Business creation (with an implemented map picking feature), searching (with Fuzzy search feature and map ordering based on location)
+> - Effective teamwork and task management.
+> - **Do differently:**
+> - Distributed work a bit better. 
+> - Estimate work efforts better.
+> - **Puzzles:**
+> - Learning how to do Notifications.
+> - Implementing Fuzzy search.
+> - **Improvements for next sprint:**
+> - Improving teamwork by having scheduled meetings through the week.
+> - Splitting the work between the members.
+
 ### Sprint 3
 
 ### Sprint 4

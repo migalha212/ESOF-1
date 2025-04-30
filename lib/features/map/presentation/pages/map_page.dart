@@ -1,7 +1,5 @@
 import 'package:eco_finder/features/map/data/business_service.dart';
 import 'package:eco_finder/features/map/presentation/widgets/marker_sheet.dart';
-import 'package:eco_finder/features/map/presentation/widgets/search_button.dart';
-import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:eco_finder/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,10 +23,6 @@ class _MapPageState extends State<MapPage> {
   Set<Marker> _markers = {};
   bool _hovering = false;
   String? _mapStyle; // Stores your custom map style
-  LatLng? _userPosition;
-  LatLng? _markerPosition;
-  Map<String, dynamic>? _markerData;
-  Offset? _popUpPosition;
 
   final int _index = 2;
   @override
@@ -50,7 +44,7 @@ class _MapPageState extends State<MapPage> {
 
     print("Initial position is: $_initialPosition");
 
-    if (_initialPosition != null && _mapController != null) {
+    if (_initialPosition != null) {
       _mapController.animateCamera(CameraUpdate.newLatLng(_initialPosition!));
     }
   }
@@ -117,11 +111,7 @@ class _MapPageState extends State<MapPage> {
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              setState(() {
-                _markerPosition = null;
-                _markerData = null;
-                _popUpPosition = null;
-              });
+              setState(() {});
             },
           ),
           GoogleMap(
