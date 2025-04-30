@@ -1,9 +1,7 @@
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eco_finder/pages/navigation_items.dart';
-import 'package:eco_finder/pages/store_profile_page.dart';
+import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'dart:math';
 import 'package:location/location.dart';
@@ -269,6 +267,7 @@ class _SearchPageState extends State<SearchPage> {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, NavigationItems.navMap.route);
           },
           icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
         ),
@@ -322,14 +321,10 @@ class _SearchPageState extends State<SearchPage> {
                         data['description'] ?? 'No description available',
                       ),
                       onTap: () {
-                        Navigator.pop(context); // Fecha o model
-                        Navigator.push(
+                        Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    StoreProfilePage(storeRef: _searchResults[index].reference),
-                          ),
+                          NavigationItems.navSearchProfile.route,
+                          arguments: _searchResults[index].reference,
                         );
                       },
                     ),

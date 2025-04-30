@@ -1,12 +1,12 @@
 import 'package:eco_finder/common_widgets/appbar_widget.dart';
-import 'package:eco_finder/pages/navigation_items.dart';
+import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
 import 'package:eco_finder/features/notifications/notification_model.dart';
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
 
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({Key? key}) : super(key: key);
-  final int _selectedIndex = 4; // Assuming this is the index for notifications
+  final int _selectedIndex = 1; // Assuming this is the index for notifications
   List<NotificationModel> _mockNotifications() {
     final now = DateTime.now();
     return [

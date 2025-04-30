@@ -1,5 +1,6 @@
+import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
-import 'package:eco_finder/pages/location_picker_widget.dart';
+import 'package:eco_finder/features/add_business/location_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddBusinessPage extends StatefulWidget {
@@ -231,6 +232,13 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
       appBar: AppBar(
         title: Text('Adicionar Negócio Sustentável'),
         backgroundColor: Color(0xFF3E8E4D),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, NavigationItems.navMap.route);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),

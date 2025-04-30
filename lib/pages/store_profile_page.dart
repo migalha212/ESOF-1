@@ -5,7 +5,7 @@ import 'package:eco_finder/common_widgets/navbar_widget.dart'; // Importa o teu 
 class StoreProfilePage extends StatelessWidget {
   final DocumentReference storeRef;
 
-  const StoreProfilePage({Key? key, required this.storeRef}) : super(key: key);
+  const StoreProfilePage({super.key, required this.storeRef});
 
   @override
   Widget build(BuildContext context) {

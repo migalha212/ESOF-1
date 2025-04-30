@@ -1,4 +1,4 @@
-import 'package:eco_finder/pages/navigation_items.dart';
+import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
@@ -14,7 +14,7 @@ class NavBar extends StatelessWidget {
         Navigator.pushNamed(context, NavigationItems.navSearch.route);
         break;
       case 1:
-        Navigator.pushNamed(context, NavigationItems.navLanding.route);
+        Navigator.pushNamed(context, NavigationItems.navNotifications.route);
         break;
       case 2:
         Navigator.pushNamed(context, NavigationItems.navMap.route);
@@ -23,7 +23,7 @@ class NavBar extends StatelessWidget {
         Navigator.pushNamed(context, NavigationItems.navAddBusiness.route);
         break;
       case 4:
-        Navigator.pushNamed(context, NavigationItems.navNotifications.route);
+        Navigator.pushNamed(context, NavigationItems.navLanding.route);
         break;
       default:
         break; // Handle other cases if needed
@@ -69,7 +69,7 @@ class NavBar extends StatelessWidget {
             NavigationDestination(
               icon: Icon(Icons.calendar_month_outlined),
               selectedIcon: Icon(Icons.calendar_month),
-              label: '',
+              label: 'Events',
             ),
             NavigationDestination(
               icon: Icon(Icons.home_outlined),
