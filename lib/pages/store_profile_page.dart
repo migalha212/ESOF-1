@@ -3,12 +3,38 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart'; // Importa o teu widget NavBar
+import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 
 class StoreProfilePage extends StatelessWidget {
   final DocumentReference storeRef;
 
   const StoreProfilePage({super.key, required this.storeRef});
+
+  Future<void> _shareStoreDetails(BuildContext context, Map<String, dynamic> data, String storeName) async {
+    String shareText = '$storeName\n\n';
+    if (data['description'] != null && data['description'].isNotEmpty) {
+      shareText += 'Descrição: ${data['description']}\n';
+    }
+    if (data['contactPhone'] != null && data['contactPhone'].isNotEmpty) {
+      shareText += 'Telefone: ${data['contactPhone']}\n';
+    }
+    if (data['website'] != null && data['website'].isNotEmpty) {
+      shareText += 'Website: ${data['website']}\n';
+    }
+    if (data['address'] != null && data['address'].isNotEmpty) {
+      shareText += 'Morada: ${data['address']}\n';
+    }
+
+    try {
+      await Share.share(shareText);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Não foi possível partilhar os detalhes da loja.')),
+      );
+      debugPrint('Erro ao partilhar: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +45,7 @@ class StoreProfilePage extends StatelessWidget {
           return const Scaffold(
             backgroundColor: Colors.white,
             body: Center(child: CircularProgressIndicator(color: Colors.green)),
-            bottomNavigationBar: NavBar(
-              selectedIndex: 0,
-            ), // Adiciona a NavBar aqui
+            bottomNavigationBar: NavBar(selectedIndex: 0),
           );
         }
 
@@ -30,20 +54,12 @@ class StoreProfilePage extends StatelessWidget {
             backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: Colors.green,
-              title: const Text(
-                'Loja não encontrada',
-                style: TextStyle(color: Colors.white),
-              ),
+              title: const Text('Loja não encontrada', style: TextStyle(color: Colors.white)),
             ),
             body: const Center(
-              child: Text(
-                'Loja não encontrada',
-                style: TextStyle(color: Colors.green),
-              ),
+              child: Text('Loja não encontrada', style: TextStyle(color: Colors.green)),
             ),
-            bottomNavigationBar: const NavBar(
-              selectedIndex: 0,
-            ), // Adiciona a NavBar aqui
+            bottomNavigationBar: const NavBar(selectedIndex: 0),
           );
         }
 
@@ -53,22 +69,15 @@ class StoreProfilePage extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: const Color(0xFF3E8E4D), // green color
-            title: Text(
-              storeName.isNotEmpty ? storeName : 'Loja',
-              style: const TextStyle(color: Colors.white),
-            ),
+            backgroundColor: Colors.green,
+            title: Text(storeName.isNotEmpty ? storeName : 'Loja', style: const TextStyle(color: Colors.white)),
             iconTheme: const IconThemeData(color: Colors.white),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context, {
-                  'latitude': data['latitude'], // Replace with actual latitude
-                  'longitude':
-                      data['longitude'], // Replace with actual longitude
-                });
-              },
-            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () => _shareStoreDetails(context, data, storeName),
+              ),
+            ],
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -115,10 +124,7 @@ class StoreProfilePage extends StatelessWidget {
                     child: Center(
                       child: Text(
                         storeName.isNotEmpty ? storeName : 'Nome da Loja',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
+                        style: const TextStyle(fontSize: 20, color: Colors.white),
                       ),
                     ),
                   ),
@@ -127,59 +133,53 @@ class StoreProfilePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildInfoRow(
-                        Icons.category_outlined,
-                        'Categoria',
-                        data['primaryCategories']?.join(', '),
-                      ),
-                      _buildInfoRow(
-                        Icons.description_outlined,
-                        'Descrição',
-                        data['description'],
-                      ),
-                      _buildInfoRow(
-                        Icons.phone_outlined,
-                        'Telefone',
-                        data['contactPhone'],
-                      ),
-                      _buildInfoRow(
-                        Icons.email_outlined,
-                        'Email',
-                        data['email'],
-                      ),
+                      _buildInfoRow(Icons.category_outlined, 'Categoria', data['primaryCategories']?.join(', ')),
+                      _buildInfoRow(Icons.description_outlined, 'Descrição', data['description']),
+                      _buildInfoRow(Icons.phone_outlined, 'Telefone', data['contactPhone']),
+                      _buildInfoRow(Icons.email_outlined, 'Email', data['email']),
                       _buildInfoRow(
                         Icons.language_outlined,
                         'Website',
                         data['website'],
+                        onTap: () async {
+                          String? url = data['website'];
+                          if (url != null && url.isNotEmpty) {
+                            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                              url = 'https://$url';
+                            }
+                            final Uri uri = Uri.parse(url);
+                            try {
+                              final bool launched = await launchUrl(
+                                uri,
+                                mode: LaunchMode.externalApplication,
+                              );
+                              if (!launched) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Não foi possível abrir o link do website.')),
+                                );
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Ocorreu um erro ao abrir o link.')),
+                              );
+                            }
+                          }
+                        },
                       ),
                       _buildInfoRow(
                         Icons.location_on_outlined,
                         'Morada',
                         data['address'],
-                        onTap: () {
-                          if (data['latitude'] != null &&
-                              data['longitude'] != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => MapPage(
-                                      initialPosition: LatLng(
-                                        data['latitude'],
-                                        data['longitude'],
-                                      ),
-                                      initialZoom: 16.0, // Default zoom level
-                                    ),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Location data not available for this store.',
-                                ),
-                              ),
-                            );
+                        onTap: () async {
+                          if (data['address'] != null && data['address'].isNotEmpty) {
+                            final Uri uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(data['address'])}');
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri, mode: LaunchMode.externalApplication);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Não foi possível abrir o mapa.')),
+                              );
+                            }
                           }
                         },
                       ),
@@ -218,16 +218,11 @@ class StoreProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(
-    IconData icon,
-    String label,
-    String? value, {
-    VoidCallback? onTap,
-  }) {
+  Widget _buildInfoRow(IconData icon, String label, String? value, {VoidCallback? onTap}) {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
+
+    if (label == 'Telefone') {
+      return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,17 +235,50 @@ class StoreProfilePage extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
                   const SizedBox(height: 4.0),
+                  SelectableText(value, style: const TextStyle(fontSize: 14, color: Colors.black54)),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.call, color: Colors.green),
+              onPressed: () async {
+                final Uri uri = Uri.parse('tel:$value');
+                if (await canLaunchUrl(uri)) {
+                  try {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  } catch (e) {
+                    debugPrint('Erro ao tentar abrir o telefone: $e');
+                  }
+                }
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: Colors.green.shade700),
+            const SizedBox(width: 12.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    value,
-                    style: const TextStyle(fontSize: 14, color: Colors.black54),
+                    label,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
+                  const SizedBox(height: 4.0),
+                  Text(value, style: const TextStyle(fontSize: 14, color: Colors.black54)),
                 ],
               ),
             ),
