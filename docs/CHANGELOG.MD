@@ -1,3 +1,5 @@
+## [V0.3.0 (April 30, 2025)](https://github.com/LEIC-ES-2024-25/2LEIC08T1/compare/Sprint-1-End...v0.3)
+
 ## [V0.2.0 (April 07, 2025)](https://github.com/LEIC-ES-2024-25/2LEIC08T1/compare/VerticalPrototype...Sprint-1-End)
 
 ### What's Changed
