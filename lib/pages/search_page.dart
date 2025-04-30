@@ -11,8 +11,14 @@ import 'package:location/location.dart';
 class SearchPage extends StatefulWidget {
   final double? hoveredLatitude;
   final double? hoveredLongitude;
+  final double? zoomLevel;
 
-  const SearchPage({super.key, this.hoveredLatitude, this.hoveredLongitude});
+  const SearchPage({
+    super.key,
+    this.hoveredLatitude,
+    this.hoveredLongitude,
+    this.zoomLevel,
+  });
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -282,6 +288,7 @@ class _SearchPageState extends State<SearchPage> {
                                 widget.hoveredLongitude!,
                               )
                               : null,
+                      initialZoom: widget.zoomLevel,
                     ),
               ),
             );

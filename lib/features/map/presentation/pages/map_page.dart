@@ -9,8 +9,9 @@ import 'package:eco_finder/common_widgets/navbar_widget.dart';
 
 class MapPage extends StatefulWidget {
   final LatLng? initialPosition;
+  final double? initialZoom;
 
-  const MapPage({super.key, this.initialPosition});
+  const MapPage({super.key, this.initialPosition, this.initialZoom});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -127,7 +128,7 @@ class _MapPageState extends State<MapPage> {
             GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: _initialPosition!,
-                zoom: 14,
+                zoom: widget.initialZoom ?? 14, // Use passed zoom if any
               ),
               markers: _markers,
               myLocationEnabled: true,
@@ -137,7 +138,12 @@ class _MapPageState extends State<MapPage> {
                 _mapController = controller;
                 if (_initialPosition != null) {
                   _mapController.animateCamera(
-                    CameraUpdate.newLatLng(_initialPosition!),
+                    CameraUpdate.newCameraPosition(
+                      CameraPosition(
+                        target: _initialPosition!,
+                        zoom: widget.initialZoom ?? 14, // reuse zoom level
+                      ),
+                    ),
                   );
                 }
               },
@@ -164,6 +170,9 @@ class _MapPageState extends State<MapPage> {
                           2,
                     );
 
+                    // Get current zoom level
+                    double zoom = await _mapController.getZoomLevel();
+
                     final shouldReload = await Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -171,6 +180,7 @@ class _MapPageState extends State<MapPage> {
                             (context) => SearchPage(
                               hoveredLatitude: center.latitude,
                               hoveredLongitude: center.longitude,
+                              zoomLevel: zoom, // Pass zoom
                             ),
                       ),
                     );
