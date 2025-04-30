@@ -1,12 +1,14 @@
+import 'package:eco_finder/features/map/data/business_service.dart';
+import 'package:eco_finder/features/map/presentation/widgets/marker_sheet.dart';
+import 'package:eco_finder/features/map/presentation/widgets/search_button.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:eco_finder/pages/search_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
-import 'store_profile_page.dart';
+
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -43,87 +45,21 @@ class _MapPageState extends State<MapPage> {
     setState(() {}); // Trigger rebuild to apply the style once loaded
   }
 
-  Future<void> _loadEcoMarkets() async {
+Future<void> _loadEcoMarkets() async {
     try {
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('businesses').get();
-
-      Set<Marker> newMarkers =
-          querySnapshot.docs.map((doc) {
-            var data = doc.data() as Map<String, dynamic>;
-            final position = LatLng(data['latitude'], data['longitude']);
-            return Marker(
-              markerId: MarkerId(doc.id),
-              position: position,
-              onTap: () async {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  backgroundColor: Colors.white,
-                  builder: (BuildContext context) {
-                    return FractionallySizedBox(
-                      heightFactor: 0.45,
-                      widthFactor: 1.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 5,
-                              margin: const EdgeInsets.only(bottom: 16),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            Text(
-                              data['name'],
-                              style: const TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                child: Text(
-                                  data['description'] ?? ' ',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.pushNamed(context, NavigationItems.navMapProfile.route, arguments: doc.reference);
-                              },
-                              icon: const Icon(Icons.store, size: 20),
-                              label: const Text(
-                                'Ver página da loja',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF3E8E4D),
-                                foregroundColor: Colors.white,
-                                minimumSize: const Size(double.infinity, 60),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          }).toSet();
+      final newMarkers = await MarketService().getBusinessMarkers(
+        onTap: (business) {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            backgroundColor: Colors.white,
+            builder: (context) => StoreBottomSheet(business: business),
+          );
+        },
+      );
 
       setState(() {
         _markers = newMarkers;
