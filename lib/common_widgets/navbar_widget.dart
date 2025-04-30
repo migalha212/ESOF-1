@@ -8,7 +8,9 @@ class NavBar extends StatelessWidget {
 
   void _handleNavigation(BuildContext context, int index) {
     if (index == selectedIndex) return; // Already on this page
-
+    if(selectedIndex != 2) {
+    Navigator.pop(context);
+    }
     switch (index) {
       case 0:
         Navigator.pushNamed(context, NavigationItems.navSearch.route);

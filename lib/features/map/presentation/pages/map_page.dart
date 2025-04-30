@@ -1,9 +1,9 @@
 import 'package:eco_finder/features/map/data/business_service.dart';
 import 'package:eco_finder/features/map/presentation/widgets/marker_sheet.dart';
-import 'package:eco_finder/pages/search_page.dart';
+import 'package:eco_finder/features/search/presentation/pages/search_page.dart';
+import 'package:eco_finder/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
 
@@ -20,7 +20,6 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   LatLng? _initialPosition;
   late GoogleMapController _mapController;
-  final Location _location = Location();
   Set<Marker> _markers = {};
   bool _hovering = false;
   String? _mapStyle; // Stores your custom map style
@@ -48,7 +47,7 @@ class _MapPageState extends State<MapPage> {
     if (widget.initialPosition != null) {
       _initialPosition = widget.initialPosition;
     } else {
-      final userLoc = await _getUserLocation();
+      final userLoc = await LocationService().getCurrentLocation();
       if (userLoc != null) {
         _initialPosition = userLoc;
       }
@@ -99,30 +98,6 @@ class _MapPageState extends State<MapPage> {
     } catch (e) {
       //
     }
-  }
-
-  Future<LatLng?> _getUserLocation() async {
-    bool serviceEnabled = await _location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await _location.requestService();
-      if (!serviceEnabled) return null;
-    }
-
-    PermissionStatus permissionStatus = await _location.hasPermission();
-    if (permissionStatus == PermissionStatus.denied) {
-      permissionStatus = await _location.requestPermission();
-      if (permissionStatus != PermissionStatus.granted) return null;
-    }
-
-    LocationData locationData = await _location.getLocation();
-    print(
-      "Got user location: ${locationData.latitude}, ${locationData.longitude}",
-    );
-
-    if (locationData.latitude != null && locationData.longitude != null) {
-      return LatLng(locationData.latitude!, locationData.longitude!);
-    }
-    return null;
   }
 
   @override

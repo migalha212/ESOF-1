@@ -6,7 +6,7 @@ import 'package:eco_finder/features/map/presentation/pages/map_page.dart';
 import 'package:eco_finder/pages/store_profile_page.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:eco_finder/features/notifications/presentation/pages/notifications_page.dart';
-import 'package:eco_finder/pages/search_page.dart';
+import 'package:eco_finder/features/search/presentation/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
