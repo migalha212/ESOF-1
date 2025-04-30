@@ -9,18 +9,17 @@ import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
 
-
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  final LatLng? initialPosition;
+
+  const MapPage({super.key, this.initialPosition});
+
   @override
   State<MapPage> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
-  static const LatLng _initialPosition = LatLng(
-    41.17740754929651,
-    -8.596500719923418,
-  );
+  LatLng? _initialPosition;
   late GoogleMapController _mapController;
   final Location _location = Location();
   Set<Marker> _markers = {};
@@ -36,8 +35,24 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     _loadMapStyle(); // Load the custom map style
-    _getUserLocation();
-    _loadEcoMarkets();
+    _loadEcoMarkets(); // Load markers
+  }
+
+  Future<void> _setInitialPosition() async {
+    if (widget.initialPosition != null) {
+      _initialPosition = widget.initialPosition;
+    } else {
+      final userLoc = await _getUserLocation();
+      if (userLoc != null) {
+        _initialPosition = userLoc;
+      }
+    }
+
+    print("Initial position is: $_initialPosition");
+
+    if (_initialPosition != null && _mapController != null) {
+      _mapController.animateCamera(CameraUpdate.newLatLng(_initialPosition!));
+    }
   }
 
   Future<void> _loadMapStyle() async {
@@ -45,7 +60,7 @@ class _MapPageState extends State<MapPage> {
     setState(() {}); // Trigger rebuild to apply the style once loaded
   }
 
-Future<void> _loadEcoMarkets() async {
+  Future<void> _loadEcoMarkets() async {
     try {
       final newMarkers = await MarketService().getBusinessMarkers(
         onTap: (business) {
@@ -69,24 +84,28 @@ Future<void> _loadEcoMarkets() async {
     }
   }
 
-  void _getUserLocation() async {
+  Future<LatLng?> _getUserLocation() async {
     bool serviceEnabled = await _location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await _location.requestService();
-      if (!serviceEnabled) return;
+      if (!serviceEnabled) return null;
     }
 
     PermissionStatus permissionStatus = await _location.hasPermission();
     if (permissionStatus == PermissionStatus.denied) {
       permissionStatus = await _location.requestPermission();
-      if (permissionStatus != PermissionStatus.granted) return;
+      if (permissionStatus != PermissionStatus.granted) return null;
     }
 
     LocationData locationData = await _location.getLocation();
+    print(
+      "Got user location: ${locationData.latitude}, ${locationData.longitude}",
+    );
+
     if (locationData.latitude != null && locationData.longitude != null) {
-      _userPosition = LatLng(locationData.latitude!, locationData.longitude!);
-      _mapController.animateCamera(CameraUpdate.newLatLng(_userPosition!));
+      return LatLng(locationData.latitude!, locationData.longitude!);
     }
+    return null;
   }
 
   @override
@@ -107,15 +126,23 @@ Future<void> _loadEcoMarkets() async {
           ),
           GoogleMap(
             initialCameraPosition: CameraPosition(
-              target: _initialPosition,
+              target:
+                  _initialPosition ??
+                  const LatLng(0, 0), // Fallback to (0, 0) if null,
               zoom: 14,
             ),
             markers: _markers,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
             style: _mapStyle, // Apply the custom map style here
-            onMapCreated: (controller) {
+            onMapCreated: (controller) async {
               _mapController = controller;
+
+              // Wait a bit to ensure the map is fully rendered
+              await Future.delayed(Duration(milliseconds: 300));
+
+              // Set the initial position after the map is created
+              await _setInitialPosition();
             },
           ),
 
@@ -130,11 +157,14 @@ Future<void> _loadEcoMarkets() async {
                 onExit: (_) => setState(() => _hovering = false),
                 child: GestureDetector(
                   onTap: () async {
-                    LatLng center = await _mapController.getLatLng(
-                      ScreenCoordinate(
-                        x: MediaQuery.of(context).size.width ~/ 2,
-                        y: MediaQuery.of(context).size.height ~/ 2,
-                      ),
+                    LatLngBounds bounds =
+                        await _mapController.getVisibleRegion();
+                    LatLng center = LatLng(
+                      (bounds.northeast.latitude + bounds.southwest.latitude) /
+                          2,
+                      (bounds.northeast.longitude +
+                              bounds.southwest.longitude) /
+                          2,
                     );
 
                     // Navigate to the SearchPage
