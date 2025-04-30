@@ -23,13 +23,23 @@ class _MapPageState extends State<MapPage> {
   Set<Marker> _markers = {};
   bool _hovering = false;
   String? _mapStyle; // Stores your custom map style
+  bool _isMapReady = false;
 
   final int _index = 2;
   @override
   void initState() {
     super.initState();
-    _loadMapStyle(); // Load the custom map style
-    _loadEcoMarkets(); // Load markers
+    _init();
+  }
+
+  Future<void> _init() async {
+    await _loadMapStyle();
+    await _setInitialPosition();
+    await _loadEcoMarkets();
+
+    setState(() {
+      _isMapReady = true;
+    });
   }
 
   Future<void> _setInitialPosition() async {
@@ -43,10 +53,6 @@ class _MapPageState extends State<MapPage> {
     }
 
     print("Initial position is: $_initialPosition");
-
-    if (_initialPosition != null) {
-      _mapController.animateCamera(CameraUpdate.newLatLng(_initialPosition!));
-    }
   }
 
   Future<void> _loadMapStyle() async {
@@ -114,27 +120,28 @@ class _MapPageState extends State<MapPage> {
               setState(() {});
             },
           ),
-          GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target:
-                  _initialPosition ??
-                  const LatLng(0, 0), // Fallback to (0, 0) if null,
-              zoom: 14,
+
+          if (!_isMapReady || _initialPosition == null)
+            const Center(child: CircularProgressIndicator())
+          else
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _initialPosition!,
+                zoom: 14,
+              ),
+              markers: _markers,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              style: _mapStyle, // Apply the custom map style here
+              onMapCreated: (controller) async {
+                _mapController = controller;
+                if (_initialPosition != null) {
+                  _mapController.animateCamera(
+                    CameraUpdate.newLatLng(_initialPosition!),
+                  );
+                }
+              },
             ),
-            markers: _markers,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            style: _mapStyle, // Apply the custom map style here
-            onMapCreated: (controller) async {
-              _mapController = controller;
-
-              // Wait a bit to ensure the map is fully rendered
-              await Future.delayed(Duration(milliseconds: 300));
-
-              // Set the initial position after the map is created
-              await _setInitialPosition();
-            },
-          ),
 
           // Search Button
           Positioned(
@@ -157,8 +164,7 @@ class _MapPageState extends State<MapPage> {
                           2,
                     );
 
-                    // Navigate to the SearchPage
-                    Navigator.push(
+                    final shouldReload = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
@@ -168,7 +174,16 @@ class _MapPageState extends State<MapPage> {
                             ),
                       ),
                     );
+
+                    if (shouldReload == true) {
+                      setState(() {
+                        _isMapReady = false;
+                        _initialPosition = null;
+                      });
+                      await _init(); // re-trigger loading and location fetch
+                    }
                   },
+
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 200),
                     width: 200,
