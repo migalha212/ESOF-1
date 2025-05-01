@@ -33,6 +33,7 @@ class _SearchPageState extends State<SearchPage> {
 
   double? _hoveredLat;
   double? _hoveredLng;
+  double? _zoomLvl;
   List<DocumentSnapshot> _searchResults = [];
   bool _isFilterExpanded = false;
   static const int _maxSearchResults = 10;
@@ -252,6 +253,7 @@ class _SearchPageState extends State<SearchPage> {
     _getUserLocation();
     _hoveredLat = widget.hoveredLatitude;
     _hoveredLng = widget.hoveredLongitude;
+    _zoomLvl = widget.zoomLevel ?? 18.0;
     _searchController.addListener(_searchMarkets);
     _searchMarkets();
   }
@@ -281,14 +283,10 @@ class _SearchPageState extends State<SearchPage> {
                 builder:
                     (context) => MapPage(
                       initialPosition:
-                          widget.hoveredLatitude != null &&
-                                  widget.hoveredLongitude != null
-                              ? LatLng(
-                                widget.hoveredLatitude!,
-                                widget.hoveredLongitude!,
-                              )
+                          _hoveredLat != null && _hoveredLng != null
+                              ? LatLng(_hoveredLat!, _hoveredLng!)
                               : null,
-                      initialZoom: widget.zoomLevel,
+                      initialZoom: _zoomLvl,
                     ),
               ),
             );

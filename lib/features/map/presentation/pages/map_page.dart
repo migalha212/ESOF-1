@@ -25,6 +25,7 @@ class _MapPageState extends State<MapPage> {
   bool _hovering = false;
   String? _mapStyle; // Stores your custom map style
   bool _isMapReady = false;
+  static const double _defaultZoom = 16.0;
 
   final int _index = 2;
   @override
@@ -65,6 +66,21 @@ class _MapPageState extends State<MapPage> {
     try {
       final newMarkers = await MarketService().getBusinessMarkers(
         onTap: (business) {
+          final LatLng marketPosition = LatLng(
+            business.latitude,
+            business.longitude,
+          );
+
+          // Animate the camera to the market position with the default zoom
+          _mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: marketPosition,
+                zoom: _defaultZoom, // Set to your default zoom level
+              ),
+            ),
+          );
+
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
@@ -128,7 +144,9 @@ class _MapPageState extends State<MapPage> {
             GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: _initialPosition!,
-                zoom: widget.initialZoom ?? 14, // Use passed zoom if any
+                zoom:
+                    widget.initialZoom ??
+                    _defaultZoom, // Use passed zoom if any
               ),
               markers: _markers,
               myLocationEnabled: true,
@@ -141,7 +159,9 @@ class _MapPageState extends State<MapPage> {
                     CameraUpdate.newCameraPosition(
                       CameraPosition(
                         target: _initialPosition!,
-                        zoom: widget.initialZoom ?? 14, // reuse zoom level
+                        zoom:
+                            widget.initialZoom ??
+                            _defaultZoom, // reuse zoom level
                       ),
                     ),
                   );

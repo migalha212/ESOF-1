@@ -1,6 +1,8 @@
+import 'package:eco_finder/features/map/presentation/pages/map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eco_finder/common_widgets/navbar_widget.dart'; // Importa o teu widget NavBar
+import 'package:eco_finder/common_widgets/navbar_widget.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart'; // Importa o teu widget NavBar
 
 class StoreProfilePage extends StatelessWidget {
   final DocumentReference storeRef;
@@ -50,12 +52,22 @@ class StoreProfilePage extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.green,
+            backgroundColor: const Color(0xFF3E8E4D), // green color
             title: Text(
               storeName.isNotEmpty ? storeName : 'Loja',
               style: const TextStyle(color: Colors.white),
             ),
             iconTheme: const IconThemeData(color: Colors.white),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context, {
+                  'latitude': data['latitude'], // Replace with actual latitude
+                  'longitude':
+                      data['longitude'], // Replace with actual longitude
+                });
+              },
+            ),
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -143,6 +155,32 @@ class StoreProfilePage extends StatelessWidget {
                         Icons.location_on_outlined,
                         'Morada',
                         data['address'],
+                        onTap: () {
+                          if (data['latitude'] != null &&
+                              data['longitude'] != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => MapPage(
+                                      initialPosition: LatLng(
+                                        data['latitude'],
+                                        data['longitude'],
+                                      ),
+                                      initialZoom: 16.0, // Default zoom level
+                                    ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Location data not available for this store.',
+                                ),
+                              ),
+                            );
+                          }
+                        },
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -159,36 +197,44 @@ class StoreProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String? value) {
+  Widget _buildInfoRow(
+    IconData icon,
+    String label,
+    String? value, {
+    VoidCallback? onTap,
+  }) {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: Colors.green.shade700),
-          const SizedBox(width: 12.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: Colors.green.shade700),
+            const SizedBox(width: 12.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4.0),
-                Text(
-                  value,
-                  style: const TextStyle(fontSize: 14, color: Colors.black54),
-                ),
-              ],
+                  const SizedBox(height: 4.0),
+                  Text(
+                    value,
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
