@@ -135,7 +135,7 @@ class StoreProfilePage extends StatelessWidget {
                     children: [
                       _buildInfoRow(Icons.category_outlined, 'Categoria', data['primaryCategories']?.join(', ')),
                       _buildInfoRow(Icons.description_outlined, 'Descrição', data['description']),
-                      _buildInfoRow(Icons.phone_outlined, 'Telefone', data['contactPhone']),
+                      _buildPhoneRow(Icons.phone_outlined, 'Telefone', data['contactPhone']),
                       _buildInfoRow(Icons.email_outlined, 'Email', data['email']),
                       _buildInfoRow(
                         Icons.language_outlined,
@@ -221,45 +221,6 @@ class StoreProfilePage extends StatelessWidget {
   Widget _buildInfoRow(IconData icon, String label, String? value, {VoidCallback? onTap}) {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
 
-    if (label == 'Telefone') {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: Colors.green.shade700),
-            const SizedBox(width: 12.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
-                  ),
-                  const SizedBox(height: 4.0),
-                  SelectableText(value, style: const TextStyle(fontSize: 14, color: Colors.black54)),
-                ],
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.call, color: Colors.green),
-              onPressed: () async {
-                final Uri uri = Uri.parse('tel:$value');
-                if (await canLaunchUrl(uri)) {
-                  try {
-                    await launchUrl(uri, mode: LaunchMode.externalApplication);
-                  } catch (e) {
-                    debugPrint('Erro ao tentar abrir o telefone: $e');
-                  }
-                }
-              },
-            ),
-          ],
-        ),
-      );
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
@@ -284,6 +245,36 @@ class StoreProfilePage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPhoneRow(IconData icon, String label, String? value) {
+    if (value == null || value.isEmpty) return const SizedBox.shrink();
+
+    final cleanedNumber = value.replaceAll(' ', '');
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: Colors.green.shade700),
+          const SizedBox(width: 12.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4.0),
+                SelectableText(
+                  cleanedNumber,
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
