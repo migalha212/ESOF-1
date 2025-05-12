@@ -7,32 +7,54 @@ import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
 
-
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  final LatLng? initialPosition;
+  final double? initialZoom;
+
+  const MapPage({super.key, this.initialPosition, this.initialZoom});
+
   @override
   State<MapPage> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
-  static const LatLng _initialPosition = LatLng(
-    41.17740754929651,
-    -8.596500719923418,
-  );
+  LatLng? _initialPosition;
   late GoogleMapController _mapController;
   final Location _location = Location();
   Set<Marker> _markers = {};
   bool _hovering = false;
   String? _mapStyle; // Stores your custom map style
-  LatLng? _userPosition;
+  bool _isMapReady = false;
+  static const double _defaultZoom = 16.0;
 
   final int _index = 2;
   @override
   void initState() {
     super.initState();
-    _loadMapStyle(); // Load the custom map style
-    _getUserLocation();
-    _loadEcoMarkets();
+    _init();
+  }
+
+  Future<void> _init() async {
+    await _loadMapStyle();
+    await _setInitialPosition();
+    await _loadEcoMarkets();
+
+    setState(() {
+      _isMapReady = true;
+    });
+  }
+
+  Future<void> _setInitialPosition() async {
+    if (widget.initialPosition != null) {
+      _initialPosition = widget.initialPosition;
+    } else {
+      final userLoc = await _getUserLocation();
+      if (userLoc != null) {
+        _initialPosition = userLoc;
+      }
+    }
+
+    print("Initial position is: $_initialPosition");
   }
 
   Future<void> _loadMapStyle() async {
@@ -40,10 +62,25 @@ class _MapPageState extends State<MapPage> {
     setState(() {}); // Trigger rebuild to apply the style once loaded
   }
 
-Future<void> _loadEcoMarkets() async {
+  Future<void> _loadEcoMarkets() async {
     try {
       final newMarkers = await MarketService().getBusinessMarkers(
         onTap: (business) {
+          final LatLng marketPosition = LatLng(
+            business.latitude,
+            business.longitude,
+          );
+
+          // Animate the camera to the market position with the default zoom
+          _mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: marketPosition,
+                zoom: _defaultZoom, // Set to your default zoom level
+              ),
+            ),
+          );
+
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
@@ -64,24 +101,28 @@ Future<void> _loadEcoMarkets() async {
     }
   }
 
-  void _getUserLocation() async {
+  Future<LatLng?> _getUserLocation() async {
     bool serviceEnabled = await _location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await _location.requestService();
-      if (!serviceEnabled) return;
+      if (!serviceEnabled) return null;
     }
 
     PermissionStatus permissionStatus = await _location.hasPermission();
     if (permissionStatus == PermissionStatus.denied) {
       permissionStatus = await _location.requestPermission();
-      if (permissionStatus != PermissionStatus.granted) return;
+      if (permissionStatus != PermissionStatus.granted) return null;
     }
 
     LocationData locationData = await _location.getLocation();
+    print(
+      "Got user location: ${locationData.latitude}, ${locationData.longitude}",
+    );
+
     if (locationData.latitude != null && locationData.longitude != null) {
-      _userPosition = LatLng(locationData.latitude!, locationData.longitude!);
-      _mapController.animateCamera(CameraUpdate.newLatLng(_userPosition!));
+      return LatLng(locationData.latitude!, locationData.longitude!);
     }
+    return null;
   }
 
   @override
@@ -93,23 +134,40 @@ Future<void> _loadEcoMarkets() async {
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              setState(() {
-              });
+              setState(() {});
             },
           ),
-          GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: _initialPosition,
-              zoom: 14,
+
+          if (!_isMapReady || _initialPosition == null)
+            const Center(child: CircularProgressIndicator())
+          else
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _initialPosition!,
+                zoom:
+                    widget.initialZoom ??
+                    _defaultZoom, // Use passed zoom if any
+              ),
+              markers: _markers,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              style: _mapStyle, // Apply the custom map style here
+              onMapCreated: (controller) async {
+                _mapController = controller;
+                if (_initialPosition != null) {
+                  _mapController.animateCamera(
+                    CameraUpdate.newCameraPosition(
+                      CameraPosition(
+                        target: _initialPosition!,
+                        zoom:
+                            widget.initialZoom ??
+                            _defaultZoom, // reuse zoom level
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
-            markers: _markers,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            style: _mapStyle, // Apply the custom map style here
-            onMapCreated: (controller) {
-              _mapController = controller;
-            },
-          ),
 
           // Search Button
           Positioned(
@@ -122,25 +180,40 @@ Future<void> _loadEcoMarkets() async {
                 onExit: (_) => setState(() => _hovering = false),
                 child: GestureDetector(
                   onTap: () async {
-                    LatLng center = await _mapController.getLatLng(
-                      ScreenCoordinate(
-                        x: MediaQuery.of(context).size.width ~/ 2,
-                        y: MediaQuery.of(context).size.height ~/ 2,
-                      ),
+                    LatLngBounds bounds =
+                        await _mapController.getVisibleRegion();
+                    LatLng center = LatLng(
+                      (bounds.northeast.latitude + bounds.southwest.latitude) /
+                          2,
+                      (bounds.northeast.longitude +
+                              bounds.southwest.longitude) /
+                          2,
                     );
 
-                    // Navigate to the SearchPage
-                    Navigator.push(
+                    // Get current zoom level
+                    double zoom = await _mapController.getZoomLevel();
+
+                    final shouldReload = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
                             (context) => SearchPage(
                               hoveredLatitude: center.latitude,
                               hoveredLongitude: center.longitude,
+                              zoomLevel: zoom, // Pass zoom
                             ),
                       ),
                     );
+
+                    if (shouldReload == true) {
+                      setState(() {
+                        _isMapReady = false;
+                        _initialPosition = null;
+                      });
+                      await _init(); // re-trigger loading and location fetch
+                    }
                   },
+
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 200),
                     width: 200,

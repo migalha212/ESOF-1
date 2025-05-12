@@ -1,7 +1,9 @@
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_finder/features/map/presentation/pages/map_page.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'dart:math';
 import 'package:location/location.dart';
@@ -9,8 +11,14 @@ import 'package:location/location.dart';
 class SearchPage extends StatefulWidget {
   final double? hoveredLatitude;
   final double? hoveredLongitude;
+  final double? zoomLevel;
 
-  const SearchPage({super.key, this.hoveredLatitude, this.hoveredLongitude});
+  const SearchPage({
+    super.key,
+    this.hoveredLatitude,
+    this.hoveredLongitude,
+    this.zoomLevel,
+  });
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -25,6 +33,7 @@ class _SearchPageState extends State<SearchPage> {
 
   double? _hoveredLat;
   double? _hoveredLng;
+  double? _zoomLvl;
   List<DocumentSnapshot> _searchResults = [];
   bool _isFilterExpanded = false;
   static const int _maxSearchResults = 10;
@@ -244,6 +253,7 @@ class _SearchPageState extends State<SearchPage> {
     _getUserLocation();
     _hoveredLat = widget.hoveredLatitude;
     _hoveredLng = widget.hoveredLongitude;
+    _zoomLvl = widget.zoomLevel ?? 18.0;
     _searchController.addListener(_searchMarkets);
     _searchMarkets();
   }
@@ -267,7 +277,19 @@ class _SearchPageState extends State<SearchPage> {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, NavigationItems.navMap.route);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => MapPage(
+                      initialPosition:
+                          _hoveredLat != null && _hoveredLng != null
+                              ? LatLng(_hoveredLat!, _hoveredLng!)
+                              : null,
+                      initialZoom: _zoomLvl,
+                    ),
+              ),
+            );
           },
           icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
         ),
