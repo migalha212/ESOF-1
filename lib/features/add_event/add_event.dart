@@ -1,5 +1,5 @@
-import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
+import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:eco_finder/features/add_business/location_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +20,15 @@ class EventService {
       throw Exception('Erro ao adicionar evento: $e');
     }
   }
+
+  Future<List<String>> getShopNames(String query) async {
+    final snapshot = await _db
+        .collection('businesses')
+        .where('name_lowercase', isGreaterThanOrEqualTo: query.toLowerCase())
+        .where('name_lowercase', isLessThan: query.toLowerCase() + 'z' * 10)
+        .get();
+    return snapshot.docs.map((doc) => doc['name'] as String).toList();
+  }
 }
 
 class _AddEventPageState extends State<AddEventPage> {
@@ -37,56 +46,52 @@ class _AddEventPageState extends State<AddEventPage> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
 
-  final Map<String, String> _primaryCategories = {
-    'Workshops': '🛠️',
-    'Feiras': '🎪',
-    'Palestras': '🗣️',
-    'Exposições': '🖼️',
-    'Atividades ao ar livre': '🌳',
-    'Música': '🎶',
-    'Teatro': '🎭',
-    'Cinema': '🎬',
-    'Infantil': '🧸',
-    'Outros': '🏷️',
+  final Map<String, Map<String, dynamic>> _primaryCategories = {
+    'Workshops': {'emoji': '🛠️', 'subcategories': []},
+    'Feiras': {'emoji': '🎪', 'subcategories': []},
+    'Palestras': {'emoji': '🗣️', 'subcategories': []},
+    'Exposições': {'emoji': '🖼️', 'subcategories': []},
+    'Atividades ao ar livre': {'emoji': '🌳', 'subcategories': []},
+    'Música': {'emoji': '🎶', 'subcategories': []},
+    'Teatro': {'emoji': '🎭', 'subcategories': []},
+    'Cinema': {'emoji': '🎬', 'subcategories': []},
+    'Infantil': {'emoji': '🧸', 'subcategories': []},
+    'Outros': {'emoji': '🏷️', 'subcategories': []},
   };
 
-  String? _selectedPrimaryCategory;
+  final List<String> _selectedPrimaryCategories = [];
+  final Map<String, List<String>> _selectedSubcategories = {};
+  List<String> _filteredShopNames = [];
+  bool _showSuggestions = false;
 
   Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2023),
+      firstDate: DateTime(2025),
       lastDate: DateTime(2030),
     );
     if (pickedDate != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-      if (pickedTime != null) {
-        setState(() {
-          controller.text = DateFormat('yyyy-MM-dd HH:mm').format(DateTime(
-            pickedDate.year,
-            pickedDate.month,
-            pickedDate.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          ));
-        });
-      }
+      setState(() {
+        controller.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+      });
     }
   }
 
   void _submitEvent() async {
-    if (_formKey.currentState!.validate() && _selectedPrimaryCategory != null) {
+    if (_formKey.currentState!.validate() && _selectedPrimaryCategories.isNotEmpty) {
+      List<String> primaries = List.from(_selectedPrimaryCategories);
+      Map<String, dynamic> subs = {};
+      _selectedSubcategories.forEach((k, v) => subs[k] = v);
+
       SustainableEvent event = SustainableEvent(
         id: '',
         name: _nameController.text,
         description: _descriptionController.text,
         latitude: double.parse(_latitudeController.text),
         longitude: double.parse(_longitudeController.text),
-        primaryCategory: _selectedPrimaryCategory!,
+        primaryCategories: primaries,
+        subcategories: subs,
         address: _addressController.text,
         website: _websiteController.text,
         imageUrl: _imageUrlController.text,
@@ -111,74 +116,24 @@ class _AddEventPageState extends State<AddEventPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selecione uma categoria primária e preencha todos os campos obrigatórios')),
+        const SnackBar(content: Text('Selecione pelo menos uma categoria primária e preencha todos os campos obrigatórios')),
       );
     }
   }
 
-  Widget _buildImagePreview() {
-    if (_imageUrlController.text.isEmpty) {
-      return Container();
+  void _filterShops(String query) async {
+    if (query.isNotEmpty) {
+      final shops = await _eventService.getShopNames(query);
+      setState(() {
+        _filteredShopNames = shops;
+        _showSuggestions = true;
+      });
+    } else {
+      setState(() {
+        _filteredShopNames = [];
+        _showSuggestions = false;
+      });
     }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Pré-visualização da imagem:',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          height: 180,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 3,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(7),
-            child: Image.network(
-              _imageUrlController.text,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.error_outline, color: Colors.red, size: 40),
-                      SizedBox(height: 8),
-                      Text('Erro ao carregar imagem',
-                          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                );
-              },
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: const Color(0xFF3E8E4D),
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   @override
@@ -243,34 +198,44 @@ class _AddEventPageState extends State<AddEventPage> {
                     },
                   ),
                 ),
-                onChanged: (value) {
-                  setState(() {});
-                },
               ),
-              const SizedBox(height: 8),
-              _buildImagePreview(),
               const SizedBox(height: 16),
-              InputDecorator(
+              Text(
+                'Categorias Primárias (Max. 3)',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              ..._primaryCategories.entries.map(
+                    (entry) => _buildPrimaryCategoryTile(entry.key, entry.value),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _startDateController,
+                readOnly: true,
                 decoration: const InputDecoration(
-                  labelText: 'Categoria Principal',
+                  labelText: 'Data de Início',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.category_outlined, color: Color(0xFF3E8E4D)),
+                  prefixIcon: Icon(Icons.calendar_today_outlined, color: Color(0xFF3E8E4D)),
                 ),
-                child: DropdownButtonFormField<String>(
-                  value: _selectedPrimaryCategory,
-                  items: _primaryCategories.entries.map((entry) {
-                    return DropdownMenuItem<String>(
-                      value: entry.key,
-                      child: Text('${entry.value} ${entry.key}'),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedPrimaryCategory = value;
-                    });
-                  },
-                  validator: (value) => value == null ? 'Selecione uma categoria' : null,
+                onTap: () => _selectDate(context, _startDateController),
+                validator: (value) =>
+                (value == null || value.isEmpty)
+                    ? 'Por favor, selecione a data de início'
+                    : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _endDateController,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  labelText: 'Data de Fim',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.calendar_today_outlined, color: Color(0xFF3E8E4D)),
                 ),
+                onTap: () => _selectDate(context, _endDateController),
+                validator: (value) =>
+                (value == null || value.isEmpty)
+                    ? 'Por favor, selecione a data de fim'
+                    : null,
               ),
               const SizedBox(height: 16),
               LocationPicker(
@@ -280,57 +245,55 @@ class _AddEventPageState extends State<AddEventPage> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _websiteController,
-                decoration: const InputDecoration(
-                  labelText: 'Website do Evento (opcional)',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.language_outlined, color: Color(0xFF3E8E4D)),
-                  hintText: 'https://exemplo.com/evento',
-                ),
-                keyboardType: TextInputType.url,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
                 controller: _hostShopController,
                 decoration: const InputDecoration(
                   labelText: 'Organizador/Loja',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.store_outlined, color: Color(0xFF3E8E4D)),
                 ),
+                onChanged: _filterShops,
                 validator: (value) =>
-                (value == null || value.isEmpty)
-                    ? 'Por favor, insira o organizador/loja'
-                    : null,
+                value == null || value.isEmpty ? 'Por favor, insira o organizador/loja' : null,
               ),
+              if (_showSuggestions && _filteredShopNames.isNotEmpty)
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                  ),
+                  margin: const EdgeInsets.only(top: 2),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _filteredShopNames.length,
+                    itemBuilder: (context, index) {
+                      final shopName = _filteredShopNames[index];
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            _hostShopController.text = shopName;
+                            _showSuggestions = false;
+                            _filteredShopNames = [];
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                          child: Text(shopName),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _startDateController,
-                readOnly: true,
+                controller: _websiteController,
                 decoration: const InputDecoration(
-                  labelText: 'Data e Hora de Início',
+                  labelText: 'Link para o Evento (opcional)',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.event_outlined, color: Color(0xFF3E8E4D)),
+                  prefixIcon: Icon(Icons.link_outlined, color: Color(0xFF3E8E4D)),
+                  hintText: 'https://exemplo.com/evento',
                 ),
-                onTap: () => _selectDate(context, _startDateController),
-                validator: (value) =>
-                (value == null || value.isEmpty)
-                    ? 'Por favor, selecione a data e hora de início'
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _endDateController,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  labelText: 'Data e Hora de Fim',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.event_outlined, color: Color(0xFF3E8E4D)),
-                ),
-                onTap: () => _selectDate(context, _endDateController),
-                validator: (value) =>
-                (value == null || value.isEmpty)
-                    ? 'Por favor, selecione a data e hora de fim'
-                    : null,
+                keyboardType: TextInputType.url,
               ),
               const SizedBox(height: 24),
               ElevatedButton(
@@ -355,6 +318,96 @@ class _AddEventPageState extends State<AddEventPage> {
       ),
     );
   }
+
+  Widget _buildPrimaryCategoryTile(String category, Map<String, dynamic> data) {
+    bool selected = _selectedPrimaryCategories.contains(category);
+    return Card(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        child: ExpansionTile(
+          key: PageStorageKey(category),
+          initiallyExpanded: selected,
+          title: Row(
+            children: [
+              Text('${data['emoji']} $category'),
+              const Spacer(),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    if (selected) {
+                      _selectedPrimaryCategories.remove(category);
+                      _selectedSubcategories.remove(category);
+                    } else {
+                      if (_selectedPrimaryCategories.length < 3) {
+                        _selectedPrimaryCategories.add(category);
+                        _selectedSubcategories[category] = [];
+                      }
+                    }
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(1),
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Icon(
+                    selected ? Icons.check_box : Icons.check_box_outline_blank,
+                    color: selected ? Colors.green : null,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          onExpansionChanged: (expanded) {
+            if (expanded && !selected) {
+              if (_selectedPrimaryCategories.length < 3) {
+                setState(() {
+                  _selectedPrimaryCategories.add(category);
+                  _selectedSubcategories[category] = [];
+                });
+              }
+            }
+          },
+          children: [
+            Wrap(
+              spacing: 8,
+              children: List<String>.from(data['subcategories']).map((sub) {
+                bool subSelected = _selectedSubcategories[category]?.contains(sub) ?? false;
+                return ChoiceChip(
+                  label: Text(sub),
+                  selected: subSelected,
+                  onSelected: (bool sel) {
+                    setState(() {
+                      if (sel) {
+                        _selectedSubcategories[category] ??= [];
+                        _selectedSubcategories[category]!.add(sub);
+                      } else {
+                        _selectedSubcategories[category]?.remove(sub);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedPrimaryCategories.remove(category);
+                    _selectedSubcategories.remove(category);
+                  });
+                },
+                child: const Text('Desselecionar'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class SustainableEvent {
@@ -363,7 +416,8 @@ class SustainableEvent {
   String description;
   double latitude;
   double longitude;
-  String primaryCategory;
+  List<String> primaryCategories;
+  Map<String, dynamic> subcategories;
   String address;
   String? website;
   String? imageUrl;
@@ -377,7 +431,8 @@ class SustainableEvent {
     required this.description,
     required this.latitude,
     required this.longitude,
-    required this.primaryCategory,
+    required this.primaryCategories,
+    required this.subcategories,
     required this.address,
     this.website,
     this.imageUrl,
@@ -393,7 +448,8 @@ class SustainableEvent {
       'description': description,
       'latitude': latitude,
       'longitude': longitude,
-      'primaryCategory': primaryCategory,
+      'primaryCategories': primaryCategories,
+      'subcategories': subcategories,
       'address': address,
       'website': website,
       'imageUrl': imageUrl,
