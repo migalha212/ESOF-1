@@ -97,61 +97,69 @@ class StoreBottomSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            Center(
-              child: Text(
-                business.name,
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-             if (business.description != null)
-              Text(
-                business.description!,
-                textAlign: TextAlign.left,
-                style: const TextStyle(fontSize: 16),
-                maxLines: 3, // Limitando a descrição a 3 linhas
-                overflow:
-                    TextOverflow
-                        .ellipsis, // Adicionando "..." para indicar texto oculto
-              ),
-            const SizedBox(height: 10),
-            if (business.address != null)
-              GestureDetector(
-                onTap: () {
-                  final address = Uri.encodeComponent(business.address!);
-                  final url =
-                      'https://www.google.com/maps/search/?api=1&query=$address';
-                  launchUrl(Uri.parse(url));
-                },
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.location_on, color: Color(0xFF3E8E4D)),
-                    const SizedBox(width: 8),
-                    Flexible(
+                    Center(
                       child: Text(
-                        business.address!,
+                        business.name,
                         style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          decoration: TextDecoration.none,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    if (business.description != null)
+                      Text(
+                        business.description!,
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(fontSize: 16),
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    const SizedBox(height: 10),
+                    if (business.address != null)
+                      GestureDetector(
+                        onTap: () {
+                          final address = Uri.encodeComponent(business.address!);
+                          final url =
+                              'https://www.google.com/maps/search/?api=1&query=$address';
+                          launchUrl(Uri.parse(url));
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.location_on, color: Color(0xFF3E8E4D)),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                business.address!,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 10),
+                    if (business.website != null)
+                      _buildWebsiteRow(
+                        Icons.language_outlined,
+                        'Website',
+                        business.website,
+                        context,
+                      ),
                   ],
                 ),
               ),
-            const SizedBox(height: 10),
-            if(business.website != null)
-              _buildWebsiteRow(
-                Icons.language_outlined,
-                'Website',
-                business.website,
-                context
-              ),
-            const SizedBox(height: 20),
+            ),
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.pushNamed(
