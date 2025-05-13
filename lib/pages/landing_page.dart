@@ -212,7 +212,7 @@ class LandingPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                bottom: 152,
+                bottom: 144,
                 right: 16,
                 child: FloatingActionButton.extended(
                   heroTag: null,

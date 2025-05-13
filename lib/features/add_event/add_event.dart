@@ -46,17 +46,49 @@ class _AddEventPageState extends State<AddEventPage> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
 
+  String? _locationError;
+
   final Map<String, Map<String, dynamic>> _primaryCategories = {
-    'Workshops': {'emoji': '🛠️', 'subcategories': []},
-    'Feiras': {'emoji': '🎪', 'subcategories': []},
-    'Palestras': {'emoji': '🗣️', 'subcategories': []},
-    'Exposições': {'emoji': '🖼️', 'subcategories': []},
-    'Atividades ao ar livre': {'emoji': '🌳', 'subcategories': []},
-    'Música': {'emoji': '🎶', 'subcategories': []},
-    'Teatro': {'emoji': '🎭', 'subcategories': []},
-    'Cinema': {'emoji': '🎬', 'subcategories': []},
-    'Infantil': {'emoji': '🧸', 'subcategories': []},
-    'Outros': {'emoji': '🏷️', 'subcategories': []},
+    'Alimentos': {
+      'emoji': '🍏',
+      'subcategories': ['Orgânicos', 'Vegan', 'Biológicos'],
+    },
+    'Roupas': {
+      'emoji': '👗',
+      'subcategories': ['Reciclada', 'Eco-Friendly', 'Segunda Mão'],
+    },
+    'Itens Colecionáveis': {
+      'emoji': '🎁',
+      'subcategories': ['Vintage', 'Edição Limitada', 'Antiguidades'],
+    },
+    'Decoração': {
+      'emoji': '🏡',
+      'subcategories': ['Móveis', 'Iluminação', 'Arte'],
+    },
+    'Eletrónicos': {
+      'emoji': '📱',
+      'subcategories': ['Smartphones', 'Computadores', 'Acessórios'],
+    },
+    'Brinquedos': {
+      'emoji': '🧸',
+      'subcategories': ['Artesanais', 'Segunda Mão', 'Reciclados'],
+    },
+    'Saúde & Beleza': {
+      'emoji': '💄',
+      'subcategories': ['Cosméticos', 'Cuidados Pessoais', 'Fitness'],
+    },
+    'Artesanato': {
+      'emoji': '🧵',
+      'subcategories': ['Feito à mão', 'Reciclado', 'Regional'],
+    },
+    'Livros': {
+      'emoji': '📚',
+      'subcategories': ['Romance', 'Segunda Mão', 'Infantis'],
+    },
+    'Desportos & Lazer': {
+      'emoji': '⚽',
+      'subcategories': ['Ginasio', 'Ao ar livre', 'Indoor'],
+    },
   };
 
   final List<String> _selectedPrimaryCategories = [];
@@ -79,7 +111,13 @@ class _AddEventPageState extends State<AddEventPage> {
   }
 
   void _submitEvent() async {
-    if (_formKey.currentState!.validate() && _selectedPrimaryCategories.isNotEmpty) {
+    setState(() {
+      _locationError = (_latitudeController.text.isEmpty || _longitudeController.text.isEmpty || _addressController.text.isEmpty)
+          ? 'Por favor, selecione a localização no mapa'
+          : null;
+    });
+
+    if (_formKey.currentState!.validate() && _selectedPrimaryCategories.isNotEmpty && _locationError == null) {
       List<String> primaries = List.from(_selectedPrimaryCategories);
       Map<String, dynamic> subs = {};
       _selectedSubcategories.forEach((k, v) => subs[k] = v);
@@ -116,7 +154,7 @@ class _AddEventPageState extends State<AddEventPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selecione pelo menos uma categoria primária e preencha todos os campos obrigatórios')),
+        const SnackBar(content: Text('Por favor, preencha todos os campos obrigatórios e selecione pelo menos uma categoria e a localização no mapa.')),
       );
     }
   }
@@ -159,14 +197,16 @@ class _AddEventPageState extends State<AddEventPage> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Nome do Evento',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
-                validator: (value) =>
-                (value == null || value.isEmpty)
-                    ? 'Por favor, insira o nome do evento'
-                    : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira o nome do evento';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -176,33 +216,33 @@ class _AddEventPageState extends State<AddEventPage> {
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
-                validator: (value) =>
-                (value == null || value.isEmpty)
-                    ? 'Por favor, insira uma descrição'
-                    : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira uma descrição';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _imageUrlController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'URL da Imagem do Evento',
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.image, color: Color(0xFF3E8E4D)),
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.image, color: Color(0xFF3E8E4D)),
                   hintText: 'https://exemplo.com/imagem_evento.jpg',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.grey),
-                    onPressed: () {
-                      setState(() {
-                        _imageUrlController.clear();
-                      });
-                    },
-                  ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira o URL da imagem do evento';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 'Categorias Primárias (Max. 3)',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               ..._primaryCategories.entries.map(
                     (entry) => _buildPrimaryCategoryTile(entry.key, entry.value),
@@ -211,31 +251,37 @@ class _AddEventPageState extends State<AddEventPage> {
               TextFormField(
                 controller: _startDateController,
                 readOnly: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Data de Início',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.calendar_today_outlined, color: Color(0xFF3E8E4D)),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.calendar_today_outlined, color: Color(0xFF3E8E4D)),
+                  errorText: _startDateController.text.isEmpty && _formKey.currentState != null && !_formKey.currentState!.validate() ? 'Por favor, selecione a data de início' : null,
                 ),
                 onTap: () => _selectDate(context, _startDateController),
-                validator: (value) =>
-                (value == null || value.isEmpty)
-                    ? 'Por favor, selecione a data de início'
-                    : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, selecione a data de início';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _endDateController,
                 readOnly: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Data de Fim',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.calendar_today_outlined, color: Color(0xFF3E8E4D)),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.calendar_today_outlined, color: Color(0xFF3E8E4D)),
+                  errorText: _endDateController.text.isEmpty && _formKey.currentState != null && !_formKey.currentState!.validate() ? 'Por favor, selecione a data de fim' : null,
                 ),
                 onTap: () => _selectDate(context, _endDateController),
-                validator: (value) =>
-                (value == null || value.isEmpty)
-                    ? 'Por favor, selecione a data de fim'
-                    : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, selecione a data de fim';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               LocationPicker(
@@ -243,6 +289,14 @@ class _AddEventPageState extends State<AddEventPage> {
                 longitudeController: _longitudeController,
                 addressController: _addressController,
               ),
+              if (_locationError != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    _locationError!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _hostShopController,
@@ -252,8 +306,12 @@ class _AddEventPageState extends State<AddEventPage> {
                   prefixIcon: Icon(Icons.store_outlined, color: Color(0xFF3E8E4D)),
                 ),
                 onChanged: _filterShops,
-                validator: (value) =>
-                value == null || value.isEmpty ? 'Por favor, insira o organizador/loja' : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira o organizador/loja';
+                  }
+                  return null;
+                },
               ),
               if (_showSuggestions && _filteredShopNames.isNotEmpty)
                 Container(
@@ -288,12 +346,18 @@ class _AddEventPageState extends State<AddEventPage> {
               TextFormField(
                 controller: _websiteController,
                 decoration: const InputDecoration(
-                  labelText: 'Link para o Evento (opcional)',
+                  labelText: 'Link para o Evento',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.link_outlined, color: Color(0xFF3E8E4D)),
-                  hintText: 'https://exemplo.com/evento',
+                  hintText: 'exemplo.com/evento',
                 ),
                 keyboardType: TextInputType.url,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira o link para o evento';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 24),
               ElevatedButton(
@@ -410,52 +474,105 @@ class _AddEventPageState extends State<AddEventPage> {
   }
 }
 
+
 class SustainableEvent {
+
   String id;
+
   String name;
+
   String description;
+
   double latitude;
+
   double longitude;
+
   List<String> primaryCategories;
+
   Map<String, dynamic> subcategories;
+
   String address;
+
   String? website;
+
   String? imageUrl;
+
   String hostShop;
+
   String startDate;
+
   String endDate;
 
+
+
   SustainableEvent({
+
     required this.id,
+
     required this.name,
+
     required this.description,
+
     required this.latitude,
+
     required this.longitude,
+
     required this.primaryCategories,
+
     required this.subcategories,
+
     required this.address,
+
     this.website,
+
     this.imageUrl,
+
     required this.hostShop,
+
     required this.startDate,
+
     required this.endDate,
+
   });
 
+
+
   Map<String, dynamic> toMap() {
+
     return {
+
       'name': name,
+
       'name_lowercase': name.toLowerCase(),
+
       'description': description,
+
       'latitude': latitude,
+
       'longitude': longitude,
+
       'primaryCategories': primaryCategories,
+
       'subcategories': subcategories,
+
       'address': address,
+
       'website': website,
+
       'imageUrl': imageUrl,
+
       'hostShop': hostShop,
+
       'startDate': startDate,
+
       'endDate': endDate,
+
     };
+
+
+
   }
+
+
+
 }
