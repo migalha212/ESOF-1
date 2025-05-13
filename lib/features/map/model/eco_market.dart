@@ -5,9 +5,12 @@ class EcoMarket {
   final String id;
   final String name;
   final String? description;
+  final String? address;
+  final String? website;
   final double latitude;
   final double longitude;
   final DocumentReference reference;
+
 
   EcoMarket({
     required this.id,
@@ -16,6 +19,8 @@ class EcoMarket {
     required this.longitude,
     required this.reference,
     this.description,
+    this.address,
+    this.website,
   });
 
   LatLng get position => LatLng(latitude, longitude);
