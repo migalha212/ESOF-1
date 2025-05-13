@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/firebase_messaging.dart';
-import 'package:eco_finder/pages/add_bussiness.dart';
+import 'package:eco_finder/features/add_business/presentation/pages/add_bussiness.dart';
 import 'package:eco_finder/pages/landing_page.dart';
 import 'package:eco_finder/features/map/presentation/pages/map_page.dart';
 import 'package:eco_finder/pages/store_profile_page.dart';

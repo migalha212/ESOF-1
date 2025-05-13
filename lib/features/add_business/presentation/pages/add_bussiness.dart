@@ -2,7 +2,6 @@ import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
 import 'package:eco_finder/features/add_business/location_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 
 class AddBusinessPage extends StatefulWidget {
   const AddBusinessPage({super.key});
