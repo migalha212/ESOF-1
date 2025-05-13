@@ -1,25 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class AuthService {
-  // This class will handle authentication logic
-  bool isAuthenticated = false;
-  String? userId;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  AuthService() {
-    // Initialize Firebase Auth
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user != null) {
-        isAuthenticated = true;
-        userId = user.uid;
-      } else {
-        isAuthenticated = false;
-        userId = null;
-      }
-    });
+  Future<User?> loginWithEmail(String email, String password) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return userCredential.user;
+    } catch (e) {
+      print('Login error: $e');
+      return null;
+    }
   }
 
-  bool isLoggedIn() {
-    return isAuthenticated;
+  Future<void> logout() async {
+    await _auth.signOut();
+  }
+
+  Future<User?> signUpWithEmail(String email, String password) async {
+    try {
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      return userCredential.user;
+    } catch (e) {
+      print('Sign up error: $e');
+      return null;
+    }
   }
 }

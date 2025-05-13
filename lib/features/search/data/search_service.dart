@@ -1,12 +1,10 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/features/map/model/eco_market.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:string_similarity/string_similarity.dart';
 
 class SearchService {
-
   Future<List<EcoMarket>> searchMarkets({
     required String query,
     required List<String> selectedCategories,

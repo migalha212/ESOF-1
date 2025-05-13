@@ -6,7 +6,10 @@ enum NavigationItems {
   navMapProfile('/map/profile'),
   navSearchProfile('/search/profile'),
   navMapSearch('/map/search'),
-  navAddBusiness('/addbusiness');
+  navAddBusiness('/addbusiness'),
+  navProfile('/profile'),
+  navLogin('/login'),
+  navRegister('/register');
   const NavigationItems(this.route);
 
   final String route;

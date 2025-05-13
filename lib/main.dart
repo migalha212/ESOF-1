@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_finder/features/authentication/presentation/pages/login_page.dart';
+import 'package:eco_finder/features/authentication/presentation/pages/signup_page.dart';
+import 'package:eco_finder/features/profile/presentation/pages/profile_page.dart';
 import 'package:eco_finder/firebase_messaging.dart';
 import 'package:eco_finder/features/add_business/presentation/pages/add_bussiness.dart';
 import 'package:eco_finder/pages/landing_page.dart';
@@ -104,6 +107,24 @@ class MyApp extends StatelessWidget {
                   () => StoreProfilePage(
                     storeRef: settings.arguments as DocumentReference,
                   ),
+            );
+          },
+          NavigationItems.navLogin.route: () {
+            return navigationFade(
+              settings: settings,
+              builder: () => const LoginPage(),
+            );
+          },
+          NavigationItems.navRegister.route: () {
+            return navigationFade(
+              settings: settings,
+              builder: () => const SignUpPage(),
+            );
+          },
+          NavigationItems.navProfile.route: () {
+            return navigationFade(
+              settings: settings,
+              builder: () => const ProfilePage(),
             );
           },
         };

@@ -1,4 +1,5 @@
 import 'package:eco_finder/utils/navigation_items.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
@@ -8,8 +9,8 @@ class NavBar extends StatelessWidget {
 
   void _handleNavigation(BuildContext context, int index) {
     if (index == selectedIndex) return; // Already on this page
-    if(selectedIndex != 2) {
-    Navigator.pop(context);
+    if (selectedIndex != 2) {
+      Navigator.pop(context);
     }
     switch (index) {
       case 0:
@@ -25,7 +26,13 @@ class NavBar extends StatelessWidget {
         Navigator.pushNamed(context, NavigationItems.navAddBusiness.route);
         break;
       case 4:
-        Navigator.pushNamed(context, NavigationItems.navLanding.route);
+        FirebaseAuth.instance.idTokenChanges().listen((User? user) {
+          if (user == null) {
+            Navigator.pushNamed(context, NavigationItems.navLogin.route);
+          } else {
+            Navigator.pushNamed(context, NavigationItems.navProfile.route);
+          }
+        });
         break;
       default:
         break; // Handle other cases if needed
