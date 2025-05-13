@@ -5,11 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter/services.dart'; // Ensure this import is here
 
 class StoreProfilePage extends StatelessWidget {
   final DocumentReference storeRef;
 
-  const StoreProfilePage({super.key, required this.storeRef});
+  const StoreProfilePage({Key? key, required this.storeRef}) : super(key: key);
 
   Future<void> _shareStoreDetails(BuildContext context, Map<String, dynamic> data, String storeName) async {
     String shareText = '$storeName\n\n';
@@ -34,6 +35,21 @@ class StoreProfilePage extends StatelessWidget {
       );
       debugPrint('Erro ao partilhar: $e');
     }
+  }
+
+  Widget _buildCategoryTile(String category, Map<String, dynamic> categoryData) {
+    String emoji = categoryData['emoji'] ?? '';
+    return ListTile(
+      leading: Text(emoji, style: const TextStyle(fontSize: 24)),
+      title: Text(category),
+    );
+  }
+
+  Widget _buildCertificationTile(String cert) {
+    return ListTile(
+      leading: const Icon(Icons.check_circle_outline, color: Colors.green),
+      title: Text(cert),
+    );
   }
 
   @override
@@ -65,6 +81,48 @@ class StoreProfilePage extends StatelessWidget {
 
         final data = snapshot.data!.data() as Map<String, dynamic>;
         final String storeName = data['name'] ?? '';
+        final Map<String, Map<String, dynamic>> primaryCategoriesData = {
+          'Alimentos': {
+            'emoji': '🍏',
+            'subcategories': ['Orgânicos', 'Vegan', 'Biológicos'],
+          },
+          'Roupas': {
+            'emoji': '👗',
+            'subcategories': ['Reciclada', 'Eco-Friendly', 'Segunda Mão'],
+          },
+          'Itens Colecionáveis': {
+            'emoji': '🎁',
+            'subcategories': ['Vintage', 'Edição Limitada', 'Antiguidades'],
+          },
+          'Decoração': {
+            'emoji': '🏡',
+            'subcategories': ['Móveis', 'Iluminação', 'Arte'],
+          },
+          'Eletrónicos': {
+            'emoji': '📱',
+            'subcategories': ['Smartphones', 'Computadores', 'Acessórios'],
+          },
+          'Brinquedos': {
+            'emoji': '🧸',
+            'subcategories': ['Artesanais', 'Segunda Mão', 'Reciclados'],
+          },
+          'Saúde & Beleza': {
+            'emoji': '💄',
+            'subcategories': ['Cosméticos', 'Cuidados Pessoais', 'Fitness'],
+          },
+          'Artesanato': {
+            'emoji': '🧵',
+            'subcategories': ['Feito à mão', 'Reciclado', 'Regional'],
+          },
+          'Livros': {
+            'emoji': '📚',
+            'subcategories': ['Romance', 'Segunda Mão', 'Infantis'],
+          },
+          'Desportos & Lazer': {
+            'emoji': '⚽',
+            'subcategories': ['Ginasio', 'Ao ar livre', 'Indoor'],
+          },
+        };
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -133,9 +191,23 @@ class StoreProfilePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildInfoRow(Icons.category_outlined, 'Categoria', data['primaryCategories']?.join(', ')),
+                      if (data['primaryCategories'] != null && data['primaryCategories'].isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Categorias Primárias:',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            ...data['primaryCategories'].map((category) {
+                              return _buildCategoryTile(category, primaryCategoriesData[category] ?? {});
+                            }).toList(),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
                       _buildInfoRow(Icons.description_outlined, 'Descrição', data['description']),
-                      _buildPhoneRow(Icons.phone_outlined, 'Telefone', data['contactPhone']),
+                      _buildPhoneRow(Icons.phone_outlined, 'Telefone', data['contactPhone'], context),
                       _buildInfoRow(Icons.email_outlined, 'Email', data['email']),
                       _buildInfoRow(
                         Icons.language_outlined,
@@ -183,6 +255,19 @@ class StoreProfilePage extends StatelessWidget {
                           }
                         },
                       ),
+                      if (data['certifications'] != null && data['certifications'].isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Certificações / Prêmios:',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            ...data['certifications'].map((cert) => _buildCertificationTile(cert)).toList(),
+                          ],
+                        ),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -249,7 +334,7 @@ class StoreProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildPhoneRow(IconData icon, String label, String? value) {
+  Widget _buildPhoneRow(IconData icon, String label, String? value, BuildContext context) {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
 
     final cleanedNumber = value.replaceAll(' ', '');
@@ -270,6 +355,12 @@ class StoreProfilePage extends StatelessWidget {
                 SelectableText(
                   cleanedNumber,
                   style: const TextStyle(fontSize: 14, color: Colors.black54),
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: cleanedNumber));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Número copiado!')),
+                    );
+                  },
                 ),
               ],
             ),
