@@ -15,6 +15,8 @@ class MarketService {
         latitude: data['latitude'],
         longitude: data['longitude'],
         description: data['description'],
+        address: data['address'],
+        website: data['website'],
         reference: doc.reference,
       );
     }).toList();
