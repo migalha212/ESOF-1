@@ -11,7 +11,9 @@ enum NavigationItems {
   navLogin('/login'),
   navRegister('/register'),
   navBookmarksProfile('/bookmarks/profile'),
-  navBookmarks('/bookmarks');
+  navBookmarks('/bookmarks')
+  navAddEvent('/add_event'),
+  navAddBusiness('/addbusiness');
   const NavigationItems(this.route);
 
   final String route;

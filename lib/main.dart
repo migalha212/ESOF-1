@@ -13,6 +13,7 @@ import 'package:eco_finder/features/notifications/presentation/pages/notificatio
 import 'package:eco_finder/features/search/presentation/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'features/add_event/add_event.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -92,6 +93,12 @@ class MyApp extends StatelessWidget {
               builder: () => const AddBusinessPage(),
             );
           },
+          NavigationItems.navAddEvent.route: () {
+            return navigationFade(
+              settings: settings,
+              builder: () => const AddEventPage(),
+            );
+          },
           NavigationItems.navMapProfile.route: () {
             return navigationFade(
               settings: settings,
@@ -99,6 +106,15 @@ class MyApp extends StatelessWidget {
                   () => StoreProfilePage(
                     storeRef: settings.arguments as DocumentReference,
                   ),
+            );
+          },
+          NavigationItems.navSearchProfile.route: () {
+            return navigationFade(
+              settings: settings,
+              builder:
+                  () => StoreProfilePage(
+                storeRef: settings.arguments as DocumentReference,
+              ),
             );
           },
           NavigationItems.navSearchProfile.route: () {
