@@ -105,6 +105,33 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
+  Widget _buildZoomButton({
+    required IconData icon,
+    required VoidCallback? onPressed,
+    required bool isDisabled,
+  }) {
+    return Material(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: isDisabled ? 0 : 6,
+      child: InkWell(
+        onTap: isDisabled ? null : onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: Center(
+            child: Icon(
+              icon,
+              color: isDisabled ? Colors.grey[400] : Colors.black,
+              size: 22,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -238,6 +265,44 @@ class _MapPageState extends State<MapPage> {
                   ),
                 ),
               ),
+            ),
+          ),
+          // Custom Zoom Controls
+          Positioned(
+            bottom: 20,
+            right: 10,
+            child: Column(
+              children: [
+                _buildZoomButton(
+                  icon: Icons.add,
+                  onPressed:
+                      _currentZoom >= _maxZoom
+                          ? null
+                          : () async {
+                            double newZoom = _currentZoom + 1;
+                            await _mapController.animateCamera(
+                              CameraUpdate.zoomTo(newZoom),
+                            );
+                            setState(() => _currentZoom = newZoom);
+                          },
+                  isDisabled: _currentZoom >= _maxZoom,
+                ),
+                const SizedBox(height: 10),
+                _buildZoomButton(
+                  icon: Icons.remove,
+                  onPressed:
+                      _currentZoom <= _minZoom
+                          ? null
+                          : () async {
+                            double newZoom = _currentZoom - 1;
+                            await _mapController.animateCamera(
+                              CameraUpdate.zoomTo(newZoom),
+                            );
+                            setState(() => _currentZoom = newZoom);
+                          },
+                  isDisabled: _currentZoom <= _minZoom,
+                ),
+              ],
             ),
           ),
         ],
