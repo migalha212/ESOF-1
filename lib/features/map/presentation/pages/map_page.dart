@@ -110,24 +110,30 @@ class _MapPageState extends State<MapPage> {
     required VoidCallback? onPressed,
     required bool isDisabled,
   }) {
+    final borderRadius = BorderRadius.circular(12);
+
     return Material(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: isDisabled ? 0 : 6,
-      child: InkWell(
-        onTap: isDisabled ? null : onPressed,
-        borderRadius: BorderRadius.circular(12),
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: Center(
-            child: Icon(
-              icon,
-              color: isDisabled ? Colors.grey[400] : Colors.black,
-              size: 22,
-            ),
-          ),
+      color: isDisabled ? Colors.grey[200] : Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius,
+        side: BorderSide(
+          color: isDisabled ? Colors.grey[300]! : Colors.transparent,
         ),
+      ),
+      elevation: isDisabled ? 0 : 6,
+      child: SizedBox(
+        width: 40,
+        height: 40,
+        child:
+            isDisabled
+                ? Center(child: Icon(icon, color: Colors.grey[500], size: 22))
+                : InkWell(
+                  onTap: onPressed,
+                  borderRadius: borderRadius,
+                  child: Center(
+                    child: Icon(icon, color: Colors.black, size: 22),
+                  ),
+                ),
       ),
     );
   }
