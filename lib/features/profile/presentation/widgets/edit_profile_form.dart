@@ -42,12 +42,10 @@ class EditProfileForm extends StatelessWidget {
           ),
           TextFormField(
             controller: emailController,
-            readOnly: true,
             decoration: const InputDecoration(labelText: 'Email'),
           ),
           TextFormField(
             controller: passwordController,
-            readOnly: true,
             obscureText: true,
             decoration: const InputDecoration(labelText: 'Password'),
           ),

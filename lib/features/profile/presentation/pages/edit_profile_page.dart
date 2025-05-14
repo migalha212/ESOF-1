@@ -53,8 +53,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       final profile = UserProfile(
         username: _usernameController.text.trim(),
         name: _nameController.text.trim(),
-        email: user.email!,
-        password: '',
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
         profileURL: _profileURLController.text.trim(),
       );
       await FirebaseFirestore.instance.
@@ -62,11 +62,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
         doc(user.uid).
         set(profile.toMap(), SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Perfil Atualizado.')),
+        SnackBar(content: Text('Profile Updated')),
       );
     } catch (e){
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao atualizar perfil.')),
+        SnackBar(content: Text('Error! Could not update profile')),
       );
     }
   }
@@ -74,7 +74,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Editar Perfil')),
+      appBar: AppBar(title: const Text('Edit Profile')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: EditProfileForm(
