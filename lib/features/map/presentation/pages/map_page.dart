@@ -123,6 +123,7 @@ class _MapPageState extends State<MapPage> {
                     widget.initialZoom ??
                     _defaultZoom, // Use passed zoom if any
               ),
+              minMaxZoomPreference: MinMaxZoomPreference(8.0, 19.0),
               markers: _markers,
               myLocationEnabled: true,
               myLocationButtonEnabled: false,
