@@ -15,8 +15,10 @@ class SignUpButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+        backgroundColor: const Color(0xFF3E8E4D),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        elevation: 4,
       ),
       child:
           isLoading
@@ -30,7 +32,11 @@ class SignUpButton extends StatelessWidget {
               )
               : const Text(
                 'Sign Up',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
     );
   }

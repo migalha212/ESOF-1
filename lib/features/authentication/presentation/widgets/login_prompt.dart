@@ -27,7 +27,14 @@ class LoginPromptDialog {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF3E8E4D),
               ),
-              child: const Text('Login'),
+              child: const Text(
+                'Login',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         );
