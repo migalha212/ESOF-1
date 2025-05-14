@@ -72,6 +72,7 @@ class _SearchPageState extends State<SearchPage> {
       widget.hoveredLatitude ?? 0.0,
       widget.hoveredLongitude ?? 0.0,
     );
+    _zoomLvl = widget.zoomLevel ?? 18.0;
 
     _searchController.addListener(_searchMarkets);
     _searchMarkets();
