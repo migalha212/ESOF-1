@@ -25,11 +25,15 @@ class _MapPageState extends State<MapPage> {
   String? _mapStyle; // Stores your custom map style
   bool _isMapReady = false;
   static const double _defaultZoom = 16.0;
+  static const double _minZoom = 8.0;
+  static const double _maxZoom = 19.0;
+  late double _currentZoom;
 
   final int _index = 2;
   @override
   void initState() {
     super.initState();
+    _currentZoom = widget.initialZoom ?? _defaultZoom;
     _init();
   }
 
@@ -64,21 +68,22 @@ class _MapPageState extends State<MapPage> {
   Future<void> _loadEcoMarkets() async {
     try {
       final newMarkers = await MarketService().getBusinessMarkers(
-        onTap: (business) {
+        onTap: (business) async {
           final LatLng marketPosition = LatLng(
             business.latitude,
             business.longitude,
           );
 
-          // Animate the camera to the market position with the default zoom
-          _mapController.animateCamera(
+          await _mapController.animateCamera(
             CameraUpdate.newCameraPosition(
-              CameraPosition(
-                target: marketPosition,
-                zoom: _defaultZoom, // Set to your default zoom level
-              ),
+              CameraPosition(target: marketPosition, zoom: _defaultZoom),
             ),
           );
+
+          double zoom = await _mapController.getZoomLevel();
+          setState(() {
+            _currentZoom = zoom;
+          });
 
           showModalBottomSheet(
             context: context,
@@ -119,12 +124,11 @@ class _MapPageState extends State<MapPage> {
             GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: _initialPosition!,
-                zoom:
-                    widget.initialZoom ??
-                    _defaultZoom, // Use passed zoom if any
+                zoom: _currentZoom,
               ),
-              minMaxZoomPreference: MinMaxZoomPreference(8.0, 19.0),
+              minMaxZoomPreference: MinMaxZoomPreference(_minZoom, _maxZoom),
               markers: _markers,
+              zoomControlsEnabled: false,
               myLocationEnabled: true,
               myLocationButtonEnabled: false,
               style: _mapStyle, // Apply the custom map style here
@@ -135,13 +139,18 @@ class _MapPageState extends State<MapPage> {
                     CameraUpdate.newCameraPosition(
                       CameraPosition(
                         target: _initialPosition!,
-                        zoom:
-                            widget.initialZoom ??
-                            _defaultZoom, // reuse zoom level
+                        zoom: _currentZoom,
                       ),
                     ),
                   );
+                  _currentZoom = await _mapController.getZoomLevel();
+                  setState(() {});
                 }
+              },
+              onCameraMove: (CameraPosition position) {
+                setState(() {
+                  _currentZoom = position.zoom;
+                });
               },
             ),
 
