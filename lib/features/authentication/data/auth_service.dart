@@ -30,4 +30,8 @@ class AuthService {
       return null;
     }
   }
+
+  User? getCurrentUser(){
+    return _auth.currentUser;
+  }
 }
