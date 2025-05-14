@@ -1,4 +1,5 @@
 import 'package:eco_finder/features/map/presentation/pages/map_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
@@ -186,12 +187,32 @@ class StoreProfilePage extends StatelessWidget {
                     ],
                   ),
                 ),
+                if(FirebaseAuth.instance.currentUser != null)
+                  if(FirebaseAuth.instance.currentUser!.uid == data['uid'])
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Navigate to the edit store page
+                          return;
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF3E8E4D),
+                        ),
+                        child: const Text('Editar Loja',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
               ],
             ),
           ),
           bottomNavigationBar: const NavBar(
             selectedIndex: 0,
-          ), // Adiciona a NavBar aqui com selectedIndex 0
+          ),
         );
       },
     );

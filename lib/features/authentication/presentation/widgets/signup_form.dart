@@ -51,8 +51,8 @@ class _SignUpFormState extends State<SignUpForm> {
             obscureText: true,
             validator: (value) {
               if (value == null || value.isEmpty) return 'Password is required';
-              if (value.length < 5)
-                return 'Password must be at least 5 characters';
+              if (value.length < 6)
+                return 'Password must be at least 6 characters';
               return null;
             },
           ),

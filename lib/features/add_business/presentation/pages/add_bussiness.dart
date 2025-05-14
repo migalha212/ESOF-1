@@ -1,4 +1,6 @@
+import 'package:eco_finder/features/authentication/presentation/widgets/login_prompt.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:eco_finder/features/add_business/location_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -96,6 +98,11 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
       _certifications.forEach((k, v) {
         if (v) certs.add(k);
       });
+
+      if (FirebaseAuth.instance.currentUser == null) {
+        LoginPromptDialog.show(context);
+        return;
+      }
       SustainableBusiness business = SustainableBusiness(
         id: '',
         name: _nameController.text,
@@ -109,6 +116,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
         website: _websiteController.text,
         certifications: certs,
         imageUrl: _imageUrlController.text,
+        uid: FirebaseAuth.instance.currentUser!.uid,
       );
       try {
         await _businessService.addBusiness(business);
@@ -186,28 +194,28 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
             Wrap(
               spacing: 8,
               children:
-              List<String>.from(data['subcategories']).map((sub) {
-                bool subSelected =
-                    _selectedSubcategories[category]?.contains(sub) ??
+                  List<String>.from(data['subcategories']).map((sub) {
+                    bool subSelected =
+                        _selectedSubcategories[category]?.contains(sub) ??
                         false;
-                return ChoiceChip(
-                  label: Text(sub),
-                  selected: subSelected,
-                  onSelected: (bool sel) {
-                    setState(() {
-                      if (sel) {
-                        if (_selectedSubcategories[category] == null) {
-                          _selectedSubcategories[category] = [sub];
-                        } else {
-                          _selectedSubcategories[category]!.add(sub);
-                        }
-                      } else {
-                        _selectedSubcategories[category]?.remove(sub);
-                      }
-                    });
-                  },
-                );
-              }).toList(),
+                    return ChoiceChip(
+                      label: Text(sub),
+                      selected: subSelected,
+                      onSelected: (bool sel) {
+                        setState(() {
+                          if (sel) {
+                            if (_selectedSubcategories[category] == null) {
+                              _selectedSubcategories[category] = [sub];
+                            } else {
+                              _selectedSubcategories[category]!.add(sub);
+                            }
+                          } else {
+                            _selectedSubcategories[category]?.remove(sub);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
             ),
             SizedBox(height: 8),
             Align(
@@ -269,8 +277,13 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                     children: [
                       Icon(Icons.error_outline, color: Colors.red, size: 40),
                       SizedBox(height: 8),
-                      Text('Erro ao carregar imagem',
-                          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Erro ao carregar imagem',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 );
@@ -280,10 +293,11 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                 return Center(
                   child: CircularProgressIndicator(
                     color: Color(0xFF3E8E4D),
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                        : null,
+                    value:
+                        loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
                   ),
                 );
               },
@@ -323,9 +337,9 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                 ),
                 validator:
                     (value) =>
-                (value == null || value.isEmpty)
-                    ? 'Por favor, insira o nome do negócio'
-                    : null,
+                        (value == null || value.isEmpty)
+                            ? 'Por favor, insira o nome do negócio'
+                            : null,
               ),
               SizedBox(height: 16),
               TextFormField(
@@ -337,9 +351,9 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                 maxLines: 3,
                 validator:
                     (value) =>
-                (value == null || value.isEmpty)
-                    ? 'Por favor, insira uma descrição'
-                    : null,
+                        (value == null || value.isEmpty)
+                            ? 'Por favor, insira uma descrição'
+                            : null,
               ),
               SizedBox(height: 16),
               TextFormField(
@@ -371,7 +385,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               ..._primaryCategories.entries.map(
-                    (entry) => _buildPrimaryCategoryTile(entry.key, entry.value),
+                (entry) => _buildPrimaryCategoryTile(entry.key, entry.value),
               ),
               SizedBox(height: 16),
               Text(
@@ -380,17 +394,17 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
               ),
               Column(
                 children:
-                _certifications.keys.map((cert) {
-                  return CheckboxListTile(
-                    title: Text(cert),
-                    value: _certifications[cert],
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _certifications[cert] = value!;
-                      });
-                    },
-                  );
-                }).toList(),
+                    _certifications.keys.map((cert) {
+                      return CheckboxListTile(
+                        title: Text(cert),
+                        value: _certifications[cert],
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _certifications[cert] = value!;
+                          });
+                        },
+                      );
+                    }).toList(),
               ),
               SizedBox(height: 16),
               LocationPicker(
@@ -453,6 +467,7 @@ class SustainableBusiness {
   String contactPhone;
   String website;
   List<String> certifications;
+  String uid;
   String imageUrl;
 
   SustainableBusiness({
@@ -467,6 +482,7 @@ class SustainableBusiness {
     required this.contactPhone,
     required this.website,
     required this.certifications,
+    required this.uid,
     this.imageUrl = '',
   });
 
@@ -484,6 +500,7 @@ class SustainableBusiness {
       'website': website,
       'certifications': certifications,
       'imageUrl': imageUrl,
+      'uid': uid,
     };
   }
 }
