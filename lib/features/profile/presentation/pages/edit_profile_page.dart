@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/features/authentication/data/auth_service.dart';
 import 'package:eco_finder/features/profile/model/profile.dart';
+import 'package:eco_finder/features/profile/presentation/widgets/edit_profile_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -68,6 +69,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
         SnackBar(content: Text('Erro ao atualizar perfil.')),
       );
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Editar Perfil')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: EditProfileForm(
+          formKey: _formKey,
+          usernameController: _usernameController,
+          nameController: _nameController,
+          profileURLController: _profileURLController,
+          emailController: _emailController,
+          passwordController: _passwordController,
+          onSave: _saveProfile,
+        ),
+      ),
+    );
   }
 }
 
