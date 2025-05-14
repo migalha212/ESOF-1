@@ -13,7 +13,7 @@ class UserProfile{
   UserProfile({
     required this.username,
     this.name = "",
-    this.profileURL = "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg",
+    this.profileURL = "",
     required this.email,
     required this.password,
     this.admin = false,

@@ -1,9 +1,11 @@
 import 'package:eco_finder/features/authentication/data/auth_service.dart';
+import 'package:eco_finder/features/authentication/presentation/pages/signup_page.dart';
 import 'package:eco_finder/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
 import 'package:eco_finder/features/profile/presentation/widgets/edit_profile_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_finder/common_widgets/navbar_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,6 +17,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final AuthService _auth = AuthService();
   Map<String, dynamic>? _userData;
+  final int _index = 4;
 
   @override
   void initState(){
@@ -37,6 +40,10 @@ class _ProfilePageState extends State<ProfilePage> {
       });
       }
     }
+    else {
+      MaterialPageRoute(builder: (context) => const SignUpPage()
+      );
+    }
   }
 
   void _logout(BuildContext context) async {
@@ -53,41 +60,60 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_userData == null){
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator(),
-      )
-    );
-  }
+    if (_userData == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
-  return Scaffold(
+    final profileUrl = _userData!['profileURL'];
+    final imageProvider = (profileUrl != null && profileUrl.isNotEmpty)
+        ? NetworkImage(profileUrl)
+        : const NetworkImage('https://i.pinimg.com/736x/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg');
+
+    return Scaffold(
+    bottomNavigationBar: NavBar(selectedIndex: _index),
     appBar: AppBar(
       title: const Text('Profile'),
       backgroundColor: const Color(0xFF3E8E4D),
       ),
       body: Column(
         children: [
-        Container(
-          width: double.infinity,
-          height: 250.0,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-            image: NetworkImage(
-            _userData!['profileURL'] ?? 'https://via.placeholder.com/150'),
-            fit: BoxFit.cover,
+          Padding(
+            padding: const EdgeInsets.only(top: 16, left: 16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 70,
+                  backgroundImage: imageProvider,
+                ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_userData!['name'] != null && _userData!['name'].toString().isNotEmpty)
+                      Text(
+                        _userData!['name'],
+                        style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                    Text(
+                      "@${_userData!['username']}",
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      _userData!['email'],
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+            ]
+            ),
           ),
-        ),
-      ),
-      const SizedBox(height: 16),
-      Text(
-        _userData!['username'] ?? 'Sem username',
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      Text(
-        _userData!['email'] ?? 'Sem email',
-        style: const TextStyle(fontSize: 16),
-      ),
-      const SizedBox(height: 24),
       ElevatedButton(
         onPressed: () => _editProfile(context),
         style: ElevatedButton.styleFrom(
