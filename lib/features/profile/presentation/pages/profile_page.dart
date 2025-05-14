@@ -86,9 +86,18 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 70,
-                  backgroundImage: imageProvider,
+                Container(
+                  width: 140,
+                  height: 140,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Color(0xFF3E8E4D), width: 2),
+                  ),
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundImage: imageProvider,
+                    backgroundColor: Colors.transparent,
+                  ),
                 ),
               const SizedBox(width: 16),
               Expanded(
@@ -96,9 +105,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (_userData!['name'] != null && _userData!['name'].toString().isNotEmpty)
-                      Text(
-                        _userData!['name'],
-                        style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          _userData!['name'],
+                          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     Text(
                       "@${_userData!['username']}",
