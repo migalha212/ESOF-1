@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/features/authentication/data/auth_service.dart';
 import 'package:eco_finder/features/profile/model/profile.dart';
 import 'package:eco_finder/features/profile/presentation/widgets/edit_profile_form.dart';
+import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -68,6 +69,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
         set(profile.toMap(), SetOptions(merge: true));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Profile Updated')),
+      );
+
+      Navigator.pushNamed(
+          context,
+          NavigationItems.navProfile.route,
       );
     } catch (e){
       ScaffoldMessenger.of(context).showSnackBar(
