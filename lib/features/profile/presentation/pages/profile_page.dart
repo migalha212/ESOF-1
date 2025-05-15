@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     border: Border.all(color: Color(0xFF3E8E4D), width: 2),
                   ),
                   child: CircleAvatar(
-                    radius: 70,
+                    radius: 80,
                     backgroundImage: imageProvider,
                     backgroundColor: Colors.transparent,
                   ),

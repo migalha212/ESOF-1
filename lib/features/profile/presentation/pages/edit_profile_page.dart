@@ -39,6 +39,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _profileURLController.text = data['profileURL'] ?? '';
         _emailController.text = data['email'];
         _passwordController.text = data['password'];
+
       }
     }
   }
@@ -49,6 +50,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final user = _auth.getCurrentUser();
     if (user == null) return;
 
+    final info = await FirebaseFirestore.instance.collection('profiles').doc(user.uid).get();
+
     try {
       final profile = UserProfile(
         username: _usernameController.text.trim(),
@@ -56,6 +59,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
         profileURL: _profileURLController.text.trim(),
+        owner: info.data()?['business_owner'],
+        admin: info.data()?['admin']
       );
       await FirebaseFirestore.instance.
         collection('profiles').
