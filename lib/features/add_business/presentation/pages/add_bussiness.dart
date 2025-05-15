@@ -121,6 +121,10 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
       );
       try {
         await _businessService.addBusiness(business);
+        final user = FirebaseFirestore.instance.
+          collection('profiles').
+          doc(FirebaseAuth.instance.currentUser!.uid);
+        await user.set({'business_owner': true}, SetOptions(merge: true));
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Negócio adicionado com sucesso!')),
