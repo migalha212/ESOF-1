@@ -106,14 +106,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     if (_userData!['name'] != null && _userData!['name'].toString().isNotEmpty)
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
+                        padding: const EdgeInsets.only(bottom: 2),
                         child: Text(
                           _userData!['name'],
                           style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                         ),
                       ),
+                    if (_userData!['business_owner'] == true)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 2),
+                        child: Text(
+                          "Business Owner",
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF3E8E4D)),
+                        ),
+                      ),
                     Text(
-                      "@${_userData!['username']}",
+                      "@${_userData!['username']}${
+                          _userData!['admin'] == true ? ' (ADMIN)' : ''}",
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text(
