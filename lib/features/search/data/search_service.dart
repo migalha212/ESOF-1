@@ -20,7 +20,7 @@ class SearchService {
     final filtered =
         snapshot.docs
             .where((doc) {
-              final data = doc.data() as Map<String, dynamic>;
+              final data = doc.data();
               final name = data['name_lowercase'] ?? '';
               final categories = List<String>.from(
                 data['primaryCategories'] ?? [],
@@ -39,7 +39,7 @@ class SearchService {
               return isSimilar && matchesCategory;
             })
             .map((doc) {
-              final data = doc.data() as Map<String, dynamic>;
+              final data = doc.data();
               return EcoMarket(
                 id: doc.id,
                 name: data['name'],

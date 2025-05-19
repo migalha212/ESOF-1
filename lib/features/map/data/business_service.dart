@@ -8,7 +8,7 @@ class MarketService {
         await FirebaseFirestore.instance.collection('businesses').get();
 
     return snapshot.docs.map((doc) {
-      final data = doc.data() as Map<String, dynamic>;
+      final data = doc.data();
       return EcoMarket(
         id: doc.id,
         name: data['name'],

@@ -6,7 +6,7 @@ enum NotificationType { event, storeOpening }
 class NotificationModel {
   final String id;
   final String title;
-  final DateTime timestamp;
+  final DateTime startDate;
   final NotificationType type;
   final String targetId; // even though not used now, keeps future-proof
   final bool read;
@@ -14,7 +14,7 @@ class NotificationModel {
   NotificationModel({
     required this.id,
     required this.title,
-    required this.timestamp,
+    required this.startDate,
     required this.type,
     required this.targetId,
     this.read = false,
@@ -23,11 +23,11 @@ class NotificationModel {
   /// Builds a ListTile representation of the notification
   Widget toListTile(BuildContext context) {
     final isPastEvent =
-        type == NotificationType.event && timestamp.isBefore(DateTime.now());
+        type == NotificationType.event && startDate.isBefore(DateTime.now());
     final bgColor = isPastEvent ? Colors.grey.shade200 : null;
     final icon =
         type == NotificationType.event ? Icons.event : Icons.storefront;
-    final formattedDate = DateFormat.yMMMd().add_jm().format(timestamp);
+    final formattedDate = DateFormat.yMMMd().add_jm().format(startDate);
 
     return Container(
       color: bgColor,

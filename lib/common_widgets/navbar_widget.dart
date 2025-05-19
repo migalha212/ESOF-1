@@ -57,10 +57,10 @@ class NavBar extends StatelessWidget {
           backgroundColor: Colors.transparent, // já definido no container
           indicatorColor: Colors.white.withOpacity(0.2),
           height: 65, // altura reduzida (default é 80)
-          labelTextStyle: MaterialStateProperty.all(
+          labelTextStyle: WidgetStateProperty.all(
             TextStyle(color: Colors.white, fontSize: 12),
           ),
-          iconTheme: MaterialStateProperty.all(
+          iconTheme: WidgetStateProperty.all(
             IconThemeData(color: Colors.white),
           ),
         ),

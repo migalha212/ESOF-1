@@ -10,8 +10,8 @@ class NotificationsPage extends StatelessWidget {
 
   Future<List<NotificationModel>> _fetchNotifications() async {
     List<NotificationModel> notifications =
-        await EventService().fetchNotifications();
-    notifications.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        await NotificationService().fetchNotifications();
+    notifications.sort((a, b) => b.startDate.compareTo(a.startDate));
     return notifications;
   }
 

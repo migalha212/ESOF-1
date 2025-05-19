@@ -1,11 +1,14 @@
 import 'package:eco_finder/features/map/data/business_service.dart';
 import 'package:eco_finder/features/map/presentation/widgets/marker_sheet.dart';
+import 'package:eco_finder/features/notifications/data/events_service.dart';
 import 'package:eco_finder/features/search/presentation/pages/search_page.dart';
 import 'package:eco_finder/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
+import 'package:eco_finder/features/events/data/event_marker_service.dart';
+import 'package:eco_finder/features/events/presentation/widgets/event_sheet.dart';
 
 class MapPage extends StatefulWidget {
   final LatLng? initialPosition;
@@ -30,18 +33,32 @@ class _MapPageState extends State<MapPage> {
   late double _currentZoom;
 
   final int _index = 2;
+  BitmapDescriptor? _eventUpcomingIcon;
+  BitmapDescriptor? _eventOngoingIcon;
+
   @override
   void initState() {
     super.initState();
     _currentZoom = widget.initialZoom ?? _defaultZoom;
+    _loadEventIcons();
     _init();
+  }
+
+  Future<void> _loadEventIcons() async {
+    // Use default marker hues for event markers
+    _eventUpcomingIcon = BitmapDescriptor.defaultMarkerWithHue(
+      BitmapDescriptor.hueOrange,
+    );
+    _eventOngoingIcon = BitmapDescriptor.defaultMarkerWithHue(
+      BitmapDescriptor.hueAzure,
+    );
+    setState(() {});
   }
 
   Future<void> _init() async {
     await _loadMapStyle();
     await _setInitialPosition();
-    await _loadEcoMarkets();
-
+    await _loadMarkers();
     setState(() {
       _isMapReady = true;
     });
@@ -65,21 +82,21 @@ class _MapPageState extends State<MapPage> {
     setState(() {}); // Trigger rebuild to apply the style once loaded
   }
 
-  Future<void> _loadEcoMarkets() async {
+  Future<void> _loadMarkers() async {
     try {
-      final newMarkers = await MarketService().getBusinessMarkers(
+      final businessMarkers = await MarketService().getBusinessMarkers(
         onTap: (business) async {
           final LatLng marketPosition = LatLng(
             business.latitude,
             business.longitude,
           );
 
+          // Animate the camera to the market position with the default zoom
           await _mapController.animateCamera(
             CameraUpdate.newCameraPosition(
               CameraPosition(target: marketPosition, zoom: _defaultZoom),
             ),
           );
-
           double zoom = await _mapController.getZoomLevel();
           setState(() {
             _currentZoom = zoom;
@@ -97,8 +114,35 @@ class _MapPageState extends State<MapPage> {
         },
       );
 
+      final eventMarkers = await EventMarkerService().getEventMarkers(
+        onTap: (event) async {
+          final LatLng eventPosition = LatLng(event.latitude, event.longitude);
+
+          // Animate the camera to the market position with the default zoom
+          await _mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(target: eventPosition, zoom: _defaultZoom),
+            ),
+          );
+          double zoom = await _mapController.getZoomLevel();
+          setState(() {
+            _currentZoom = zoom;
+          });
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            backgroundColor: Colors.white,
+            builder: (context) => EventBottomSheet(event: event),
+          );
+        },
+        upcomingIcon: _eventUpcomingIcon!,
+        ongoingIcon: _eventOngoingIcon!,
+      );
       setState(() {
-        _markers = newMarkers;
+        _markers = {...businessMarkers, ...eventMarkers};
       });
     } catch (e) {
       //
@@ -241,7 +285,7 @@ class _MapPageState extends State<MapPage> {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
+                          color: Colors.black.withOpacity(0.2),
                           blurRadius: 8,
                           offset: Offset(0, 3),
                         ),

@@ -13,7 +13,7 @@ import 'package:eco_finder/features/notifications/presentation/pages/notificatio
 import 'package:eco_finder/features/search/presentation/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'features/add_event/add_event.dart';
+import 'features/events/presentation/pages/add_event_page.dart';
 import 'firebase_options.dart';
 
 void main() async {

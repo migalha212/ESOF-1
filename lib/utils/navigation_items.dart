@@ -7,13 +7,12 @@ enum NavigationItems {
   navSearchProfile('/search/profile'),
   navMapSearch('/map/search'),
   navAddBusiness('/addbusiness'),
+  navAddEvent('/add_event'),
   navProfile('/profile'),
   navLogin('/login'),
   navRegister('/register'),
   navBookmarksProfile('/bookmarks/profile'),
-  navBookmarks('/bookmarks')
-  navAddEvent('/add_event'),
-  navAddBusiness('/addbusiness');
+  navBookmarks('/bookmarks');
   const NavigationItems(this.route);
 
   final String route;
