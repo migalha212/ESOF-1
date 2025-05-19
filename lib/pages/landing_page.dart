@@ -193,40 +193,6 @@ class LandingPage extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // Botões flutuantes
-              Positioned(
-                bottom: 80,
-                right: 16,
-                child: FloatingActionButton.extended(
-                  heroTag: null,
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      NavigationItems.navAddBusiness.route,
-                    );
-                  },
-                  backgroundColor: Color(0xFF3E8E4D),
-                  icon: Icon(Icons.add),
-                  label: Text('Add Business'),
-                ),
-              ),
-              Positioned(
-                bottom: 144,
-                right: 16,
-                child: FloatingActionButton.extended(
-                  heroTag: null,
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      NavigationItems.navAddEvent.route,
-                    );
-                  },
-                  backgroundColor: Color(0xFF3E8E4D),
-                  icon: Icon(Icons.add),
-                  label: Text('Add Event'),
-                ),
-              ),
               Positioned(
                 bottom: 16,
                 right: 16,

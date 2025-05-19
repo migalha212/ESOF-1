@@ -113,8 +113,8 @@ class MyApp extends StatelessWidget {
               settings: settings,
               builder:
                   () => StoreProfilePage(
-                storeRef: settings.arguments as DocumentReference,
-              ),
+                    storeRef: settings.arguments as DocumentReference,
+                  ),
             );
           },
           NavigationItems.navSearchProfile.route: () {
@@ -158,6 +158,12 @@ class MyApp extends StatelessWidget {
                   () => StoreProfilePage(
                     storeRef: settings.arguments as DocumentReference,
                   ),
+            );
+          },
+          NavigationItems.navAddEvent.route: () {
+            return navigationFade(
+              settings: settings,
+              builder: () => const AddEventPage(),
             );
           },
         };

@@ -155,6 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
+          SizedBox(height: 2),
           ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(
@@ -163,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.teal,
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 26),
             ),
             child: const Text(
@@ -171,6 +172,21 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
+          SizedBox(height: 2),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, NavigationItems.navAddEvent.route);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 38),
+            ),
+            child: const Text(
+              'Add Event',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(height: 2),
           ElevatedButton(
             onPressed: () => _logout(context),
             style: ElevatedButton.styleFrom(
