@@ -1,4 +1,4 @@
-import 'package:eco_finder/features/map/presentation/pages/map_page.dart';
+import 'package:eco_finder/features/bookmarks/presentation/widgets/bookmark_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -292,12 +292,15 @@ class StoreProfilePage extends StatelessWidget {
                         ),
                       ),
                     ),
+
               ],
             ),
           ),
           bottomNavigationBar: const NavBar(
             selectedIndex: 0,
           ),
+           floatingActionButton: BookmarkButton(shopId: storeRef.id, shopReference: storeRef,),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
       },
     );

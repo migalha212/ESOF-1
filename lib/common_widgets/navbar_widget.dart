@@ -23,7 +23,7 @@ class NavBar extends StatelessWidget {
         Navigator.pushNamed(context, NavigationItems.navMap.route);
         break;
       case 3:
-        Navigator.pushNamed(context, NavigationItems.navAddBusiness.route);
+        Navigator.pushNamed(context, NavigationItems.navBookmarks.route);
         break;
       case 4:
         FirebaseAuth.instance.idTokenChanges().listen((User? user) {
@@ -88,12 +88,12 @@ class NavBar extends StatelessWidget {
             NavigationDestination(
               icon: Icon(Icons.favorite_outline),
               selectedIcon: Icon(Icons.favorite),
-              label: '',
+              label: 'Bookmarks',
             ),
             NavigationDestination(
               icon: Icon(Icons.person_outline),
               selectedIcon: Icon(Icons.person),
-              label: '',
+              label: 'Profile',
             ),
           ],
         ),

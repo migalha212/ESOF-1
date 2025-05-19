@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,5 +35,26 @@ class AuthService {
 
   User? getCurrentUser(){
     return _auth.currentUser;
+  }
+
+  bool createBlankProfile(String email,String password) {
+    Map<String, dynamic> blankProfile = {
+      'id': getCurrentUser()?.uid,
+      'admin': false,
+      'business_owner':false,
+      'email': email,
+      'name': '',
+      'username': email.substring(0, email.indexOf('@')),
+      'profilePicture': '',
+      'password': password,
+    };
+
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    try {
+      db.collection('profiles').doc(getCurrentUser()?.uid).set(blankProfile);
+    } catch (e) {
+      throw Exception('Erro ao adicionar negócio: $e');
+    }
+    return true;
   }
 }

@@ -9,7 +9,9 @@ enum NavigationItems {
   navAddBusiness('/addbusiness'),
   navProfile('/profile'),
   navLogin('/login'),
-  navRegister('/register');
+  navRegister('/register'),
+  navBookmarksProfile('/bookmarks/profile'),
+  navBookmarks('/bookmarks');
   const NavigationItems(this.route);
 
   final String route;

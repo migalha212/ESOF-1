@@ -1,5 +1,6 @@
 import 'package:eco_finder/features/authentication/data/auth_service.dart';
 import 'package:eco_finder/features/authentication/presentation/widgets/signup_form.dart';
+import 'package:eco_finder/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,8 @@ class _SignUpPageState extends State<SignUpPage> {
       final user = await _authService.signUpWithEmail(email, password);
       if (user != null) {
         Navigator.pop(context);
-        Navigator.pushNamed(context, NavigationItems.navMap.route);
+        AuthService().createBlankProfile(email,password);
+        Navigator.push(context, MaterialPageRoute(builder: (_) => EditProfilePage()));
       } else {
         _showError('Sign up failed. Please try again.');
       }
