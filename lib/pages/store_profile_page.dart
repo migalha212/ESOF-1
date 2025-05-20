@@ -302,9 +302,7 @@ class StoreProfilePage extends StatelessWidget {
                             Navigator.pushNamed(
                             context,
                             NavigationItems.navProfile.route,
-                              arguments: FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(data['uid'])
+                              arguments: data['uid'],
                             );
                           },
                         style: ElevatedButton.styleFrom(

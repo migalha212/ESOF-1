@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:eco_finder/features/profile/presentation/widgets/edit_profile_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
+import 'package:flutter/rendering.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -20,19 +21,29 @@ class _ProfilePageState extends State<ProfilePage> {
   final int _index = 4;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _loadUser();
   }
 
   Future<void> _loadUser() async {
     final user = _auth.getCurrentUser();
+    final args = ModalRoute.of(context)?.settings.arguments;
 
-    if (user != null) {
+    String? load;
+
+    if (args is String){
+      load = args;
+    }
+    else if (user != null){
+      load = user.uid;
+    }
+
+    if (load != null) {
       final info =
           await FirebaseFirestore.instance
               .collection('profiles')
-              .doc(user.uid)
+              .doc(load)
               .get();
 
       if (info.exists) {
