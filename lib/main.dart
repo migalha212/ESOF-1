@@ -3,12 +3,11 @@ import 'package:eco_finder/features/authentication/presentation/pages/login_page
 import 'package:eco_finder/features/authentication/presentation/pages/signup_page.dart';
 import 'package:eco_finder/features/bookmarks/presentation/pages/bookmark_page.dart';
 import 'package:eco_finder/features/profile/presentation/pages/profile_page.dart';
-import 'package:eco_finder/firebase_messaging.dart';
 import 'package:eco_finder/features/add_business/presentation/pages/add_bussiness.dart';
-import 'package:eco_finder/pages/event_profile_page.dart';
-import 'package:eco_finder/pages/landing_page.dart';
+import 'package:eco_finder/features/profile/presentation/pages/event_profile_page.dart';
+import 'package:eco_finder/landing_page.dart';
 import 'package:eco_finder/features/map/presentation/pages/map_page.dart';
-import 'package:eco_finder/pages/store_profile_page.dart';
+import 'package:eco_finder/features/profile/presentation/pages/store_profile_page.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:eco_finder/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:eco_finder/features/search/presentation/pages/search_page.dart';
@@ -20,7 +19,6 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseNotificationService().initNotifications();
   runApp(const MyApp());
 }
 
@@ -121,7 +119,9 @@ class MyApp extends StatelessWidget {
           NavigationItems.navEventProfile.route: () {
             final eventId = settings.arguments as String?;
             if (eventId != null) {
-              final eventRef = FirebaseFirestore.instance.collection('events').doc(eventId);
+              final eventRef = FirebaseFirestore.instance
+                  .collection('events')
+                  .doc(eventId);
               return navigationFade(
                 settings: settings,
                 builder: () => EventProfilePage(eventRef: eventRef),
@@ -130,7 +130,12 @@ class MyApp extends StatelessWidget {
               // Handle the case where no eventId is provided
               return navigationFade(
                 settings: settings,
-                builder: () => const Scaffold(body: Center(child: Text('Erro: ID do evento não encontrado'))),
+                builder:
+                    () => const Scaffold(
+                      body: Center(
+                        child: Text('Erro: ID do evento não encontrado'),
+                      ),
+                    ),
               );
             }
           },

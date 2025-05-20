@@ -3,7 +3,6 @@ import 'package:eco_finder/features/authentication/data/auth_service.dart';
 import 'package:eco_finder/features/profile/model/profile.dart';
 import 'package:eco_finder/features/profile/presentation/widgets/edit_profile_form.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -86,7 +85,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
+      appBar: AppBar(title: const Text('Edit Profile'),
+        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF3E8E4D),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: EditProfileForm(

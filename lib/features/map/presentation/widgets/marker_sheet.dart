@@ -20,7 +20,7 @@ class StoreBottomSheet extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () async {
-          if (url != null) {
+          if (url.isNotEmpty) {
             String processedUrl = url;
             if (!processedUrl.startsWith('http://') &&
                 !processedUrl.startsWith('https://')) {
@@ -67,7 +67,7 @@ class StoreBottomSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 4.0),
                   Text(
-                    value!,
+                    value,
                     style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                 ],

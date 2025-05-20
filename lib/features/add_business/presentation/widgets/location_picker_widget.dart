@@ -105,7 +105,7 @@ class _LocationPickerState extends State<LocationPicker> {
         widget.addressController.text = address;
       }
     } catch (e) {
-      widget.addressController.text = "Endereço não encontrado";
+      widget.addressController.text = "Address not found";
     }
   }
 
@@ -121,7 +121,7 @@ class _LocationPickerState extends State<LocationPicker> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Endereço não encontrado')),
+        SnackBar(content: Text('Address not found')),
       );
     }
   }
@@ -138,7 +138,7 @@ class _LocationPickerState extends State<LocationPicker> {
         TextFormField(
           controller: widget.addressController,
           decoration: InputDecoration(
-            labelText: 'Endereço',
+            labelText: 'Address',
             border: OutlineInputBorder(),
           ),
           textInputAction: TextInputAction.search,

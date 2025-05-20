@@ -1,6 +1,5 @@
 import 'package:eco_finder/features/map/data/business_service.dart';
 import 'package:eco_finder/features/map/presentation/widgets/marker_sheet.dart';
-import 'package:eco_finder/features/notifications/data/notifications_service.dart';
 import 'package:eco_finder/features/search/presentation/pages/search_page.dart';
 import 'package:eco_finder/services/location_service.dart';
 import 'package:flutter/material.dart';

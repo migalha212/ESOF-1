@@ -3,10 +3,8 @@ import 'package:eco_finder/features/authentication/presentation/pages/signup_pag
 import 'package:eco_finder/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:flutter/material.dart';
-import 'package:eco_finder/features/profile/presentation/widgets/edit_profile_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
-import 'package:flutter/rendering.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -51,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
           _userData = info.data()!;
         });
 
-        if(info['business_owner'] == true){
+        if (info['business_owner'] == true) {
           await _loadUserBusinesses(load);
         }
       }
@@ -61,10 +59,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _loadUserBusinesses(String uid) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('businesses')
-        .where('uid', isEqualTo: uid)
-        .get();
+    final querySnapshot =
+        await FirebaseFirestore.instance
+            .collection('businesses')
+            .where('uid', isEqualTo: uid)
+            .get();
 
     setState(() {
       _userBusinesses = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -104,7 +103,14 @@ class _ProfilePageState extends State<ProfilePage> {
       bottomNavigationBar: NavBar(selectedIndex: _index),
       appBar: AppBar(
         title: const Text('Profile'),
+        foregroundColor: Colors.white,
         backgroundColor: const Color(0xFF3E8E4D),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
+        ),
       ),
       body: Column(
         children: [
@@ -177,103 +183,90 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: EdgeInsets.only(top: 20, bottom: 8),
               child: Text(
                 (_userData!['id'] == _auth.getCurrentUser()!.uid)
-                  ? "As Minhas Lojas"
-                  : "Lojas de ${_userData!['name'] ?? _userData!['username']}",
+                    ? "My Businesses"
+                    : "${_userData!['name'] ?? _userData!['username']}'s Businesses",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
           if (_userBusinesses.isEmpty)
             const Text("Ainda não tens lojas registadas."),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: _userBusinesses.length,
-            itemBuilder: (context, index) {
-              final business = _userBusinesses[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ListTile(
-                  title: Text(
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: AlwaysScrollableScrollPhysics(),
+              itemCount: _userBusinesses.length,
+              itemBuilder: (context, index) {
+                final business = _userBusinesses[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: ListTile(
+                    title: Text(
                       business['name'] ?? 'Negócio sem nome',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(business['description'] ?? '', maxLines: 3),
+                    trailing: Icon(Icons.energy_savings_leaf),
+                    onTap: () {},
                   ),
-                  subtitle: Text(
-                      business['description'] ?? '',
-                      maxLines: 3,
-                  ),
-                  trailing: Icon(Icons.energy_savings_leaf),
-                  onTap: () {
-                    // TODO
-                  },
-                ),
-              );
-            },
-          ),
-          if (_userData!['id'] == user!.uid)
-            ElevatedButton(
-              onPressed: () => _editProfile(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 14,
-                  horizontal: 32,
-                ),
-              ),
-              child: const Text(
-                'Editar Perfil',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          SizedBox(height: 2),
-          if (_userData!['id'] == user!.uid)
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                NavigationItems.navAddBusiness.route,
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 26),
-            ),
-            child: const Text(
-              'Add Business',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(height: 2),
-          if (_userData!['id'] == user!.uid)
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, NavigationItems.navAddEvent.route);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 38),
-            ),
-            child: const Text(
-              'Add Event',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(height: 2),
-          if(user!.uid == _userData!['id'])
-          ElevatedButton(
-            onPressed: () => _logout(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
-            ),
-            child: const Text(
-              'Logout',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                );
+              },
             ),
           ),
         ],
       ),
+      floatingActionButton:
+          _userData!['id'] == user!.uid
+              ? Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    heroTag: "editBtn",
+                    onPressed: () => _editProfile(context),
+                    backgroundColor: const Color(0xFF3E8E4D),
+                    tooltip: "Edit Profile",
+                    child: const Icon(Icons.edit),
+                  ),
+                  const SizedBox(height: 8),
+                  FloatingActionButton(
+                    heroTag: "businessBtn",
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        NavigationItems.navAddBusiness.route,
+                      );
+                    },
+                    backgroundColor: const Color(0xFF3E8E4D),
+                    tooltip: "Add Business",
+                    child: const Icon(Icons.store),
+                  ),
+                  const SizedBox(height: 8),
+                  FloatingActionButton(
+                    heroTag: "eventBtn",
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        NavigationItems.navAddEvent.route,
+                      );
+                    },
+                    backgroundColor: const Color(0xFF3E8E4D),
+                    tooltip: "Add Event",
+                    child: const Icon(Icons.event),
+                  ),
+                  const SizedBox(height: 8),
+                  FloatingActionButton(
+                    heroTag: "logoutBtn",
+                    onPressed: () => _logout(context),
+                    backgroundColor: Colors.red,
+                    tooltip: "Logout",
+                    child: const Icon(Icons.logout),
+                  ),
+                ],
+              )
+              : null,
     );
   }
 }

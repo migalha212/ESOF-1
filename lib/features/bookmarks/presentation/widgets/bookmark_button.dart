@@ -63,8 +63,9 @@ class _BookmarkButtonState extends State<BookmarkButton> {
     return FloatingActionButton(
       heroTag: null,
       onPressed: _isLoading ? null : _toggleBookmark,
-      backgroundColor: _isBookmarked ? Colors.red : Colors.green,
+      backgroundColor: _isBookmarked ? Colors.red : const Color(0xFF3E8E4D),
       tooltip: _isBookmarked ? 'Remove from Bookmarks' : 'Add to Bookmarks',
+      foregroundColor: Colors.white,
       child:
           _isLoading
               ? const CircularProgressIndicator(

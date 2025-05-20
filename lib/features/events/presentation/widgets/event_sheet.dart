@@ -58,7 +58,7 @@ class EventBottomSheet extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () async {
-          if (url != null) {
+          if (url.isNotEmpty) {
             String processedUrl = url;
             if (!processedUrl.startsWith('http://') &&
                 !processedUrl.startsWith('https://')) {

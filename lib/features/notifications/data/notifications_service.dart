@@ -8,7 +8,7 @@ class NotificationService {
     await FirebaseFirestore.instance.collection('notifications').get();
 
     return snapshot.docs.map((doc) {
-      final data = doc.data() as Map<String, dynamic>;
+      final data = doc.data();
       return NotificationModel(
         id: doc.id,
         title: data['title'] as String,

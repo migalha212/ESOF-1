@@ -1,6 +1,5 @@
 import 'package:eco_finder/features/add_business/model/full_business.dart';
 import 'package:eco_finder/features/authentication/presentation/widgets/login_prompt.dart';
-import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:eco_finder/features/add_business/presentation/widgets/location_picker_widget.dart';
@@ -24,7 +23,7 @@ class BusinessService {
       await _notificationService.createStoreOpeningNotification(
           await _db.collection('businesses').doc(businessRef.id).get());
     } catch (e) {
-      throw Exception('Erro ao adicionar negócio: $e');
+      throw Exception('Error adding business: $e');
     }
   }
 }
@@ -43,45 +42,45 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
   final TextEditingController _imageUrlController = TextEditingController();
 
   final Map<String, Map<String, dynamic>> _primaryCategories = {
-    'Alimentos': {
+    'Food': {
       'emoji': '🍏',
-      'subcategories': ['Orgânicos', 'Vegan', 'Biológicos'],
+      'subcategories': ['Organic', 'Vegan', 'Biological'],
     },
-    'Roupas': {
+    'Clothes': {
       'emoji': '👗',
-      'subcategories': ['Reciclada', 'Eco-Friendly', 'Segunda Mão'],
+      'subcategories': ['Recicled', 'Eco-Friendly', 'Second-Hand'],
     },
-    'Itens Colecionáveis': {
+    'Colectibles': {
       'emoji': '🎁',
-      'subcategories': ['Vintage', 'Edição Limitada', 'Antiguidades'],
+      'subcategories': ['Vintage', 'Limited edition', 'Antiques'],
     },
-    'Decoração': {
+    'Decoration': {
       'emoji': '🏡',
-      'subcategories': ['Móveis', 'Iluminação', 'Arte'],
+      'subcategories': ['Furniture', 'Lighting', 'Art'],
     },
-    'Eletrónicos': {
+    'Eletronics': {
       'emoji': '📱',
-      'subcategories': ['Smartphones', 'Computadores', 'Acessórios'],
+      'subcategories': ['Smartphones', 'Computers', 'Accessories'],
     },
-    'Brinquedos': {
+    'Toys': {
       'emoji': '🧸',
-      'subcategories': ['Artesanais', 'Segunda Mão', 'Reciclados'],
+      'subcategories': ['Artisan', 'Second-Hand', 'Recicled'],
     },
-    'Saúde & Beleza': {
+    'Beauty and Hygiene': {
       'emoji': '💄',
-      'subcategories': ['Cosméticos', 'Cuidados Pessoais', 'Fitness'],
+      'subcategories': ['Cosmetics', 'Personal care', 'Fitness'],
     },
-    'Artesanato': {
+    'Artisanship': {
       'emoji': '🧵',
-      'subcategories': ['Feito à mão', 'Reciclado', 'Regional'],
+      'subcategories': ['Handmade', 'Recicled', 'Regional'],
     },
-    'Livros': {
+    'Books': {
       'emoji': '📚',
-      'subcategories': ['Romance', 'Segunda Mão', 'Infantis'],
+      'subcategories': ['Romance', 'Second-Hand', "Children's"],
     },
-    'Desportos & Lazer': {
+    'Sports and Leisure': {
       'emoji': '⚽',
-      'subcategories': ['Ginasio', 'Ao ar livre', 'Indoor'],
+      'subcategories': ['Gym', 'Outdoors', 'Indoor'],
     },
   };
 
@@ -89,7 +88,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
   final Map<String, List<String>> _selectedSubcategories = {};
 
   final Map<String, bool> _certifications = {
-    'Certificado Orgânico': false,
+    'Organic Certificate': false,
     'Fair Trade Certified': false,
     'Green Business Award': false,
   };
@@ -132,20 +131,20 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
         await user.set({'business_owner': true}, SetOptions(merge: true));
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Negócio adicionado com sucesso!')),
+            SnackBar(content: Text('Business added successfully!')),
           );
           Navigator.pop(context);
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Erro ao adicionar negócio: $e')),
+            SnackBar(content: Text('Error adding Business: $e')),
           );
         }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Selecione pelo menos uma categoria primária')),
+        SnackBar(content: Text('Select at least one primary category')),
       );
     }
   }
@@ -237,7 +236,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                     _selectedSubcategories.remove(category);
                   });
                 },
-                child: Text('Desselecionar'),
+                child: Text('Desselect'),
               ),
             ),
           ],
@@ -256,7 +255,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Pré-visualização da imagem:',
+          'Image preview:',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8),
@@ -288,7 +287,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                       Icon(Icons.error_outline, color: Colors.red, size: 40),
                       SizedBox(height: 8),
                       Text(
-                        'Erro ao carregar imagem',
+                        'Error loading image',
                         style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
@@ -322,14 +321,14 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Adicionar Negócio Sustentável'),
+        title: const Text('Add Eco-Business'),
+        foregroundColor: Colors.white,
         backgroundColor: Color(0xFF3E8E4D),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, NavigationItems.navMap.route);
           },
+          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -342,37 +341,37 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: 'Nome do Negócio',
+                  labelText: 'Business Name',
                   border: OutlineInputBorder(),
                 ),
                 validator:
                     (value) =>
                         (value == null || value.isEmpty)
-                            ? 'Por favor, insira o nome do negócio'
+                            ? 'Please, enter a name'
                             : null,
               ),
               SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Descrição',
+                  labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
                 validator:
                     (value) =>
                         (value == null || value.isEmpty)
-                            ? 'Por favor, insira uma descrição'
+                            ? 'Please, enter a description'
                             : null,
               ),
               SizedBox(height: 16),
               TextFormField(
                 controller: _imageUrlController,
                 decoration: InputDecoration(
-                  labelText: 'URL da Imagem do Negócio',
+                  labelText: 'Business Image URL',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.image, color: Color(0xFF3E8E4D)),
-                  hintText: 'https://exemplo.com/imagem.jpg',
+                  hintText: 'https://example.com/image.jpg',
                   suffixIcon: IconButton(
                     icon: Icon(Icons.clear, color: Colors.grey),
                     onPressed: () {
@@ -391,7 +390,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
               _buildImagePreview(),
               SizedBox(height: 16),
               Text(
-                'Categorias Primárias (Max. 3)',
+                'Primary Categories (Max. 3)',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               ..._primaryCategories.entries.map(
@@ -399,7 +398,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
               ),
               SizedBox(height: 16),
               Text(
-                'Certificações / Prêmios',
+                'Certificates / Awards',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Column(
@@ -426,7 +425,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
               TextFormField(
                 controller: _phoneController,
                 decoration: InputDecoration(
-                  labelText: 'Telefone de Contato',
+                  labelText: 'Contact Phone',
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.phone,
@@ -449,7 +448,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
                   elevation: 8,
                 ),
                 child: Text(
-                  'Adicionar Negócio',
+                  'Add business',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.normal,

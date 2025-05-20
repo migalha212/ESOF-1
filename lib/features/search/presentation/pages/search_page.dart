@@ -91,6 +91,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       bottomNavigationBar: NavBar(selectedIndex: _index),
       appBar: AppBar(
+        foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Text('Search EcoMarkets'),
         backgroundColor: Color(0xFF3E8E4D),
@@ -109,7 +110,7 @@ class _SearchPageState extends State<SearchPage> {
               ),
             );
           },
-          icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
         ),
         actions: [
           IconButton(
@@ -165,6 +166,7 @@ class _SearchPageState extends State<SearchPage> {
                 itemBuilder: (context, index) {
                   var data = _searchResults[index];
                   return Card(
+                    color: Colors.white,
                     margin: EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),

@@ -43,12 +43,12 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF3E8E4D), // verde principal
+        color: const Color(0xFF3E8E4D),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
             blurRadius: 8,
-            offset: Offset(0, -2), // sombra para cima
+            offset: Offset(0, -2),
           ),
         ],
       ),
@@ -78,7 +78,7 @@ class NavBar extends StatelessWidget {
             NavigationDestination(
               icon: Icon(Icons.calendar_month_outlined),
               selectedIcon: Icon(Icons.calendar_month),
-              label: 'Events',
+              label: 'Notifications',
             ),
             NavigationDestination(
               icon: Icon(Icons.home_outlined),

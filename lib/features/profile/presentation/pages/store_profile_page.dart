@@ -13,32 +13,39 @@ class StoreProfilePage extends StatelessWidget {
 
   const StoreProfilePage({Key? key, required this.storeRef}) : super(key: key);
 
-  Future<void> _shareStoreDetails(BuildContext context, Map<String, dynamic> data, String storeName) async {
+  Future<void> _shareStoreDetails(
+    BuildContext context,
+    Map<String, dynamic> data,
+    String storeName,
+  ) async {
     String shareText = '$storeName\n\n';
     if (data['description'] != null && data['description'].isNotEmpty) {
-      shareText += 'Descrição: ${data['description']}\n';
+      shareText += 'Description: ${data['description']}\n';
     }
     if (data['contactPhone'] != null && data['contactPhone'].isNotEmpty) {
-      shareText += 'Telefone: ${data['contactPhone']}\n';
+      shareText += 'Contact: ${data['contactPhone']}\n';
     }
     if (data['website'] != null && data['website'].isNotEmpty) {
       shareText += 'Website: ${data['website']}\n';
     }
     if (data['address'] != null && data['address'].isNotEmpty) {
-      shareText += 'Morada: ${data['address']}\n';
+      shareText += 'Address: ${data['address']}\n';
     }
 
     try {
       await Share.share(shareText);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Não foi possível partilhar os detalhes da loja.')),
+        const SnackBar(content: Text('Error sharing shop details.')),
       );
-      debugPrint('Erro ao partilhar: $e');
+      debugPrint('Error when sharing: $e');
     }
   }
 
-  Widget _buildCategoryTile(String category, Map<String, dynamic> categoryData) {
+  Widget _buildCategoryTile(
+    String category,
+    Map<String, dynamic> categoryData,
+  ) {
     String emoji = categoryData['emoji'] ?? '';
     return ListTile(
       leading: Text(emoji, style: const TextStyle(fontSize: 24)),
@@ -70,11 +77,17 @@ class StoreProfilePage extends StatelessWidget {
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              backgroundColor: Colors.green,
-              title: const Text('Loja não encontrada', style: TextStyle(color: Colors.white)),
+              backgroundColor: const Color(0xFF3E8E4D),
+              title: const Text(
+                'Store not found',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             body: const Center(
-              child: Text('Loja não encontrada', style: TextStyle(color: Colors.green)),
+              child: Text(
+                'Store not found',
+                style: TextStyle(color: Colors.green),
+              ),
             ),
             bottomNavigationBar: const NavBar(selectedIndex: 0),
           );
@@ -83,53 +96,56 @@ class StoreProfilePage extends StatelessWidget {
         final data = snapshot.data!.data() as Map<String, dynamic>;
         final String storeName = data['name'] ?? '';
         final Map<String, Map<String, dynamic>> primaryCategoriesData = {
-          'Alimentos': {
+          'Food': {
             'emoji': '🍏',
-            'subcategories': ['Orgânicos', 'Vegan', 'Biológicos'],
+            'subcategories': ['Organic', 'Vegan', 'Biological'],
           },
-          'Roupas': {
+          'Clothes': {
             'emoji': '👗',
-            'subcategories': ['Reciclada', 'Eco-Friendly', 'Segunda Mão'],
+            'subcategories': ['Recicled', 'Eco-Friendly', 'Second-Hand'],
           },
-          'Itens Colecionáveis': {
+          'Colectibles': {
             'emoji': '🎁',
-            'subcategories': ['Vintage', 'Edição Limitada', 'Antiguidades'],
+            'subcategories': ['Vintage', 'Limited edition', 'Antiques'],
           },
-          'Decoração': {
+          'Decoration': {
             'emoji': '🏡',
-            'subcategories': ['Móveis', 'Iluminação', 'Arte'],
+            'subcategories': ['Furniture', 'Lighting', 'Art'],
           },
-          'Eletrónicos': {
+          'Eletronics': {
             'emoji': '📱',
-            'subcategories': ['Smartphones', 'Computadores', 'Acessórios'],
+            'subcategories': ['Smartphones', 'Computers', 'Accessories'],
           },
-          'Brinquedos': {
+          'Toys': {
             'emoji': '🧸',
-            'subcategories': ['Artesanais', 'Segunda Mão', 'Reciclados'],
+            'subcategories': ['Artisan', 'Second-Hand', 'Recicled'],
           },
-          'Saúde & Beleza': {
+          'Beauty and Hygiene': {
             'emoji': '💄',
-            'subcategories': ['Cosméticos', 'Cuidados Pessoais', 'Fitness'],
+            'subcategories': ['Cosmetics', 'Personal care', 'Fitness'],
           },
-          'Artesanato': {
+          'Artisanship': {
             'emoji': '🧵',
-            'subcategories': ['Feito à mão', 'Reciclado', 'Regional'],
+            'subcategories': ['Handmade', 'Recicled', 'Regional'],
           },
-          'Livros': {
+          'Books': {
             'emoji': '📚',
-            'subcategories': ['Romance', 'Segunda Mão', 'Infantis'],
+            'subcategories': ['Romance', 'Second-Hand', "Children's"],
           },
-          'Desportos & Lazer': {
+          'Sports and Leisure': {
             'emoji': '⚽',
-            'subcategories': ['Ginasio', 'Ao ar livre', 'Indoor'],
+            'subcategories': ['Gym', 'Outdoors', 'Indoor'],
           },
         };
 
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.green,
-            title: Text(storeName.isNotEmpty ? storeName : 'Loja', style: const TextStyle(color: Colors.white)),
+            backgroundColor: const Color(0xFF3E8E4D),
+            title: Text(
+              storeName.isNotEmpty ? storeName : 'Shop',
+              style: const TextStyle(color: Colors.white),
+            ),
             iconTheme: const IconThemeData(color: Colors.white),
             actions: [
               IconButton(
@@ -182,8 +198,11 @@ class StoreProfilePage extends StatelessWidget {
                     color: Colors.green.shade700,
                     child: Center(
                       child: Text(
-                        storeName.isNotEmpty ? storeName : 'Nome da Loja',
-                        style: const TextStyle(fontSize: 20, color: Colors.white),
+                        storeName.isNotEmpty ? storeName : 'Shop Name',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -192,24 +211,44 @@ class StoreProfilePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (data['primaryCategories'] != null && data['primaryCategories'].isNotEmpty)
+                      if (data['primaryCategories'] != null &&
+                          data['primaryCategories'].isNotEmpty)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Categorias Primárias:',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              'Primary Categories:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const SizedBox(height: 8),
                             ...data['primaryCategories'].map((category) {
-                              return _buildCategoryTile(category, primaryCategoriesData[category] ?? {});
+                              return _buildCategoryTile(
+                                category,
+                                primaryCategoriesData[category] ?? {},
+                              );
                             }).toList(),
                             const SizedBox(height: 16),
                           ],
                         ),
-                      _buildInfoRow(Icons.description_outlined, 'Descrição', data['description']),
-                      _buildPhoneRow(Icons.phone_outlined, 'Telefone', data['contactPhone'], context),
-                      _buildInfoRow(Icons.email_outlined, 'Email', data['email']),
+                      _buildInfoRow(
+                        Icons.description_outlined,
+                        'Description',
+                        data['description'],
+                      ),
+                      _buildPhoneRow(
+                        Icons.phone_outlined,
+                        'Contact Phone',
+                        data['contactPhone'],
+                        context,
+                      ),
+                      _buildInfoRow(
+                        Icons.email_outlined,
+                        'Email',
+                        data['email'],
+                      ),
                       _buildInfoRow(
                         Icons.language_outlined,
                         'Website',
@@ -217,7 +256,8 @@ class StoreProfilePage extends StatelessWidget {
                         onTap: () async {
                           String? url = data['website'];
                           if (url != null && url.isNotEmpty) {
-                            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                            if (!url.startsWith('http://') &&
+                                !url.startsWith('https://')) {
                               url = 'https://$url';
                             }
                             final Uri uri = Uri.parse(url);
@@ -228,12 +268,18 @@ class StoreProfilePage extends StatelessWidget {
                               );
                               if (!launched) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Não foi possível abrir o link do website.')),
+                                  const SnackBar(
+                                    content: Text(
+                                      'Unable to open website URL.',
+                                    ),
+                                  ),
                                 );
                               }
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Ocorreu um erro ao abrir o link.')),
+                                const SnackBar(
+                                  content: Text('Erro opening Website URL.'),
+                                ),
                               );
                             }
                           }
@@ -241,100 +287,88 @@ class StoreProfilePage extends StatelessWidget {
                       ),
                       _buildInfoRow(
                         Icons.location_on_outlined,
-                        'Morada',
+                        'Address',
                         data['address'],
                         onTap: () async {
-                          if (data['address'] != null && data['address'].isNotEmpty) {
-                            final Uri uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(data['address'])}');
+                          if (data['address'] != null &&
+                              data['address'].isNotEmpty) {
+                            final Uri uri = Uri.parse(
+                              'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(data['address'])}',
+                            );
                             if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri, mode: LaunchMode.externalApplication);
+                              await launchUrl(
+                                uri,
+                                mode: LaunchMode.externalApplication,
+                              );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Não foi possível abrir o mapa.')),
+                                const SnackBar(
+                                  content: Text('Error opening Map.'),
+                                ),
                               );
                             }
                           }
                         },
                       ),
-                      if (data['certifications'] != null && data['certifications'].isNotEmpty)
+                      if (data['certifications'] != null &&
+                          data['certifications'].isNotEmpty)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 16),
                             const Text(
-                              'Certificações / Prêmios:',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              'Certificates / Awards:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const SizedBox(height: 8),
-                            ...data['certifications'].map((cert) => _buildCertificationTile(cert)).toList(),
+                            ...data['certifications']
+                                .map((cert) => _buildCertificationTile(cert))
+                                .toList(),
                           ],
                         ),
                       const SizedBox(height: 20),
                     ],
                   ),
                 ),
-                if(FirebaseAuth.instance.currentUser != null && data['uid'] != null)
-                  if(FirebaseAuth.instance.currentUser!.uid == data['uid'])
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the edit store page
-                          return;
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3E8E4D),
-                        ),
-                        child: const Text('Editar Loja',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    )
-                else
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: 
-                      ElevatedButton.icon(
-                          onPressed: (){
-                            Navigator.pushNamed(
-                            context,
-                            NavigationItems.navProfile.route,
-                              arguments: data['uid'],
-                            );
-                          },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3E8E4D),
-                        ),
-                        icon: const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                        ),
-                        label: const Text(
-                          "Owner Profile",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                  )
               ],
             ),
           ),
-          bottomNavigationBar: const NavBar(
-            selectedIndex: 0,
+          bottomNavigationBar: const NavBar(selectedIndex: 0),
+          floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    NavigationItems.navProfile.route,
+                    arguments: data['uid'],
+                  );
+                },
+                backgroundColor: const Color(0xFF3E8E4D),
+                tooltip: "View Owner Profile",
+                child: const Icon(Icons.person, color: Colors.white),
+              ),
+              SizedBox(height: 8),
+              BookmarkButton(shopId: storeRef.id, shopReference: storeRef),
+            ],
           ),
-           floatingActionButton: BookmarkButton(shopId: storeRef.id, shopReference: storeRef,),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
       },
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String? value, {VoidCallback? onTap}) {
+  Widget _buildInfoRow(
+    IconData icon,
+    String label,
+    String? value, {
+    VoidCallback? onTap,
+  }) {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
 
     return Padding(
@@ -352,10 +386,17 @@ class StoreProfilePage extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
                   const SizedBox(height: 4.0),
-                  Text(value, style: const TextStyle(fontSize: 14, color: Colors.black54)),
+                  Text(
+                    value,
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
+                  ),
                 ],
               ),
             ),
@@ -365,7 +406,12 @@ class StoreProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildPhoneRow(IconData icon, String label, String? value, BuildContext context) {
+  Widget _buildPhoneRow(
+    IconData icon,
+    String label,
+    String? value,
+    BuildContext context,
+  ) {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
 
     final cleanedNumber = value.replaceAll(' ', '');
@@ -381,7 +427,13 @@ class StoreProfilePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 4.0),
                 SelectableText(
                   cleanedNumber,
@@ -389,7 +441,7 @@ class StoreProfilePage extends StatelessWidget {
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: cleanedNumber));
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Número copiado!')),
+                      const SnackBar(content: Text('Number Copied!')),
                     );
                   },
                 ),

@@ -49,8 +49,15 @@ class _BookmarksPageState extends State<BookmarksPage> {
     return Scaffold(
       bottomNavigationBar: NavBar(selectedIndex: 3),
       appBar: AppBar(
-        title: const Text('Bookmarks'),
-        backgroundColor: const Color(0xFF3E8E4D),
+        title: const Text('Bookrmarks'),
+        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF3E8E4D),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
+        ),
       ),
       body: Center(
         child:

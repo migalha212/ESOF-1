@@ -70,10 +70,11 @@ class _BookmarkCardState extends State<BookmarkCard> {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,
       child: ListTile(
-        leading: Icon(Icons.store, color: Colors.green),
+        leading: Icon(Icons.shopping_bag, color: Colors.green),
         title:
             isLoading
                 ? const Text('Loading...')

@@ -1,4 +1,3 @@
-import 'package:eco_finder/common_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:eco_finder/features/notifications/model/notification_model.dart';
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
@@ -12,19 +11,19 @@ class NotificationsPage extends StatelessWidget {
 
   Future<List<NotificationModel>> _fetchNotifications() async {
     List<NotificationModel> notifications =
-    await NotificationService().fetchNotifications();
+        await NotificationService().fetchNotifications();
     notifications.sort((a, b) => b.startDate.compareTo(a.startDate));
     return notifications;
   }
 
-  void _handleNotificationTap(BuildContext context, NotificationModel notification) {
+  void _handleNotificationTap(
+    BuildContext context,
+    NotificationModel notification,
+  ) {
     if (notification.type == NotificationType.storeOpening) {
-      final storeReference =
-      FirebaseFirestore.instance.collection('businesses').doc(notification.targetId);
-      print('Tapped Store Notification');
-      print('Notification Type: ${notification.type}');
-      print('Target ID (Store): ${notification.targetId}');
-      print('Store Reference (before navigation): ${storeReference}'); // Log the DocumentReference path
+      final storeReference = FirebaseFirestore.instance
+          .collection('businesses')
+          .doc(notification.targetId);
       Navigator.pushNamed(
         context,
         NavigationItems.navSearchProfile.route,
@@ -37,13 +36,22 @@ class NotificationsPage extends StatelessWidget {
         arguments: notification.targetId,
       );
     }
-    // Consider adding a default case or logging if the type is unexpected
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWidget(title: 'Notifications'),
+      appBar: AppBar(
+        title: const Text('Notifications'),
+        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF3E8E4D),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
+        ),
+      ),
       bottomNavigationBar: NavBar(selectedIndex: _selectedIndex),
       body: FutureBuilder<List<NotificationModel>>(
         future: _fetchNotifications(),
@@ -56,14 +64,49 @@ class NotificationsPage extends StatelessWidget {
             return const Center(child: Text('No notifications available.'));
           } else {
             final notifications = snapshot.data!;
-            return ListView.separated(
+            return ListView.builder(
+              padding: const EdgeInsets.all(16),
               itemCount: notifications.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final notification = notifications[index];
-                return notification.toListTile(
-                  context,
-                  onTap: (model) => _handleNotificationTap(context, model), // Pass the function here
+                return Card(
+                  color: Colors.white,
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 4,
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(12),
+                    leading: Icon(
+                      notification.type == NotificationType.storeOpening
+                          ? Icons.shopping_bag
+                          : Icons.event,
+                      color:
+                          notification.startDate.isAfter(DateTime.now())
+                              ? const Color(0xFF3E8E4D)
+                              : Colors.grey,
+                    ),
+                    title: Text(
+                      notification.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    subtitle: Text(
+                      notification.startDate.isAfter(DateTime.now())
+                          ? 'Starts on ${notification.startDate.toLocal()}'
+                          : 'Ended on ${notification.startDate.toLocal()}',
+                      style: TextStyle(
+                        color:
+                            notification.startDate.isAfter(DateTime.now())
+                                ? Colors.black
+                                : Colors.grey,
+                      ),
+                    ),
+                    onTap: () => _handleNotificationTap(context, notification),
+                  ),
                 );
               },
             );

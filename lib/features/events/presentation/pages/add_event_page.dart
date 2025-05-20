@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:eco_finder/features/add_business/presentation/widgets/location_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -54,45 +53,45 @@ class _AddEventPageState extends State<AddEventPage> {
   String? _locationError;
 
   final Map<String, Map<String, dynamic>> _primaryCategories = {
-    'Alimentos': {
+    'Food': {
       'emoji': '🍏',
-      'subcategories': ['Orgânicos', 'Vegan', 'Biológicos'],
+      'subcategories': ['Organic', 'Vegan', 'Biological'],
     },
-    'Roupas': {
+    'Clothes': {
       'emoji': '👗',
-      'subcategories': ['Reciclada', 'Eco-Friendly', 'Segunda Mão'],
+      'subcategories': ['Recicled', 'Eco-Friendly', 'Second-Hand'],
     },
-    'Itens Colecionáveis': {
+    'Colectibles': {
       'emoji': '🎁',
-      'subcategories': ['Vintage', 'Edição Limitada', 'Antiguidades'],
+      'subcategories': ['Vintage', 'Limited edition', 'Antiques'],
     },
-    'Decoração': {
+    'Decoration': {
       'emoji': '🏡',
-      'subcategories': ['Móveis', 'Iluminação', 'Arte'],
+      'subcategories': ['Furniture', 'Lighting', 'Art'],
     },
-    'Eletrónicos': {
+    'Eletronics': {
       'emoji': '📱',
-      'subcategories': ['Smartphones', 'Computadores', 'Acessórios'],
+      'subcategories': ['Smartphones', 'Computers', 'Accessories'],
     },
-    'Brinquedos': {
+    'Toys': {
       'emoji': '🧸',
-      'subcategories': ['Artesanais', 'Segunda Mão', 'Reciclados'],
+      'subcategories': ['Artisan', 'Second-Hand', 'Recicled'],
     },
-    'Saúde & Beleza': {
+    'Beauty and Hygiene': {
       'emoji': '💄',
-      'subcategories': ['Cosméticos', 'Cuidados Pessoais', 'Fitness'],
+      'subcategories': ['Cosmetics', 'Personal care', 'Fitness'],
     },
-    'Artesanato': {
+    'Artisanship': {
       'emoji': '🧵',
-      'subcategories': ['Feito à mão', 'Reciclado', 'Regional'],
+      'subcategories': ['Handmade', 'Recicled', 'Regional'],
     },
-    'Livros': {
+    'Books': {
       'emoji': '📚',
-      'subcategories': ['Romance', 'Segunda Mão', 'Infantis'],
+      'subcategories': ['Romance', 'Second-Hand', "Children's"],
     },
-    'Desportos & Lazer': {
+    'Sports and Leisure': {
       'emoji': '⚽',
-      'subcategories': ['Ginasio', 'Ao ar livre', 'Indoor'],
+      'subcategories': ['Gym', 'Outdoors', 'Indoor'],
     },
   };
 
@@ -118,7 +117,7 @@ class _AddEventPageState extends State<AddEventPage> {
   void _submitEvent() async {
     setState(() {
       _locationError = (_latitudeController.text.isEmpty || _longitudeController.text.isEmpty || _addressController.text.isEmpty)
-          ? 'Por favor, selecione a localização no mapa'
+          ? 'Please select a location on the map'
           : null;
     });
 
@@ -146,20 +145,20 @@ class _AddEventPageState extends State<AddEventPage> {
         await _eventService.addEvent(event);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Evento adicionado com sucesso!')),
+            const SnackBar(content: Text('Event added successfully!')),
           );
           Navigator.pop(context);
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Erro ao adicionar evento: $e')),
+            SnackBar(content: Text('Error adding Event: $e')),
           );
         }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, preencha todos os campos obrigatórios e selecione pelo menos uma categoria e a localização no mapa.')),
+        const SnackBar(content: Text('Please, fill all fields correctly')),
       );
     }
   }
@@ -182,15 +181,14 @@ class _AddEventPageState extends State<AddEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Adicionar Evento Sustentável'),
-        backgroundColor: const Color(0xFF3E8E4D),
+      appBar: AppBar(title: const Text('Add Event'),
+        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF3E8E4D),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, NavigationItems.navMap.route);
           },
+          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -203,12 +201,12 @@ class _AddEventPageState extends State<AddEventPage> {
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: 'Nome do Evento',
+                  labelText: 'Event name',
                   border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o nome do evento';
+                    return 'Please, insert an event name';
                   }
                   return null;
                 },
@@ -217,13 +215,13 @@ class _AddEventPageState extends State<AddEventPage> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: 'Descrição',
+                  labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, insira uma descrição';
+                    return 'Please, insert a description';
                   }
                   return null;
                 },
@@ -232,21 +230,21 @@ class _AddEventPageState extends State<AddEventPage> {
               TextFormField(
                 controller: _imageUrlController,
                 decoration: const InputDecoration(
-                  labelText: 'URL da Imagem do Evento',
+                  labelText: 'Event Image URL',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.image, color: Color(0xFF3E8E4D)),
-                  hintText: 'https://exemplo.com/imagem_evento.jpg',
+                  hintText: 'https://example.com/event_image.jpg',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o URL da imagem do evento';
+                    return 'Please, insert an image URL';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
               const Text(
-                'Categorias Primárias (Max. 3)',
+                'Primary Categories (Select up to 3)',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               ..._primaryCategories.entries.map(
@@ -257,7 +255,7 @@ class _AddEventPageState extends State<AddEventPage> {
                 controller: _startDateController,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelText: 'Data de Início',
+                  labelText: 'Start DAte',
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.calendar_today_outlined, color: Color(0xFF3E8E4D)),
                   errorText: _startDateController.text.isEmpty && _formKey.currentState != null && !_formKey.currentState!.validate() ? 'Por favor, selecione a data de início' : null,
@@ -265,7 +263,7 @@ class _AddEventPageState extends State<AddEventPage> {
                 onTap: () => _selectDate(context, _startDateController),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, selecione a data de início';
+                    return 'Please, insert a start date';
                   }
                   return null;
                 },
@@ -275,7 +273,7 @@ class _AddEventPageState extends State<AddEventPage> {
                 controller: _endDateController,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelText: 'Data de Fim',
+                  labelText: 'End Date',
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.calendar_today_outlined, color: Color(0xFF3E8E4D)),
                   errorText: _endDateController.text.isEmpty && _formKey.currentState != null && !_formKey.currentState!.validate() ? 'Por favor, selecione a data de fim' : null,
@@ -283,7 +281,7 @@ class _AddEventPageState extends State<AddEventPage> {
                 onTap: () => _selectDate(context, _endDateController),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, selecione a data de fim';
+                    return 'Please, insert an end date';
                   }
                   return null;
                 },
@@ -306,14 +304,14 @@ class _AddEventPageState extends State<AddEventPage> {
               TextFormField(
                 controller: _hostShopController,
                 decoration: const InputDecoration(
-                  labelText: 'Organizador/Loja',
+                  labelText: 'Host',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.store_outlined, color: Color(0xFF3E8E4D)),
                 ),
                 onChanged: _filterShops,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o organizador/loja';
+                    return 'Please, insert a Host';
                   }
                   return null;
                 },
@@ -351,15 +349,15 @@ class _AddEventPageState extends State<AddEventPage> {
               TextFormField(
                 controller: _websiteController,
                 decoration: const InputDecoration(
-                  labelText: 'Link para o Evento',
+                  labelText: 'Event page link',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.link_outlined, color: Color(0xFF3E8E4D)),
-                  hintText: 'exemplo.com/evento',
+                  hintText: 'example.com/event',
                 ),
                 keyboardType: TextInputType.url,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o link para o evento';
+                    return 'Please, insert a website link';
                   }
                   return null;
                 },
@@ -373,7 +371,7 @@ class _AddEventPageState extends State<AddEventPage> {
                   elevation: 8,
                 ),
                 child: const Text(
-                  'Adicionar Evento',
+                  'Add Event',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.normal,
@@ -469,7 +467,7 @@ class _AddEventPageState extends State<AddEventPage> {
                     _selectedSubcategories.remove(category);
                   });
                 },
-                child: const Text('Desselecionar'),
+                child: const Text('Unselect'),
               ),
             ),
           ],
