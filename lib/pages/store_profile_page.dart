@@ -1,4 +1,5 @@
 import 'package:eco_finder/features/bookmarks/presentation/widgets/bookmark_button.dart';
+import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -272,7 +273,7 @@ class StoreProfilePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                if(FirebaseAuth.instance.currentUser != null)
+                if(FirebaseAuth.instance.currentUser != null && data['uid'] != null)
                   if(FirebaseAuth.instance.currentUser!.uid == data['uid'])
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -291,8 +292,37 @@ class StoreProfilePage extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
-
+                    )
+                else
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: 
+                      ElevatedButton.icon(
+                          onPressed: (){
+                            Navigator.pushNamed(
+                            context,
+                            NavigationItems.navProfile.route,
+                              arguments: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(data['uid'])
+                            );
+                          },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF3E8E4D),
+                        ),
+                        icon: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          "Owner Profile",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                  )
               ],
             ),
           ),
