@@ -32,10 +32,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
     String? load;
 
-    if (args is String){
+    if (args is String) {
       load = args;
-    }
-    else if (user != null){
+    } else if (user != null) {
       load = user.uid;
     }
 
@@ -74,6 +73,8 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_userData == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+
+    final user = _auth.getCurrentUser();
 
     final profileUrl = _userData!['profileURL'];
     final imageProvider =
@@ -155,18 +156,23 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () => _editProfile(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+          if (_userData!['id'] == user!.uid)
+            ElevatedButton(
+              onPressed: () => _editProfile(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 14,
+                  horizontal: 32,
+                ),
+              ),
+              child: const Text(
+                'Editar Perfil',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
-            child: const Text(
-              'Editar Perfil',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
           SizedBox(height: 2),
+          if (user!.uid == _userData!['id'])
           ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(
@@ -184,6 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           SizedBox(height: 2),
+          if (user!.uid == _userData!['id'])
           ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(context, NavigationItems.navAddEvent.route);
@@ -198,6 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           SizedBox(height: 2),
+          if(user!.uid == _userData!['id'])
           ElevatedButton(
             onPressed: () => _logout(context),
             style: ElevatedButton.styleFrom(

@@ -55,6 +55,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     try {
       final profile = UserProfile(
+        id: user.uid,
         username: _usernameController.text.trim(),
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
