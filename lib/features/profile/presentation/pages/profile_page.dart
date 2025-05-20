@@ -18,6 +18,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final AuthService _auth = AuthService();
   Map<String, dynamic>? _userData;
+  List<Map<String, dynamic>> _userBusinesses = [];
   final int _index = 4;
 
   @override
@@ -49,10 +50,25 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           _userData = info.data()!;
         });
+
+        if(info['business_owner'] == true){
+          await _loadUserBusinesses(load);
+        }
       }
     } else {
       MaterialPageRoute(builder: (context) => const SignUpPage());
     }
+  }
+
+  Future<void> _loadUserBusinesses(String uid) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('businesses')
+        .where('uid', isEqualTo: uid)
+        .get();
+
+    setState(() {
+      _userBusinesses = querySnapshot.docs.map((doc) => doc.data()).toList();
+    });
   }
 
   void _logout(BuildContext context) async {
@@ -155,6 +171,43 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
+          ),
+          if (_userData!['business_owner'] == true)
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 8),
+              child: Text(
+                "As Minhas Lojas",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+          if (_userBusinesses.isEmpty)
+            const Text("Ainda não tens lojas registadas."),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: _userBusinesses.length,
+            itemBuilder: (context, index) {
+              final business = _userBusinesses[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: ListTile(
+                  title: Text(
+                      business['name'] ?? 'Negócio sem nome',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                  ),
+                  subtitle: Text(
+                      business['description'] ?? '',
+                      maxLines: 3,
+                  ),
+                  trailing: Icon(Icons.energy_savings_leaf),
+                  onTap: () {
+                    // TODO
+                  },
+                ),
+              );
+            },
           ),
           if (_userData!['id'] == user!.uid)
             ElevatedButton(
