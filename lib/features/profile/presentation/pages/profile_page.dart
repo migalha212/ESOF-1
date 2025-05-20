@@ -173,10 +173,12 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           if (_userData!['business_owner'] == true)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 20, bottom: 8),
               child: Text(
-                "As Minhas Lojas",
+                (_userData!['id'] == _auth.getCurrentUser()!.uid)
+                  ? "As Minhas Lojas"
+                  : "Lojas de ${_userData!['name'] ?? _userData!['username']}",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
