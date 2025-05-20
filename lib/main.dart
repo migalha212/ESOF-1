@@ -5,6 +5,7 @@ import 'package:eco_finder/features/bookmarks/presentation/pages/bookmark_page.d
 import 'package:eco_finder/features/profile/presentation/pages/profile_page.dart';
 import 'package:eco_finder/firebase_messaging.dart';
 import 'package:eco_finder/features/add_business/presentation/pages/add_bussiness.dart';
+import 'package:eco_finder/pages/event_profile_page.dart';
 import 'package:eco_finder/pages/landing_page.dart';
 import 'package:eco_finder/features/map/presentation/pages/map_page.dart';
 import 'package:eco_finder/pages/store_profile_page.dart';
@@ -117,14 +118,21 @@ class MyApp extends StatelessWidget {
                   ),
             );
           },
-          NavigationItems.navSearchProfile.route: () {
-            return navigationFade(
-              settings: settings,
-              builder:
-                  () => StoreProfilePage(
-                    storeRef: settings.arguments as DocumentReference,
-                  ),
-            );
+          NavigationItems.navEventProfile.route: () {
+            final eventId = settings.arguments as String?;
+            if (eventId != null) {
+              final eventRef = FirebaseFirestore.instance.collection('events').doc(eventId);
+              return navigationFade(
+                settings: settings,
+                builder: () => EventProfilePage(eventRef: eventRef),
+              );
+            } else {
+              // Handle the case where no eventId is provided
+              return navigationFade(
+                settings: settings,
+                builder: () => const Scaffold(body: Center(child: Text('Erro: ID do evento não encontrado'))),
+              );
+            }
           },
           NavigationItems.navLogin.route: () {
             return navigationFade(

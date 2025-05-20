@@ -48,13 +48,13 @@ class Event {
       name: data['name'] ?? '',
       description: data['description'] ?? '',
       latitude:
-          (lat is num)
-              ? lat.toDouble()
-              : double.tryParse(lat.toString()) ?? 0.0,
+      (lat is num)
+          ? lat.toDouble()
+          : double.tryParse(lat.toString()) ?? 0.0,
       longitude:
-          (lng is num)
-              ? lng.toDouble()
-              : double.tryParse(lng.toString()) ?? 0.0,
+      (lng is num)
+          ? lng.toDouble()
+          : double.tryParse(lng.toString()) ?? 0.0,
       primaryCategories: List<String>.from(data['primaryCategories'] ?? []),
       subcategories: Map<String, dynamic>.from(data['subcategories'] ?? {}),
       address: data['address'] ?? '',
@@ -64,6 +64,37 @@ class Event {
       startDate: data['startDate'] ?? '',
       endDate: data['endDate'] ?? '',
       reference: doc.reference,
+    );
+  }
+
+  // Add this fromMap constructor:
+  factory Event.fromMap(String id, Map<String, dynamic> data) {
+    final lat = data['latitude'];
+    final lng = data['longitude'];
+    if (lat == null || lng == null) {
+      throw Exception('Event data missing latitude or longitude');
+    }
+    return Event(
+      id: id,
+      name: data['name'] ?? '',
+      description: data['description'] ?? '',
+      latitude:
+      (lat is num)
+          ? lat.toDouble()
+          : double.tryParse(lat.toString()) ?? 0.0,
+      longitude:
+      (lng is num)
+          ? lng.toDouble()
+          : double.tryParse(lng.toString()) ?? 0.0,
+      primaryCategories: List<String>.from(data['primaryCategories'] ?? []),
+      subcategories: Map<String, dynamic>.from(data['subcategories'] ?? {}),
+      address: data['address'] ?? '',
+      website: data['website'],
+      imageUrl: data['imageUrl'],
+      hostShop: data['hostShop'] ?? '',
+      startDate: data['startDate'] ?? '',
+      endDate: data['endDate'] ?? '',
+      reference: data['reference'] as DocumentReference, // Assuming reference is stored in the map
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:eco_finder/utils/navigation_items.dart';
 import 'package:eco_finder/features/add_business/presentation/widgets/location_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:eco_finder/features/notifications/data/notifications_service.dart';
 
 class AddEventPage extends StatefulWidget {
   const AddEventPage({super.key});
@@ -13,9 +14,13 @@ class AddEventPage extends StatefulWidget {
 
 class EventService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final NotificationService _notificationService =
+  NotificationService();
   Future<void> addEvent(SustainableEvent event) async {
     try {
-      await _db.collection('events').add(event.toMap());
+      final DocumentReference eventRef = await _db.collection('events').add(event.toMap());
+      final DocumentSnapshot eventSnapshot = await eventRef.get();
+      await _notificationService.createEventNotification(eventSnapshot);
     } catch (e) {
       throw Exception('Erro ao adicionar evento: $e');
     }

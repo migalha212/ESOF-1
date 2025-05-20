@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-enum NotificationType { event, storeOpening }
+import '../data/notifications_service.dart'; // Import NotificationService to access NotificationType
 
 class NotificationModel {
   final String id;
   final String title;
   final DateTime startDate;
+  final DateTime? endDate;
   final NotificationType type;
   final String targetId; // even though not used now, keeps future-proof
   final bool read;
@@ -15,18 +15,19 @@ class NotificationModel {
     required this.id,
     required this.title,
     required this.startDate,
+    required this.endDate,
     required this.type,
     required this.targetId,
     this.read = false,
   });
 
   /// Builds a ListTile representation of the notification
-  Widget toListTile(BuildContext context) {
+  Widget toListTile(BuildContext context, {required Function(NotificationModel) onTap}) {
     final isPastEvent =
         type == NotificationType.event && startDate.isBefore(DateTime.now());
     final bgColor = isPastEvent ? Colors.grey.shade200 : null;
     final icon =
-        type == NotificationType.event ? Icons.event : Icons.storefront;
+    type == NotificationType.event ? Icons.event : Icons.storefront;
     final formattedDate = DateFormat.yMMMd().add_jm().format(startDate);
 
     return Container(
@@ -45,10 +46,7 @@ class NotificationModel {
           style: TextStyle(color: isPastEvent ? Colors.grey : null),
         ),
         onTap: () {
-          // You could show a dialog or a placeholder detail screen here
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Tapped: $title')));
+          onTap(this); // Call the provided onTap callback
         },
       ),
     );

@@ -5,6 +5,7 @@ enum NavigationItems {
   navNotifications('/notifications'),
   navMapProfile('/map/profile'),
   navSearchProfile('/search/profile'),
+  navEventProfile('/map/profile'),
   navMapSearch('/map/search'),
   navAddBusiness('/addbusiness'),
   navAddEvent('/add_event'),

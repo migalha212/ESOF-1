@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:eco_finder/features/add_business/presentation/widgets/location_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_finder/features/notifications/data/notifications_service.dart';
 
 class AddBusinessPage extends StatefulWidget {
   const AddBusinessPage({super.key});
@@ -15,9 +16,13 @@ class AddBusinessPage extends StatefulWidget {
 
 class BusinessService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
   Future<void> addBusiness(SustainableBusiness business) async {
     try {
+      final DocumentReference businessRef =
       await _db.collection('businesses').add(business.toMap());
+      await _notificationService.createStoreOpeningNotification(
+          await _db.collection('businesses').doc(businessRef.id).get());
     } catch (e) {
       throw Exception('Erro ao adicionar negócio: $e');
     }

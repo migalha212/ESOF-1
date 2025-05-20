@@ -164,7 +164,7 @@ class StoreBottomSheet extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(
                   context,
-                  NavigationItems.navMapProfile.route,
+                  NavigationItems.navSearchProfile.route,
                   arguments: business.reference,
                 );
               },

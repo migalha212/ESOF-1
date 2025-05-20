@@ -1,13 +1,13 @@
 import 'package:eco_finder/features/map/data/business_service.dart';
 import 'package:eco_finder/features/map/presentation/widgets/marker_sheet.dart';
-import 'package:eco_finder/features/notifications/data/events_service.dart';
+import 'package:eco_finder/features/notifications/data/notifications_service.dart';
 import 'package:eco_finder/features/search/presentation/pages/search_page.dart';
 import 'package:eco_finder/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
-import 'package:eco_finder/features/events/data/event_marker_service.dart';
+import 'package:eco_finder/features/events/data/event_service.dart';
 import 'package:eco_finder/features/events/presentation/widgets/event_sheet.dart';
 
 class MapPage extends StatefulWidget {
