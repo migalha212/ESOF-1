@@ -227,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           SizedBox(height: 2),
-          if (user!.uid == _userData!['id'])
+          if (_userData!['id'] == user!.uid)
           ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(
@@ -245,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           SizedBox(height: 2),
-          if (user!.uid == _userData!['id'])
+          if (_userData!['id'] == user!.uid)
           ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(context, NavigationItems.navAddEvent.route);

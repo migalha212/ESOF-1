@@ -114,18 +114,6 @@ class MyApp extends StatelessWidget {
               settings: settings,
               builder:
                   () => StoreProfilePage(
-<<<<<<< HEAD
-=======
-                    storeRef: settings.arguments as DocumentReference,
-                  ),
-            );
-          },
-          NavigationItems.navSearchProfile.route: () {
-            return navigationFade(
-              settings: settings,
-              builder:
-                  () => StoreProfilePage(
->>>>>>> 15ecd3c (small adjustments)
                     storeRef: settings.arguments as DocumentReference,
                   ),
             );
