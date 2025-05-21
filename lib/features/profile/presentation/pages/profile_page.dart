@@ -37,8 +37,6 @@ class _ProfilePageState extends State<ProfilePage> {
       load = user.uid;
     }
 
-    print(load);
-    print("LOAD");
 
     if (load != null) {
       final info =
