@@ -181,6 +181,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       subtitle: Text(
                         data.description ?? 'No description available',
+                        maxLines: 4,
                       ),
                       onTap: () {
                         Navigator.pushNamed(

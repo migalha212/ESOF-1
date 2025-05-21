@@ -85,7 +85,9 @@ class _BookmarkCardState extends State<BookmarkCard> {
         subtitle:
             isLoading
                 ? null
-                : Text(shopDescription ?? 'No description available.'),
+                : Text(shopDescription ?? 'No description available.',
+                        maxLines: 4,
+            ),
         onTap: () => _navigateToShop(context),
       ),
     );
