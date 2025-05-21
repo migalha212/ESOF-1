@@ -1,6 +1,5 @@
 import 'package:eco_finder/features/bookmarks/presentation/widgets/bookmark_button.dart';
 import 'package:eco_finder/utils/navigation_items.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_finder/common_widgets/navbar_widget.dart';
@@ -102,9 +101,9 @@ class StoreProfilePage extends StatelessWidget {
           },
           'Clothes': {
             'emoji': '👗',
-            'subcategories': ['Recicled', 'Eco-Friendly', 'Second-Hand'],
+            'subcategories': ['Recycled', 'Eco-Friendly', 'Second-Hand'],
           },
-          'Colectibles': {
+          'Collectibles': {
             'emoji': '🎁',
             'subcategories': ['Vintage', 'Limited edition', 'Antiques'],
           },
@@ -118,7 +117,7 @@ class StoreProfilePage extends StatelessWidget {
           },
           'Toys': {
             'emoji': '🧸',
-            'subcategories': ['Artisan', 'Second-Hand', 'Recicled'],
+            'subcategories': ['Artisan', 'Second-Hand', 'Recycled'],
           },
           'Beauty and Hygiene': {
             'emoji': '💄',
@@ -126,7 +125,7 @@ class StoreProfilePage extends StatelessWidget {
           },
           'Artisanship': {
             'emoji': '🧵',
-            'subcategories': ['Handmade', 'Recicled', 'Regional'],
+            'subcategories': ['Handmade', 'Recycled', 'Regional'],
           },
           'Books': {
             'emoji': '📚',

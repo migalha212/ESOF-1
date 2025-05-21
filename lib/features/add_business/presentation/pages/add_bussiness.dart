@@ -48,9 +48,9 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
     },
     'Clothes': {
       'emoji': '👗',
-      'subcategories': ['Recicled', 'Eco-Friendly', 'Second-Hand'],
+      'subcategories': ['Recycled', 'Eco-Friendly', 'Second-Hand'],
     },
-    'Colectibles': {
+    'Collectibles': {
       'emoji': '🎁',
       'subcategories': ['Vintage', 'Limited edition', 'Antiques'],
     },
@@ -64,7 +64,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
     },
     'Toys': {
       'emoji': '🧸',
-      'subcategories': ['Artisan', 'Second-Hand', 'Recicled'],
+      'subcategories': ['Artisan', 'Second-Hand', 'Recycled'],
     },
     'Beauty and Hygiene': {
       'emoji': '💄',
@@ -72,7 +72,7 @@ class _AddBusinessPageState extends State<AddBusinessPage> {
     },
     'Artisanship': {
       'emoji': '🧵',
-      'subcategories': ['Handmade', 'Recicled', 'Regional'],
+      'subcategories': ['Handmade', 'Reciycled', 'Regional'],
     },
     'Books': {
       'emoji': '📚',

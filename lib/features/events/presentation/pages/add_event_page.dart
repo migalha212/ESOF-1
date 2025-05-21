@@ -59,9 +59,9 @@ class _AddEventPageState extends State<AddEventPage> {
     },
     'Clothes': {
       'emoji': '👗',
-      'subcategories': ['Recicled', 'Eco-Friendly', 'Second-Hand'],
+      'subcategories': ['Recycled', 'Eco-Friendly', 'Second-Hand'],
     },
-    'Colectibles': {
+    'Collectibles': {
       'emoji': '🎁',
       'subcategories': ['Vintage', 'Limited edition', 'Antiques'],
     },
@@ -75,7 +75,7 @@ class _AddEventPageState extends State<AddEventPage> {
     },
     'Toys': {
       'emoji': '🧸',
-      'subcategories': ['Artisan', 'Second-Hand', 'Recicled'],
+      'subcategories': ['Artisan', 'Second-Hand', 'Recycled'],
     },
     'Beauty and Hygiene': {
       'emoji': '💄',
@@ -83,7 +83,7 @@ class _AddEventPageState extends State<AddEventPage> {
     },
     'Artisanship': {
       'emoji': '🧵',
-      'subcategories': ['Handmade', 'Recicled', 'Regional'],
+      'subcategories': ['Handmade', 'Recycled', 'Regional'],
     },
     'Books': {
       'emoji': '📚',

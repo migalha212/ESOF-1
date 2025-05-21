@@ -162,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       Text(
-                        "@${_userData!['username']}${_userData!['admin'] == true ? ' (ADMIN)' : ''}",
+                        "@${_userData!['username']}",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
