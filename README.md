@@ -21,8 +21,6 @@ This Software Development Report, tailored for LEIC-ES-2024-25, provides compreh
     - [Sprint 1](#sprint-1)
     - [Sprint 2](#sprint-2)
     - [Sprint 3](#sprint-3)
-    - [Sprint 4](#sprint-4)
-    - [Final Release](#final-release)
 
 Contributions are expected to be made exclusively by the initial team, but we may open them to the community, after the course, in all areas and topics: requirements, technologies, development, experimentation, testing, etc.
 
@@ -129,7 +127,7 @@ After the user story text, you should add a draft of the corresponding user inte
 For each user story you should write also the acceptance tests (textually in [Gherkin](https://cucumber.io/docs/gherkin/reference/)), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
 
 **Value and effort**.
-At the end, it is good to add a rough indication of the value of the user story to the customers (e.g. [MoSCoW](https://en.wikipedia.org/wiki/MoSCoW_method) method) and the team should add an estimation of the effort to implement it, for example, using points in a kind-of-a Fibonnacci scale (1,2,3,5,8,13,20,40, no idea).
+At the end, it is good to add a rough indication of the value of the user story to the customers (e.g. [MoSCoW](https://en.wikipedia.org/wiki/MoSCoW_method) method) and the team should add an estimation of the effort to implement it, for example, using points in a kind-of-a Fibonnaci scale (1,2,3,5,8,13,20,40, no idea).
 
 -->
 
@@ -271,40 +269,68 @@ You can find below information and references related with the project managemen
 > - **Improvements for next sprint:**
 >   - Enhance time management by setting clearer deadlines for tasks.
 >   - Improve team organization by holding more frequent check-ins to track progress.
->  - **[Changelog](docs/CHANGELOG.MD)**
 ### Sprint 2
 
 > ### Github Projects Board
-> 
+>
 > Goals: Navbar, Events and Store profile
-> 
+>
 > - **Beginning**
-> 
+>
 > ![sprint 2](docs/resources/scrum_board/sprint2_start.png)
-> 
+>
 > - **End**
-> 
+>
 > ![sprint_2_end](docs/resources/scrum_board/sprint2_end.png)
-> 
+>
 > ### Retrospectives
-> 
+>
 > - **Did well:**
-> - Successfully implemented a Navigation Bar for accessing the different pages of the App easily.
-> - Delivered key user stories: App navigation, store profile visualization, event notification.
-> - Improved already implemented features: Business creation (with an implemented map picking feature), searching (with Fuzzy search feature and map ordering based on location)
-> - Effective teamwork and task management.
+>   - Successfully implemented a Navigation Bar for accessing the different pages of the App easily.
+>   - Delivered key user stories: App navigation, store profile visualization, event notification.
+>   - Improved already implemented features: Business creation (with an implemented map picking feature), searching (with Fuzzy search feature and map ordering based on location)
+>   - Effective teamwork and task management.
 > - **Do differently:**
-> - Distributed work a bit better. 
-> - Estimate work efforts better.
+>   - Distributed work a bit better.
+>   - Estimate work efforts better.
 > - **Puzzles:**
-> - Learning how to do Notifications.
-> - Implementing Fuzzy search.
+>   - Learning how to do Notifications.
+>   - Implementing Fuzzy search.
 > - **Improvements for next sprint:**
-> - Improving teamwork by having scheduled meetings through the week.
-> - Splitting the work between the members.
+>   - Improving teamwork by having scheduled meetings through the week.
+>   - Splitting the work between the members.
 
 ### Sprint 3
 
-### Sprint 4
+> #### Github Projects Board
+>
+> Goals: Refactor project structure; improve store and profile pages; enhance map pins and event display; improve bookmarks and event management.
+>
+> - **Beginning**
+>
+> ![sprint3_start](docs/resources/scrum_board/sprint3_start.png)
+>
+> - **End**
+>
+> ![sprint3_end](docs/resources/scrum_board/sprint3_end.png)
+>
+> ### Retrospectives
+>
+> - **Did well:**
+>   - Completed a feature-first project refactor, making the codebase more modular and maintainable.
+>   - Improved the store and profile pages, adding more customization and information for users and business owners.
+>   - Enhanced map functionality, including better map pin visuals and displaying events on the map.
+>   - Delivered key user stories: bookmarking favorite stores, customizable profiles, and improved event visibility.
+>   - Maintained strong collaboration and clear task assignments among team members.
+> - **Do differently:**
+>   - Start implementation of complex features earlier in the sprint.
+> - **Puzzles:**
+>   - Integrating new features smoothly after the project refactor, which introduced some bugs that required fixes, especially in authentication and user profile management modules.
+> - **Improvements for next sprint:**
+>   - Plan and break down tasks in more detail before starting implementation.
+>   - Allocate dedicated time for testing and bug fixing at the end of the sprint.
 
-### Final Release
+___
+
+**[Changelog](docs/CHANGELOG.MD)**
+
