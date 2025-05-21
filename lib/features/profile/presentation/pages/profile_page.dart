@@ -37,6 +37,9 @@ class _ProfilePageState extends State<ProfilePage> {
       load = user.uid;
     }
 
+    print(load);
+    print("LOAD");
+
     if (load != null) {
       final info =
           await FirebaseFirestore.instance
@@ -182,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Padding(
               padding: EdgeInsets.only(top: 20, bottom: 8),
               child: Text(
-                (_userData!['id'] == _auth.getCurrentUser()!.uid)
+                (_auth.getCurrentUser() != null && _userData!['id'] == _auth.getCurrentUser()!.uid)
                     ? "My Businesses"
                     : "${_userData!['name'] ?? _userData!['username']}'s Businesses",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -219,7 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
 
       floatingActionButton:
-          _userData!['id'] == user!.uid
+            (user != null && _userData != null && _userData!['id'] == user.uid)
               ? Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
