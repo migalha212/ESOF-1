@@ -49,7 +49,7 @@ class _BookmarksPageState extends State<BookmarksPage> {
     return Scaffold(
       bottomNavigationBar: NavBar(selectedIndex: 3),
       appBar: AppBar(
-        title: const Text('Bookrmarks'),
+        title: const Text('Bookmarks'),
         foregroundColor: Colors.white,
         backgroundColor: Color(0xFF3E8E4D),
         leading: IconButton(

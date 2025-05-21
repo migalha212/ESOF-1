@@ -71,9 +71,9 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _logout(BuildContext context) async {
-    await AuthService().logout();
     Navigator.pop(context);
     Navigator.pushNamed(context, NavigationItems.navMap.route);
+    await AuthService().logout();
   }
 
   void _editProfile(BuildContext context) {
@@ -188,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-          if (_userBusinesses.isEmpty)
+          if (_userBusinesses.isEmpty && _userData!['business_owner'] == true)
             const Text("Ainda não tens lojas registadas."),
           Expanded(
             child: ListView.builder(
@@ -217,8 +217,9 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
+
       floatingActionButton:
-          _userData!['id'] == user!.uid
+          _userData!['id']
               ? Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,

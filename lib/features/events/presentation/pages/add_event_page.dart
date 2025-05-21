@@ -255,7 +255,7 @@ class _AddEventPageState extends State<AddEventPage> {
                 controller: _startDateController,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelText: 'Start DAte',
+                  labelText: 'Start Date',
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.calendar_today_outlined, color: Color(0xFF3E8E4D)),
                   errorText: _startDateController.text.isEmpty && _formKey.currentState != null && !_formKey.currentState!.validate() ? 'Por favor, selecione a data de início' : null,

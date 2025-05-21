@@ -77,7 +77,7 @@ class NotificationsPage extends StatelessWidget {
                   ),
                   elevation: 4,
                   child: ListTile(
-                    contentPadding: EdgeInsets.all(12),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
                     leading: Icon(
                       notification.type == NotificationType.storeOpening
                           ? Icons.shopping_bag
