@@ -219,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
 
       floatingActionButton:
-          _userData!['id']
+          _userData!['id'] == user!.uid
               ? Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
