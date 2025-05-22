@@ -36,79 +36,191 @@ class _EditProfileFormState extends State<EditProfileForm> {
 
   void _update() => setState(() {});
 
-
-
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       margin: const EdgeInsets.all(16),
       child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: widget.formKey,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(12)
-                  ),
-                  child: ListTile(
-                    leading: CircleAvatar(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: widget.formKey,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  leading: CircleAvatar(
                     radius: 30,
-                    backgroundImage: widget.profileURLController.text.isNotEmpty
-                        ? NetworkImage(widget.profileURLController.text)
-                        : null,
-                    child: widget.profileURLController.text.isEmpty
-                        ? const Icon(Icons.person, size: 30)
-                        : null,
+                    backgroundImage:
+                        widget.profileURLController.text.isNotEmpty
+                            ? NetworkImage(widget.profileURLController.text)
+                            : null,
+                    child:
+                        widget.profileURLController.text.isEmpty
+                            ? const Icon(Icons.person, size: 30)
+                            : null,
                   ),
-                  title: Text(widget.nameController.text.isNotEmpty
+                  title: Text(
+                    widget.nameController.text.isNotEmpty
                         ? widget.nameController.text
-                        : ''),
+                        : '',
+                  ),
                   subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('@${widget.usernameController.text.isNotEmpty ? widget.usernameController.text : 'username'}'),
-                        Text(widget.emailController.text.isNotEmpty ? widget.emailController.text : 'sem email'),
-                      ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '@${widget.usernameController.text.isNotEmpty ? widget.usernameController.text : 'username'}',
+                      ),
+                      Text(
+                        widget.emailController.text.isNotEmpty
+                            ? widget.emailController.text
+                            : 'sem email',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: widget.usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color(0xFF3E8E4D),
+                      width: 2,
                     ),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                TextFormField(
-                  controller: widget.usernameController,
-                  decoration: const InputDecoration(labelText: 'Username'),
-                  validator:
-                      (value) => value == null || value.isEmpty ? 'Required' : null,
-                ),
-                TextFormField(
-                  controller: widget.nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                ),
-                TextFormField(
-                  controller: widget.profileURLController,
-                  decoration: const InputDecoration(
-                    labelText: 'Profile picture URL',
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty ? 'Required' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: widget.nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color(0xFF3E8E4D),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                TextFormField(
-                  controller: widget.emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: widget.profileURLController,
+                decoration: InputDecoration(
+                  labelText: 'Profile picture URL',
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color(0xFF3E8E4D),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                TextFormField(
-                  controller: widget.passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Password'),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: widget.emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color(0xFF3E8E4D),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                const SizedBox(height: 24),
-                ElevatedButton(onPressed: widget.onSave, child: const Text('Save')),
-              ],
-            ),
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty ? 'Required' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: widget.passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color(0xFF3E8E4D),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty ? 'Required' : null,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: widget.onSave,
+                child: const Text('Save'),
+              ),
+            ],
+          ),
         ),
-      )
-
+      ),
     );
   }
 }
-

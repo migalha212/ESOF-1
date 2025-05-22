@@ -22,7 +22,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  @override void initState() {
+  @override
+  void initState() {
     super.initState();
     _loadUser();
   }
@@ -30,16 +31,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _loadUser() async {
     final user = _auth.getCurrentUser();
 
-    if (user != null){
-      final info = await FirebaseFirestore.instance.collection('profiles').doc(user.uid).get();
-      if (info.exists){
+    if (user != null) {
+      final info =
+          await FirebaseFirestore.instance
+              .collection('profiles')
+              .doc(user.uid)
+              .get();
+      if (info.exists) {
         final data = info.data()!;
         _usernameController.text = data['username'] ?? '';
         _nameController.text = data['name'] ?? '';
         _profileURLController.text = data['profileURL'] ?? '';
         _emailController.text = data['email'];
         _passwordController.text = data['password'];
-
       }
     }
   }
@@ -50,7 +54,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final user = _auth.getCurrentUser();
     if (user == null) return;
 
-    final info = await FirebaseFirestore.instance.collection('profiles').doc(user.uid).get();
+    final info =
+        await FirebaseFirestore.instance
+            .collection('profiles')
+            .doc(user.uid)
+            .get();
 
     try {
       final profile = UserProfile(
@@ -61,21 +69,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
         password: _passwordController.text.trim(),
         profileURL: _profileURLController.text.trim(),
         owner: info.data()?['business_owner'],
-        admin: info.data()?['admin']
+        admin: info.data()?['admin'],
       );
-      await FirebaseFirestore.instance.
-        collection('profiles').
-        doc(user.uid).
-        set(profile.toMap(), SetOptions(merge: true));
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile Updated')),
-      );
+      await FirebaseFirestore.instance
+          .collection('profiles')
+          .doc(user.uid)
+          .set(profile.toMap(), SetOptions(merge: true));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Profile Updated')));
 
-      Navigator.pushNamed(
-          context,
-          NavigationItems.navProfile.route,
-      );
-    } catch (e){
+      Navigator.pushNamed(context, NavigationItems.navProfile.route);
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error! Could not update profile')),
       );
@@ -85,7 +90,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile'),
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
         foregroundColor: Colors.white,
         backgroundColor: Color(0xFF3E8E4D),
         leading: IconButton(
@@ -97,17 +103,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: EditProfileForm(
-          formKey: _formKey,
-          usernameController: _usernameController,
-          nameController: _nameController,
-          profileURLController: _profileURLController,
-          emailController: _emailController,
-          passwordController: _passwordController,
-          onSave: _saveProfile,
+        child: Center(
+          heightFactor: 1.1,
+          child: EditProfileForm(
+            formKey: _formKey,
+            usernameController: _usernameController,
+            nameController: _nameController,
+            profileURLController: _profileURLController,
+            emailController: _emailController,
+            passwordController: _passwordController,
+            onSave: _saveProfile,
+          ),
         ),
       ),
     );
   }
 }
-
