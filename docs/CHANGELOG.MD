@@ -1,3 +1,17 @@
+## [V0.4.0 (May 22, 2025)](https://github.com/LEIC-ES-2024-25/2LEIC08T1/compare/Sprint-2-end...Sprint-3-end)
+
+### What's changed
+* **User Authentication**: Users can now create and use an account in the app, allowing them to take full advantage of the features when logged in. [PR #46](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/46)
+* **User Profile**: Logged Users get a customisable Profile, accessible both to them or to users who decide to check the Owner of a store! [PR #52](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/52)
+* **Finished bookmarks**: Users can now bookmark their favourite shops through the store's profile page. Boomarks can be checked in the bookmarks tab. The user must be logged in to access this feature. [PR #57](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/57) and [PR #59](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/59)
+* **Events**: In addition to shops, the map now also shows upcoming events! Users or Stores can share that they are gonna be hosting an event through our notification system. Events can be found both in the map and in the notifications tab. [PR #58](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/58)
+
+### Enhancements
+* **Map improvements**: Zoom is now limited, changed default zoom when opening map. [PR #38](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/38)
+* **Shop Profile update**: UI for shop Profiles updated, with link redirects and the ability to copy a store's contact phone directly. [PR #45](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/45)
+* **Login UI**: Changed the look of login and signup tabs to better fit the app. [PR #51](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/51)
+* **General UI**: Small UI changes across the app, solving inconsistencies. [PR #61](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/61)
+
 ## [V0.3.0 (April 30, 2025)](https://github.com/LEIC-ES-2024-25/2LEIC08T1/compare/Sprint-1-End...Sprint-2-end)
 
 ### What's Changed
