@@ -25,6 +25,7 @@ class EditProfileForm extends StatefulWidget {
 }
 
 class _EditProfileFormState extends State<EditProfileForm> {
+  bool _hidePassoword = true;
   @override
   void initState() {
     super.initState();
@@ -189,6 +190,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: widget.passwordController,
+                obscureText: _hidePassoword,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   filled: true,
@@ -206,6 +208,15 @@ class _EditProfileFormState extends State<EditProfileForm> {
                       width: 2,
                     ),
                     borderRadius: BorderRadius.circular(12),
+                  ),
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _hidePassoword = !_hidePassoword;
+                        });
+                      },
+                      icon: Icon(
+                          _hidePassoword ? Icons.visibility_off : Icons.visibility)
                   ),
                 ),
                 validator:
