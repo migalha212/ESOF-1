@@ -34,16 +34,16 @@ class _SearchPageState extends State<SearchPage> {
   static const int _maxSearchResults = 10;
   final int _index = 0;
   final Map<String, String> _filterCategories = {
-    'Alimentos': '🍏',
-    'Roupas': '👗',
-    'Itens Colecionáveis': '🎁',
-    'Decoração': '🏡',
-    'Eletrónicos': '📱',
-    'Brinquedos': '🧸',
-    'Saúde & Beleza': '💄',
-    'Artesanato': '🧵',
-    'Livros': '📚',
-    'Desportos & Lazer': '⚽',
+    'Food': '🍏',
+    'Clothes': '👗',
+    'Collectibles': '🎁',
+    'Decoration': '🏡',
+    'Electronics': '📱',
+    'Toys': '🧸',
+    'Beauty and Hygiene': '💄',
+    'Artisanship': '🧵',
+    'Books': '📚',
+    'Sports and Leisure': '⚽',
   };
 
   final List<String> _selectedFilterCategories = [];
