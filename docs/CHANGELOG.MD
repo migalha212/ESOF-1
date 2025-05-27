@@ -1,4 +1,20 @@
+# Stable Release
+
+## [V1.0.0 (May 27, 2025)](https://github.com/LEIC-ES-2024-25/2LEIC08T1/compare/Sprint-3-end...Release)
+
+### Enhancements
+* **Edit Profile form**: Upgraded visuals, now features a preview of the profile banner. [PR #64](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/64)
+* **Bug fixes**: trying to view someone's profile without log in would result in crash.
+
+# Pre-Release Cycle
+
+<details>
+
+<summary> V0.4.0 (May 22, 2025)
+</summary>
+
 ## [V0.4.0 (May 22, 2025)](https://github.com/LEIC-ES-2024-25/2LEIC08T1/compare/Sprint-2-end...Sprint-3-end)
+
 
 ### What's changed
 * **User Authentication**: Users can now create and use an account in the app, allowing them to take full advantage of the features when logged in. [PR #46](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/46)
@@ -12,7 +28,18 @@
 * **Login UI**: Changed the look of login and signup tabs to better fit the app. [PR #51](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/51)
 * **General UI**: Small UI changes across the app, solving inconsistencies. [PR #61](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/61)
 
+</details>
+
+<details>
+
+
+<summary> V0.3.0 (April 30, 2025)
+</summary>
+
+
+
 ## [V0.3.0 (April 30, 2025)](https://github.com/LEIC-ES-2024-25/2LEIC08T1/compare/Sprint-1-End...Sprint-2-end)
+
 
 ### What's Changed
 
@@ -27,6 +54,12 @@
 - **Add Business improvements**: When adding a business the location can now be pinpointed through an interactive map. [PR #22](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/22)
 - **Shop Banner Pictures**: Added the option to add an image to a business page to serve as a banner, this is done in the add business page through a url. [PR #36](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/36)
 
+</details>
+
+<details>
+
+<summary> V0.2.0 (April 07, 2025)
+</summary>
 
 ## [V0.2.0 (April 07, 2025)](https://github.com/LEIC-ES-2024-25/2LEIC08T1/compare/VerticalPrototype...Sprint-1-End)
 
@@ -40,3 +73,4 @@
 - **Case-Insensitive Search**: Enhanced the search functionality to support case-insensitive queries, making it more user-friendly and accommodating. [PR #17](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/17)
 - **Market Fix**: Fixed bugs affecting market-related features, enhancing stability and reliability. [PR #15](https://github.com/LEIC-ES-2024-25/2LEIC08T1/pull/15)
 
+</details>
